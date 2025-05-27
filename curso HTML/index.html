@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi primera web</title>
+    <!--esto es CSS y aplica bordes a toda la tabla sin tener que hacerlo celda a celda-->
+    <!--<style> 
+        table, th, td {
+            border: 1px solid black
+        }
+    </style>-->
+</head>
+<body>
+    <!--Tablas-->
+    <table style="width: 500px; border: 1px solid black;">
+        <thead><!--cabecera de tabla, no hace falta es solo para algunos navegadores--> 
+            <tr>
+                <th style="border: 1px solid black;">Producto</th>
+                <th style="border: 1px solid black;">Precio</th>
+            </tr>
+        </thead>
+        <tbody><!--cuerpo de tabla, no hace falta es solo para algunos navegadores-->
+            <tr>
+                <td>Aceite</td>
+                <td>110€</td>
+            </tr>
+            <tr>
+                <td>Pipas</td>
+                <td>12€</td>
+            </tr>
+            <tr>
+                <td>Articulo con nombre largo</td>
+                <td>12€</td>
+            </tr>
+        </tbody>
+        <tfoot><!--pie de tabla, no hace falta es solo para algunos navegadores-->
+            <td></td>
+            <td>SUMA=159€</td>
+        </tfoot>
+    </table>
+    <ul><!--Lista no ordenada-->
+        <li>Elemento 1</li>
+        <li>Elemento 2</li>
+        <li>Elemento 3</li>
+    </ul>
+    <ol><!--Lista ordenada con la propiedad value="" puede iniciar en ese valor-->
+        <li>Elemento 1</li>
+        <li>Elemento 2</li>
+        <li>Elemento 3</li>
+        <li>Elmento 4
+            <ol>
+                <li style="list-style-type: lower-alpha;">dentro de elemento 4</li>
+                <li style="list-style-type: lower-alpha;">dentro de elemento 4</li>
+            </ol>
+        </li>
+    </ol>
+    <!-- Formularios-->
+    <form action="formulario.php" method="POST">
+        <label for="nombre">Nombre</label> <!-- for="" sirve para poner el cursor o foco en el campo indicado cuando se pincha sobre el texto de la etiqueta "Nombre"-->
+        <input type="text" id="nombre" name="nombre" placeholder="Introduzca su nombre aqui" />
+        <br><!-- con la propiedad value dentro de input podemos dar un valor por defecto-->
+        <label for="apellido">Apellido</label> 
+        <input value="popo" type="text" id="apellido" name="apellido" placeholder="Introduzca su apellido aqui" />
+        <br>
+        <label for="comentario">Comentarios: </label> <br>
+        <textarea id="comentario" row="15" cols="30" placeholder="Escriba un comentario" name="comentario"> Valor por defecto</textarea>
+        <br>
+        <!--<input type="submit"/> esta forma de poner un boton no permite ponerle texto dentro del boton -->
+        <button type="submit">Enviar</button>
+        <button type="reset">Reset</button>
+        <button type="Button"><img width="25" height="25"src="fotos/scott foil.jpg">  Boton</button>
+    </form>
+    <h1>Mi primer heading</h1>
+    <h2>Mi segundo heading</h2>
+    <h3>Mi tercer heading</h3>
+    <h4>Mi cuarto heading</h4>
+    <h5>Mi quinto heading</h5>
+    <h6>popo feliz</h6>
+    <p>Pedro Sandoval Abenza hace una web</p>
+    <hr>
+    <h2>Otro titulo h2</h2>
+    <p>otro texto que incluye <span style="color:blueviolet">la etiqueta</span> span para luego usar codigo CSS <br> esto se vera en otra linea gracias a la etiqueta br</p>
+    <!--Esto es un comentario que no se vera en la web-->
+    <a target="_blank" href="https://www.google.es">Ir a google</a>
+<!-- la etiqueta a sirve para crear texto con hipervinculos-->    
+<!-- target="_blank" es para que abra el link en una nueva ventana-->
+    <img width="400" height="300" src="https://www.mundodeportivo.com/files/content_image_desktop_filter/uploads/2023/10/14/6554dd540355e.jpeg"/>
+    <img width="400" height="300" src="fotos/scott foil.jpg"/>
+    
+
+
+</body>
+</html>
