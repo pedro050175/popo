@@ -17,7 +17,7 @@ header h1 {
 }
 .container {
     width: 300px;/* porque las imagenes son de 300px */
-    margin: 0px auto; 
+    margin: 0px auto; /*con esto se centra*/
 }
 section article {
     transition: box-shadow 0.3s ease;
@@ -37,4 +37,18 @@ footer {
     background-color: rgb(61, 59, 59);
     padding: 3rem;;
     color: white;
+}
+footer section {
+    float: right;
+}
+footer p {
+    margin: 0;
+}
+footer a {
+    transition: color 0.3s ease; /* para que el color cambie despacio, tmb se puede poner en el modificador de hover pero funciona diferente */
+    color: white;
+    text-decoration: none;
+}
+footer a:hover {/* para que cambie el color al ponerme encima */
+    color: rgb(177, 177, 233); 
 }

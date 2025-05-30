@@ -1,0 +1,20 @@
+h2{
+    color: red;
+    background-color: blue;
+    width: 250px;
+    text-align: center;
+    padding: 10px;
+    margin: 0px; /* para quitar el margen que se aplica automaticamente al darle padding o poner borde a div*/
+   
+}
+div {
+    background-color: green;
+    padding: 5px;
+    border: solid 3px rgb(187, 36, 36); 
+    width: 350px;
+    margin: 0px auto;/* se centra */
+    
+}
+/* las section o div (tal vez otras etiquetas tmb) en cuanto se le pone borde o padding, 
+aplica automaticamente margen arriba y abajo al texto que haya dentro, para quitarlo 
+hay que darle 0 a la propiedad margin del texto*/

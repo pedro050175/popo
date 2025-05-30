@@ -1,7 +1,7 @@
-/*body{esto es como ponerlo en el HEAD del HTML con la palabra style aplica el color a todo el body del HTML
+/* body{esto es como ponerlo en el HEAD del HTML con la palabra style aplica el color a todo el body del HTML
     color: tomato;
 } seria el color por defecto*/
-/*h1 { 
+/* h1 { 
     color: rgb(71, 255, 169);
 }puedo hacerlo asi o usando el id que le puse a h1 */
 #tituloh1 {
@@ -10,15 +10,15 @@
 /*p {esto pone color a todos los parrafos
     color:blue;
 }*/
-.texto{ color: greenyellow}/*afecta a la class texto*/
+.texto { color: greenyellow}/*afecta a la class texto*/
 p.texto { /*afecta a las etiquetas p de la class texto*/
-    color:aqua;
+    color:rgb(7, 134, 13);
 }
 p.diferente{
     color:mediumvioletred;
 }
 /*tenemos una class cuyo nombre son dos palabras y puedo hacer referencia a ella usando las dos o solo una palabra. Vemos en el ejemplo
-que el color asignado es el de la ultima establecida p.dos, porque CSS interpreta en orden*/
+que el color asignado es el de la ultima establecida p.dos, porque CSS interpreta en orden hacia abajo*/
 p.tengo{
     color:chocolate;
 }
@@ -26,7 +26,7 @@ p.dos{
     color:deeppink;
 }
 div p { /*esto significa que en todas las etiquetas de <div> que contengas etiquetas <p>*/
-    color:slateblue;
+    color:rgb(50, 36, 141);
 }
 div h2, div h3 {/*si no le pongo div delante de h3 aplicaria el color a todos los h3 aunque no esten dentro de div*/
     color: yellow;
@@ -118,12 +118,12 @@ tr:hover { /* al pasar con el raton encima*/
     background-color: rgb(194, 191, 191); /*se sombrean de gris las celdas tr */
     cursor: pointer; /* cambia el cursor del raton a una mano */
 }
-span {
-    display: block;/* con esto cada etiqueta span invade una linea */
+/* span {
+    display: block;/* con esto cada etiqueta span invade una linea 
     max-width: 500px;
     background-color: red;
 
-}  
+}   */
 .enlinea { /* hace que las etiq div de la clase enlinea no invadan la linea entera */
     display:inline;
 }
@@ -139,7 +139,7 @@ span {
     height: 200px;
 }
 .container {/* si no le doy un tamaño al container, el texto que hay debajo se me pone a la deracha de la moto, pq la moto flota*/
-    height: 100px;
+    height: 210px;
 }
 .derecha {
     float: right;
