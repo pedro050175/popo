@@ -1,0 +1,40 @@
+html {
+    font-family: "Montserrat", sans-serif;
+}
+body {/* esto se aplica a body para eliminar propiedades de magen por defecto */
+    margin: 0px;
+    background-color: #efefef;
+    font: optional;
+}
+header {
+    background-color: black;
+    color: red;
+    padding: 2rem 2rem;
+}
+header h1 {
+    font-size: 4rem;
+    text-align: center;
+}
+.container {
+    width: 300px;/* porque las imagenes son de 300px */
+    margin: 0px auto; 
+}
+section article {
+    transition: box-shadow 0.3s ease;
+    background-color: white;
+    margin 1rem 0px;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0rem;
+    cursor: pointer;
+}
+section article:hover {
+    box-shadow: 0 0.1rem 0.4rem rgba(0,0,0,0.3);
+}
+section article h2, section article p {
+    margin: 1rem;
+}
+footer {
+    background-color: rgb(61, 59, 59);
+    padding: 3rem;;
+    color: white;
+}

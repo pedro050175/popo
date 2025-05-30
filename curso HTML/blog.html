@@ -2,20 +2,42 @@
 <html>
 <head>
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="misestilos2.css"/>
 </head>
 <body>
     <header> <!--para agrupar likns e imagenes, pueden haber varias-->
         <h1>Blog de Pedro</h1>
     </header> <!--cabecera del blog-->
-    <seccion><!--cuerpo, pueden haber muchas-->
-        <article><!--articulos independiente-->
+    
+    <section class="container"><!--cuerpo, pueden haber muchas-->
+        <article class="post"><!--atributo class es como id pero es para darle el mismo atributo a muchas etiquetas o secciones-->
             <h2>Titulo del post</h2>
             <p>Descripcion del post</p>
             <img src="fotos/scott foil.jpg" width="300">
             <p>Texto completo del articulo</p>
         </article>
-    </seccion>
-    <footer><!--pie, suele tener las politicas-->        
+        <article>
+            <h2>Titulo del post 2</h2>
+            <p>Descripcion del post 2</p>
+            <img src="fotos/suzuki.jpg" width="300">
+            <p>Texto completo del articulo</p>
+        </article>
+        <article>
+            <h2>Titulo del post 3</h2>
+            <p>Descripcion del post 3</p>
+            <img src="fotos/suzuki.png" width="300">
+            <p>Texto completo del articulo</p>
+        </article>
+    </section>
+    <footer><!--pie, suele tener las politicas--> 
+        <section>
+            <a href="#titulo">Ir arriba</a><p></p>
+            <a href="mailto:psandoval26@hotmail.com">Correo para contacto</a>       
+            <p>Declaracion de proteccion de datos</p>
+        </section>
     </footer>
 </body>
 </html>

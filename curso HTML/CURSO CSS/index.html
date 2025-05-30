@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+    <!--ESTA forma de añadir CSS es mejor pero no la mejor, con la etiqueta de HTML Style-->
+    <!--<style>
+        body {
+            color: tomato;
+        }
+    </style>-->
+    <link rel="stylesheet" href="misestilos.css"/> <!--esta es la mejor manera de usar CSS, usando un archivo CSS externo-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- para usar una fuenta de google font, se llama Exile, y l a uso en una clase-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=WDXL+Lubrifont+TC&display=swap" rel="stylesheet">
+</head>
+<body> <!-- poniendo dentro de body style="color:tomato">S se pone el texto rojo. Esta es la peor forma de añadir CSS a un HTML-->
+    <section class="centro"><!-- clase para centrar texto -->
+        <p>Hola Mundo</p>
+    </section><br>
+    <div class="enlinea-block">Clase de bloque 1</div>
+    <div class="enlinea-block">Clase de bloque 2</div>
+    <div class="container">
+        <article class="columna derecha">1</article><!-- ojo nombre de class con dos palabras, en la deficion puedo tratarlo como dos clases, una con nombre card y otra con nombre derecha -->
+        <article class="columna derecha">2</article>
+        <article class="columna derecha">3</article>
+    </div>
+
+    <div class="container"><!--este div contien otros div, se crea una class y asi dandele propiedades a la class container se la estoy dando a todo lo que haya dentro-->
+        <img src="suzuki.jpg" class="izq" /> 
+        <p>Esto es una moto deportiva del 1995</p>
+    </div>
+
+    <article id="posicion">Este texto va a flotar por la pantalla</article>    
+<div>Este texto aunque sea mas corto que una linea invade la line completa</div>
+<div>Si añado este 2º div forzosamente se va a la siguiente linea porque el anterior invade todo el ancho</div>
+<span>Con la etiqueta span no ocurre como div</span>
+<span>Hay una propiedad display (modificable en CSS) </span><!-- que es la que controla esto de invadir todo el renglon -->
+<div class="enlinea">Este haremos que no invada la linea entera</div>
+<div class="enlinea">Todo en la misma linea</div>
+
+    <table>  
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+            </tr>
+            <tr>
+                <td>Aceite</td>
+                <td>110€</td>
+            </tr>
+            <tr>
+                <td>Pipas</td>
+                <td>12€</td>
+            </tr>
+            <tr>
+                <td>Articulo con nombre largo</td>
+                <td>12€</td>
+            </tr>
+    </table>
+    <ul>
+            <li>Uno</li>
+            <li>Dos</li>
+            <li>Tres</li>
+    </ul>
+    <a href="https://www.rentcardeluxe.es">Alquilar coche</a>
+    <p class="pepe">Aqui esta el texto de clase pepe</p>
+    <div class="margen">
+        Texto con margen       
+    </div>
+    <article id="fondo">
+        Propiedad de fondo
+    </article>
+    <h1 class="otra">Propiedad color</h1>  
+    <h1 id="tituloh1">Titulo</h1>
+    <p class="texto">Hola mundo</p>
+    <p class="diferente">Hola mundo 2</p>
+    <p class="tengo dos">Esta clase tiene dos palabras en su nombre</p>
+    <div>
+        <p>Aqui sigo</p>
+        <h2>Soy un subtitulo</h2>
+        <h3>Soy un subtitulo</h3>
+    </div>   
+</body>
+</html>

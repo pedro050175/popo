@@ -1,0 +1,165 @@
+/*body{esto es como ponerlo en el HEAD del HTML con la palabra style aplica el color a todo el body del HTML
+    color: tomato;
+} seria el color por defecto*/
+/*h1 { 
+    color: rgb(71, 255, 169);
+}puedo hacerlo asi o usando el id que le puse a h1 */
+#tituloh1 {
+    color: blueviolet; 
+}
+/*p {esto pone color a todos los parrafos
+    color:blue;
+}*/
+.texto{ color: greenyellow}/*afecta a la class texto*/
+p.texto { /*afecta a las etiquetas p de la class texto*/
+    color:aqua;
+}
+p.diferente{
+    color:mediumvioletred;
+}
+/*tenemos una class cuyo nombre son dos palabras y puedo hacer referencia a ella usando las dos o solo una palabra. Vemos en el ejemplo
+que el color asignado es el de la ultima establecida p.dos, porque CSS interpreta en orden*/
+p.tengo{
+    color:chocolate;
+}
+p.dos{
+    color:deeppink;
+}
+div p { /*esto significa que en todas las etiquetas de <div> que contengas etiquetas <p>*/
+    color:slateblue;
+}
+div h2, div h3 {/*si no le pongo div delante de h3 aplicaria el color a todos los h3 aunque no esten dentro de div*/
+    color: yellow;
+}
+* {/*con el * se aplica a todo*/
+    font-size: 24px; 
+    color:black;/*solo aplica color a los elementos que no se le hayan aplicado color, aplica a todo poero en orden secundario*/
+}
+.otra {
+    color: #f00; /*se puede usar #+3 digitos o #+6  digitos para mas colores o rgb(0, 245,227)*/
+}
+.otra {
+    /* border: 5px black inset; crea un borde con grosor y color*/ 
+    border-style: solid ; /*con estas 4 opciones creas un borde mas personalizado*/
+    border-color: blue;
+    border-radius: 5px;
+    border-width: 0.3cm;} /*tmb acepta mm (milimitros), in (pulgadas), px (pixel), pt (puntos), pc (picas)*/
+/*o puedo usar medidas relativas: 2em (doble de tamaño de la fuente que tiene el elemento al cual le ponemos el borde
+2rem o 3rem o 4rem... (doble del tamaño de la fuente raiz)*/
+#fondo {
+    background-color: rgba(247,0,3,0.5); /* el 4º valor es la transparencia (solo del fondo) que va desde 0 hasta 1, en el ejemplo se muestra gris, pero es negro trasnparente y permitiria que se viera algo detras del texto*/
+    /*opacity: 0.3; le da trasnparencia al fondo y al texto */
+    background-image: url("suzuki.jpg");
+    height: 200px;
+    background-size: 100px 100px; /* tmb se pueden poner cover, contain, etc.. redimensionan la imagen segun el tamaño de la pagina*/
+    background-repeat: no-repeat; /* para que no se repita, con repeat-x se repte en horizontal y repat-y en vertical */
+    background-position: center top; /* para centrarla o alinear a izq o derch */
+    /* con la propiedad background y todos estos paramentros se puede hacer todo lo anterior */
+    background : #f00 url("suzuki.jpg") repeat-y center bottom / 200px 100px;  
+
+} 
+.margen {
+    background-color: rgb(43, 255, 0);
+    margin: 50px 50px 50px 30px; /* margen del cuadro que alberga el texto respecto a los elementos que lo rodean, se le indica el top, right, left, down; si solo se le indica un valor aplica mismo valor a los 4 lados */
+    padding: 30px 25px 20px 15px; /* margen del texto con el color de fondo */
+    border: solid 1px black;
+    height: 70px;
+    width: 150px;
+    overflow:scroll;
+    outline: 1px solid red; /*es un borde alrededor del borde */
+}  
+.pepe {
+    font-family: 'WDXL Lubrifont TC', 'sans-serif', 'Times New Roman'; /*WDXL es una fuente de google font, se ponen 2 o 3 fuentes mas por si falla al cargar la 1º*/
+    font-size: 20px;
+    font-style: normal;
+    text-align: center;/* se puede justificar con justify*/
+    
+    
+    text-decoration: underline;
+    text-shadow: 3px 5px 3px grey;/* c1º valor: cuanto se desplz hacia la derecha la sombra, 2º: cuanto se desplaz hacia abajo, 3º difuminado de la sobra*/
+}
+/*para configurar los colores que toman los links segun se haya activado o no. hay que ponerlos en el orden que salen aqui*/
+a:link { /* color cuando link no se ha visitado */
+    color: blueviolet;
+}
+a:visited { /* cuando se ha visitado */
+    color: rgb(255, 47, 210);
+}
+a:hover { /* cuando paso por encima */
+    color: rgb(0, 255, 136);
+}
+a:active { /* cuando se esta pinchando */
+    color: red;
+}
+ul {
+    background-color: cyan;
+   
+    list-style-type: circle; /* quita los puntos  */  
+}
+table {
+    width: 100%;
+    border-collapse: collapse; /*quita bordes dobles, borde superior de una celda y el inferior de la celda de encima sea una unica linea, en lugar de dos lineas separadas */
+}
+th, td {
+    border: solid 1px red;
+    padding: 2px;
+}
+
+th {
+    background-color: rgb(241, 170, 170);
+    color: white;
+    text-align: left;
+}
+tr:nth-child(even){ /* esto sombre las filas pares o impares de una tabla, even para impar */
+    background-color: #eee;
+}/*esta propiedad impide el funcionamiento correcto de hover si se pone despues de ella, hay que ponerla antes de hover*/
+
+tr:hover { /* al pasar con el raton encima*/
+    background-color: rgb(194, 191, 191); /*se sombrean de gris las celdas tr */
+    cursor: pointer; /* cambia el cursor del raton a una mano */
+}
+span {
+    display: block;/* con esto cada etiqueta span invade una linea */
+    max-width: 500px;
+    background-color: red;
+
+}  
+.enlinea { /* hace que las etiq div de la clase enlinea no invadan la linea entera */
+    display:inline;
+}
+#posicion {/* para posicionar en cualquier parte de la pantalla */
+    position: sticky;/* con sticky el texto se desplaza por toda la pantalla */
+    left: 20px;
+    top: 10px;
+    
+}
+.izq {
+    float: left;
+    width: 200px;
+    height: 200px;
+}
+.container {/* si no le doy un tamaño al container, el texto que hay debajo se me pone a la deracha de la moto, pq la moto flota*/
+    height: 100px;
+}
+.derecha {
+    float: right;
+}
+.columna {
+    margin: 0;
+    padding: 10px px;
+    width: 33.3%;
+}
+.enlinea-block {
+    display: inline-block;
+    height: px; 
+    background-color: red;;
+}
+.centro {
+    text-align: center;
+    padding: 1px ; 
+    width: 200px; 
+    
+   /*  height:50px;  */
+    margin: 0px auto;
+    background-color: aqua;
+}
