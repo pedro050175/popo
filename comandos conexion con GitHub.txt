@@ -1,4 +1,5 @@
+C:/Users/psand/Desktop/curso_git
 eval "$(ssh-agent -s)"
 ssh-add .ssh/id_rsa
 
-se pueden pegar y ejecutar los dos juntos en git
+se pueden pegar y ejecutar los 3 juntos en git
