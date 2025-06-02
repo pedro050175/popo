@@ -1,2 +1,4 @@
 eval "$(ssh-agent -s)"
 ssh-add .ssh/id_rsa
+
+se pueden pegar y ejecutar los dos juntos en git
