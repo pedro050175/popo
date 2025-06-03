@@ -1,7 +1,8 @@
-C:/Users/psand/Desktop/curso_git
+cd C:/Users/psand/Desktop/curso_git
 eval "$(ssh-agent -s)"
 ssh-add .ssh/id_rsa
 git add .
+git commit -m "Actualizacion manual"
+git push
 
-
-se pueden pegar y ejecutar los 4 juntos en git
+se pueden pegar y ejecutar los 6 juntos en git
