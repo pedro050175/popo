@@ -1,0 +1,2 @@
+UPDATE `entidad` SET `direccion` = "C/SIERRA DE GUADARRAMA NUM 6, PUERTA B
+28830 - SAN FERNANDO DE HENARES, MADRID" where `id` = 2; 
