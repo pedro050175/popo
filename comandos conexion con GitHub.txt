@@ -1,3 +1,5 @@
+TODO ETO SE PONE EN GIT, NO EN MSDOS
+
 cd C:/Users/psand/Desktop/curso_git
 eval "$(ssh-agent -s)"
 ssh-add .ssh/id_rsa

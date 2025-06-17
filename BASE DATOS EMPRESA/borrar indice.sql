@@ -1,0 +1,1 @@
+alter table pagoscomven drop index CompraVenta; 

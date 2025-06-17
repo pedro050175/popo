@@ -1,0 +1,2 @@
+esta en C:\Users\psand\curso-de-php-8-y-mysql-8\data\db\empresa 
+este directorio esta mapeado con el directorio del contenedor donde trabaja mysql
