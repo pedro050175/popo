@@ -1,5 +1,5 @@
 <?php
-// echo 'hola';
+
 spl_autoload_register(function ($clase) {
     $directorio_clase = str_replace('\\', '/', $clase);
     if (file_exists ($directorio_clase . '.php')){

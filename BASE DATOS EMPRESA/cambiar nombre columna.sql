@@ -1,0 +1,1 @@
+alter table `vehiculos` rename column `Marca y modelo`to `Marca_modelo`; 
