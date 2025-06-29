@@ -14,12 +14,12 @@ private function conectar (): Mysqli {
     $conexion = new Mysqli($this->servidor, $this->usuario, $this->pass, $this->base_datos);
     if ($conexion->connect_error){ die('Error de conexion');
     }
-      
     return $conexion;
 }
-public function consulta(string $consultaSQL) : bool {   //Si la consulta es incorrecta, $this->resultado será false.
+public function consulta(string $consultaSQL) : bool {   //Si la consulta es incorrecta, $this->resultado no será false.
+    
     $this->resultado = $this->conexion->query($consultaSQL);
-    return $this->resultado !== false;//si la consulta es rxitosa $this->resultado almacena el valor de la consulta, tabla llena de valores, que es diferente de False
+    return $this->resultado !== false;//si la consulta es exitosa $this->resultado almacena el valor de la consulta, tabla llena de valores, que es diferente de False
 } //si la consulta es diferente de false devuelve true y si es false devuelve false porque es falso que sea diferente de false
 //en PHP una variable puede tener un valor, string, tabla, etc o tener un false que es booleano
 

@@ -1,0 +1,15 @@
+ <!-- <th scope="row"><?=$entidad->getId()?></th> 
+                    <td><?=$entidad->getCIF_DNI()?></td>
+                    <td><?=$entidad->getNombre()?></td>
+                    <td><?=$entidad->getApellidos()?></td>
+                    <td><?=$entidad->getDireccion()?></td>
+                    <td><?=$entidad->getTelefono()?></td>
+                    <td><?=$entidad->getEmail()?></td> -->
+                    <td> <?= $indice ?> </td> 
+                    <!-- <td>
+                        <div class="btn-group" role="group">
+                        <a href="#" role="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                        </div> 
+                    </td> -->

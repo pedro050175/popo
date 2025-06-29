@@ -16,7 +16,7 @@ class EntidadController {
         
     public function list(): void {
         $entidades = $this->service->findAll();
-        $this->pages->render('entidad', ['entidades' => $entidades]);//ver explicacion de la IA
+        $this->pages->render('entidades', ['entidades' => $entidades]);//ver explicacion de la IA
     }
 }
 ?>

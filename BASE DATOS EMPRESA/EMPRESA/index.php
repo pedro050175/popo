@@ -5,6 +5,10 @@ require_once "config.php";
 use lib\Router;
 use controllers\EntidadController;
 
-Router::add('GET', '/entidad', function () { return (new EntidadController())->list();});
-Router::dispatch();
+
+$entidades = (new EntidadController())->list();
+// var_dump($entidades);
+// Router::add('GET', '/entidad', function () { return (new EntidadController())->list();});
+
+// Router::dispatch();
 ?>
