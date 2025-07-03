@@ -4,7 +4,7 @@
             <h2>Entidades</h2>
         </div>
         <div class="col text-end">
-            <a href="entidades/entidad" role="button" class="btn btn-primary">Nueva entidad</a>
+            <a href="pages/nueva_entidad" role="button" class="btn btn-primary">Nueva entidad</a>
         </div>
     </div>
     <div class="row">

@@ -1,7 +1,5 @@
 <?php
 namespace lib;
-/* define ('REQUEST_URI', '/mis_pruebas/entidad 125');
-define ('REQUEST_METHOD', 'GET'); */
 
 class Router {
 
@@ -13,10 +11,14 @@ class Router {
 
     public static function dispatch ():void{
         $method = $_SERVER['REQUEST_METHOD'];
-        //$method = REQUEST_METHOD;
-
+        
+        /*echo " constante DIRECTORIO es: ". DIRECTORIO . "<br/>"; */
+        echo "_SERVER['REQUEST_METHOD']: ". $_SERVER['REQUEST_METHOD']. "<br/>";
+        echo "_SERVER['REQUEST_URI']: ".  $_SERVER['REQUEST_URI']. "<br/>"; 
+        var_dump(self::$routes);
+        sleep(2);
         $action = preg_replace(DIRECTORIO,'',$_SERVER['REQUEST_URI']);
-        //$action = preg_replace(DIRECTORIO,'',REQUEST_URI);
+        
         $action = trim($action, '/'); //elimina todos las / del principio y del final, si hay dos al principio quita las dos
         
         $param = null;

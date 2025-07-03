@@ -18,5 +18,8 @@ class EntidadController {
         $entidades = $this->service->findAll();
         $this->pages->render('entidades', ['entidades' => $entidades]);//ver explicacion de la IA
     }
+    public function add(): void {
+        $this->pages->render('nueva_entidad');
+    }
 }
 ?>
