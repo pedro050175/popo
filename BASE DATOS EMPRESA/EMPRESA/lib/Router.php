@@ -12,11 +12,10 @@ class Router {
     public static function dispatch ():void{
         $method = $_SERVER['REQUEST_METHOD'];
         
-        /*echo " constante DIRECTORIO es: ". DIRECTORIO . "<br/>"; */
-        echo "_SERVER['REQUEST_METHOD']: ". $_SERVER['REQUEST_METHOD']. "<br/>";
+        /* echo "_SERVER['REQUEST_METHOD']: ". $_SERVER['REQUEST_METHOD']. "<br/>";
         echo "_SERVER['REQUEST_URI']: ".  $_SERVER['REQUEST_URI']. "<br/>"; 
         var_dump(self::$routes);
-        sleep(2);
+        sleep(2); */
         $action = preg_replace(DIRECTORIO,'',$_SERVER['REQUEST_URI']);
         
         $action = trim($action, '/'); //elimina todos las / del principio y del final, si hay dos al principio quita las dos

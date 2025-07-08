@@ -24,7 +24,7 @@ public function consulta(string $consultaSQL) : bool {   //Si la consulta es inc
 //en PHP una variable puede tener un valor, string, tabla, etc o tener un false que es booleano
 
 public function extraer_registro(): mixed{
-    return ($fila = $this->resultado->fetch_array(MYSQLI_ASSOC)) ? $fila:false;
+    return ($fila = $this->resultado->fetch_array(MYSQLI_ASSOC)) ? $fila:false; //puede ser llamado reiteradas veces hasta sacar todos los registros leidos por eso se consulta que no sea null
 }
 public function extraer_todos(): array | bool {//fetch_all extrae todos los registros de una sola vez en una tabla de 2 dimensiones
     return $this->resultado ? $this->resultado->fetch_all(MYSQLI_ASSOC) : false;

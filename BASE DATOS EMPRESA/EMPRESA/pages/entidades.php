@@ -33,7 +33,7 @@
                     <td><?=$entidad->getEmail()?></td>
                     <td>
                         <div class="btn-group" role="group">
-                        <a href="#" role="button" class="btn btn-sm btn-outline-secondary">
+                        <a href="/pages/nueva_entidad/<?=$entidad->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
                         <a href="#" role="button" class="btn btn-sm btn-outline-danger">

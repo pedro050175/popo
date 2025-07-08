@@ -12,4 +12,10 @@ class EntidadService {
     public function findAll(): ?array { 
         return $this->repository->findAll();
     }
+    public function save(array $entidad):void{
+        $this->repository->save($entidad);
+    }
+    public function read(int $id){
+        $this->repository->read($id);
+    }
 }
