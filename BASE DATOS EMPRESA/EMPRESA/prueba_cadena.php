@@ -1,10 +1,6 @@
 <?php
-$datos = array('nombre' => "Pedro", 'apellido' => "sandoval", 'Direccion' => "Gran Via");
-// var_dump($datos);
-$cadena='';
-foreach ($datos as $indice => $valor){
-    $cadena = $cadena . "'$indice'  =  \"$valor\", ";
-}
-$cadena=trim($cadena,', ');
-echo $cadena;
-// var_dump($cadena);
+$datos = "entidades?error=No+se+puede+borrar+la+entidad+porque+hay+relacionados.";
+
+$datos=preg_replace('/[?].+/','',$datos);
+echo $datos;
+?>

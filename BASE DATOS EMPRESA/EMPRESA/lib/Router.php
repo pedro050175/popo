@@ -4,20 +4,19 @@ namespace lib;
 class Router {
 
     private static $routes = [];
+    
     public static function add(string $method, string $action, callable $controller): void {
         $action = trim($action, '/');
         self::$routes[$method][$action] = $controller;
     }
 
     public static function dispatch ():void{
+        //no se puede usar echo dara un warning ver mi WORLD
         $method = $_SERVER['REQUEST_METHOD'];
         
-        /* echo "_SERVER['REQUEST_METHOD']: ". $_SERVER['REQUEST_METHOD']. "<br/>";
-        echo "_SERVER['REQUEST_URI']: ".  $_SERVER['REQUEST_URI']. "<br/>"; 
-        var_dump(self::$routes);
-        sleep(2); */
         $action = preg_replace(DIRECTORIO,'',$_SERVER['REQUEST_URI']);
         
+        //file_put_contents("log.txt", "ruta que llega a dispacth ".$action."\n" , FILE_APPEND);
         $action = trim($action, '/'); //elimina todos las / del principio y del final, si hay dos al principio quita las dos
         
         $param = null;
@@ -26,9 +25,14 @@ class Router {
             $param = $match[0];
             $action = preg_replace('/'.$match[0].'/',':id',$action);
         }
+        $action = preg_replace('/[?].+/','',$action); //elimino todo lo que hay en la url al encontrar un ? porque detras de ? vienen parametros que no puedo usar para acceder a la tabla routes
+        //file_put_contents("log.txt", "ruta que limpiada: ".$action."\n" , FILE_APPEND);
         $callback = self::$routes[$method][$action];
         if (null != ($callback)) {
-            echo call_user_func($callback, $param);
+            $result= call_user_func($callback, $param);
+            if (!is_null($result)){ 
+                echo $result;            }
+             
          } else { echo "Funcion nula";}    
     } 
 }

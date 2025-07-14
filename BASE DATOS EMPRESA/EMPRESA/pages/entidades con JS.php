@@ -40,10 +40,10 @@
                         <a href="pages/nueva_entidad/<?=$entidad->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <a href="pages/borrar/<?=$entidad->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta entidad?');"> 
+                        <button class= "btn btn-sm btn-outline-danger" type="button" onclick="fetch('pages/nueva_entidad/<?=$entidad->getId()?>', {method: 'DELETE'}).then(data => location.reload())"> 
                             <i class="bi bi-trash"></i>
-                        </a>
-                        </button>    
+                        </button>
+                            
                         </div>
                     </td>          
                 </tr>

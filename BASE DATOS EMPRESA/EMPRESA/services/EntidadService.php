@@ -16,6 +16,12 @@ class EntidadService {
         $this->repository->save($entidad);
     }
     public function read(int $id){
-        $this->repository->read($id);
+        return $this->repository->read($id);
     }
+    public function delete(int $id){
+        $this->repository->delete($id);
+    }
+    public function relacionados(int $id): bool {
+        return $this->repository->relacionados($id);
+}
 }

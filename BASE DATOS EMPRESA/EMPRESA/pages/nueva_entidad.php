@@ -2,10 +2,11 @@
     <?php if (isset($entidad)) :?>
     <input type="hidden" name="data[entidad][id]" value="<?=$entidad->getId()?>">
     <?php endif;?>    
+    <!--<p><?// sleep(3); echo "hola";?></p> hay que poner comentarios para html y tmb comentarios para el codigo incrustado PHP -->  
     <div class="container mt-4">
         <div class="row">
             <div class="col">
-                <h2><?= (isset($entidad)) ? 'Modifircar' : 'Nuevo'?>Entidad</h2>
+                <h2><?= (isset($entidad)) ? 'Modificar' : 'Nueva'?> Entidad</h2>
             </div>
             <div class="col text-end">  
                 <a href="/mis_pruebas/entidades" role="button" class="btn btn-secondary">Cancelar</a>

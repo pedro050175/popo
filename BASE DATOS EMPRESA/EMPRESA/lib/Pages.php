@@ -6,11 +6,13 @@ class Pages {
         if ($params != null) {
             foreach ($params as $name => $value) {
                 $$name = $value; //usando el indice asociativo de la tabla de datos, crea variable con el nombre del indice y le asigna el valor que contiene esa posicion de la tabla
+                //file_put_contents("log.txt", "Variable: ".$name. " \n" , FILE_APPEND);       
             }
         }
-         require_once "pages/header.php";
-         require_once "pages/$pageName.php";
-         require_once "pages/footer.php";
+        //file_put_contents("log.txt", "Variable: ".$name. " con valor: ". $valor. " \n" , FILE_APPEND);
+        require_once "pages/header.php";
+        require_once "pages/$pageName.php";
+        require_once "pages/footer.php";
 
     }
 }
