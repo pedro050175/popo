@@ -16,3 +16,17 @@ Variable:
 Variable:  
 Variable: No se puede borrar la entidad porque hay relacionados. 
 Variable:  
+Variable:  
+Variable:  
+Variable:  
+Variable:  
+Variable:  
+Variable:  
+Variable: No se puede crear una entidad sin nombre 
+Variable: No se puede crear una entidad sin nombre 
+Variable:  
+Variable:  
+Variable:  
+Variable:  
+Variable:  
+Variable:  

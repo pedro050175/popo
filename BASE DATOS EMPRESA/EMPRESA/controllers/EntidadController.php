@@ -25,9 +25,15 @@ class EntidadController {
     }
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $entidad=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
-        $this->service->save($entidad);
-        header('Location: /mis_pruebas/entidades');   
-        exit;     
+        $nombre=$_POST['data']['entidad']['Nombre'];
+        if ($_POST['data']['entidad']['Nombre']!=''){
+            $this->service->save($entidad);
+            header('Location: /mis_pruebas/entidades');   
+            exit;
+        }    
+        $mensaje = urlencode('No se puede crear una entidad sin nombre');
+        header("Location: /mis_pruebas/entidades?error=$mensaje");
+        exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
         $entidad = $this->service->read($id);
@@ -43,11 +49,10 @@ class EntidadController {
             /* $entidades = $this->service->findAll(); Estas dos lineas hacen lo mismo que lo anterior y sin cargar una nueva pagina con header
             $this->pages->render('entidades', ['entidades' => $entidades,'error' => 'No se puede borrar hay asociados.']); */
             
-        } else {
-            $this->service->delete($id);
-            header('Location: /mis_pruebas/entidades');
-            exit;
-        } 
+        }
+        $this->service->delete($id);
+        header('Location: /mis_pruebas/entidades');
+        exit; 
     }
 }
 ?>

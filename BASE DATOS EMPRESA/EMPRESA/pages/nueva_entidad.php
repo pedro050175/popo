@@ -1,3 +1,5 @@
+<div id="error-message" class="alert alert-danger d-none" role="alert"></div> <!-- para mostrar mensaje de error en la pagina HTML al guardar con Nombre vacio-->
+
 <form action="/mis_pruebas/pages/nueva_entidad" method="post">
     <?php if (isset($entidad)) :?>
     <input type="hidden" name="data[entidad][id]" value="<?=$entidad->getId()?>">
@@ -10,11 +12,11 @@
             </div>
             <div class="col text-end">  
                 <a href="/mis_pruebas/entidades" role="button" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary"> <?= (isset($entidad)) ? 'Modificar' : 'Crear' ?> </button>
+                <button type="submit" class="btn btn-primary"> <?= (isset($entidad)) ? 'Modificar' : 'Crear' ?></button>
             </div>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Nombre]" class="form-control" id="floatingInput" placeholder="Nombre" value="<?=(isset($entidad))?$entidad->getNombre():''?>">
+            <input type="text" name="data[entidad][Nombre]" class="form-control" id="floatingInput" placeholder="Nombre" value="<?=(isset($entidad))?$entidad->getNombre():''?>"> 
             <label for="floatingInput">Nombre</label>
         </div>
         <div class="form-floating mb-3">
@@ -22,7 +24,7 @@
             <label for="floatingInput">Apellidos</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="floatingInput" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>">
+            <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="floatingInput" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>" required>
             <label for="floatingInput">CIF_DNI</label>
         </div>
         <div class="form-floating mb-3">
@@ -39,3 +41,38 @@
         </div>
     </div>
 </form>
+<!-- Esto es JS para mostrar mensaje de error en la pagina al guardar con Nombre vacio, este codigo va junto al que se pone al principio de la pagina-->
+<script> 
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+    const errorBox = document.getElementById("error-message");
+
+    form.addEventListener("submit", function(e) {
+        const nombreInput = form.querySelector('input[name="data[entidad][Nombre]"]');
+        if (nombreInput.value.trim() === "") {
+            e.preventDefault();
+
+            errorBox.textContent = "El campo Nombre no puede estar vacío.";
+            errorBox.classList.remove("d-none");
+            nombreInput.focus();
+        } else {
+            // Ocultar mensaje si todo está bien
+            errorBox.classList.add("d-none");
+        }
+    });
+});
+</script>
+<!-- Esto es JS para mostrar mensaje de error en en una ventana emergente al guardar con Nombre vacio, no necesita la linea del principio del formulario-->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function(e) {
+        const nombreInput = form.querySelector('input[name="data[entidad][Nombre]"]');
+        if (nombreInput.value.trim() === "") {
+            alert("El campo Nombre no puede estar vacío.");
+            nombreInput.focus();
+            e.preventDefault();
+        }
+    });
+});
+</script>
