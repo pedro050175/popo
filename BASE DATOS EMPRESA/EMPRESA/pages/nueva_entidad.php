@@ -20,10 +20,6 @@
             <label for="floatingInput">Nombre</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Apellidos]" class="form-control" id="floatingInput" placeholder="Apellidos" value="<?=(isset($entidad))?$entidad->getApellidos():''?>">
-            <label for="floatingInput">Apellidos</label>
-        </div>
-        <div class="form-floating mb-3">
             <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="floatingInput" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>" required>
             <label for="floatingInput">CIF_DNI</label>
         </div>
@@ -38,6 +34,10 @@
         <div class="form-floating mb-3">
             <input type="text" name="data[entidad][Email]" class="form-control" id="floatingInput" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
             <label for="floatingInput">Email</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" name="data[entidad][Observaciones]" class="form-control" id="floatingInput" placeholder="Observaciones" value="<?=(isset($entidad))?$entidad->getObservaciones():''?>">
+            <label for="floatingInput">Observaciones</label>
         </div>
     </div>
 </form>
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-<!-- Esto es JS para mostrar mensaje de error en en una ventana emergente al guardar con Nombre vacio, no necesita la linea del principio del formulario-->
+<!-- Esto es JS para mostrar mensaje de error en en una ventana emergente al guardar con Nombre vacio, no necesita la linea del principio del formulario
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.querySelector("form");
@@ -75,4 +75,4 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-</script>
+</script>-->

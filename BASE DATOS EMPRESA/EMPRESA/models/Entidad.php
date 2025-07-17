@@ -4,7 +4,7 @@ namespace models;
 class Entidad {
     
     function __construct (private int $id, private string $CIF_DNI, private string $Nombre, 
-    private ?string $Apellidos,private ?string $Direccion, private ?string $Telefono,
+    private ?string $Observaciones,private ?string $Direccion, private ?string $Telefono,
     private ?string $Email){}
 
     public function getId(): int {
@@ -25,11 +25,11 @@ class Entidad {
     public function setNombre(string $nombre) {
         $this->Nombre = $nombre;
     }
-    public function getApellidos(): ?string {
-        return $this->Apellidos;
+    public function getObservaciones(): ?string {
+        return $this->Observaciones;
     }
-    public function setApellidos(?string $apellidos) {
-        $this->Apellidos = $apellidos;
+    public function setObservaciones(?string $Observaciones) {
+        $this->Observaciones = $Observaciones;
     }
     public function getDireccion(): string {
         return $this->Direccion;
@@ -50,6 +50,6 @@ class Entidad {
         $this->Email = $email;
     }
     public static function fromArray(array $data): Entidad {
-        return new Entidad ($data['id'], $data['CIF_DNI'], $data['Nombre'], $data['Apellidos'], $data['Direccion'], $data['Telefono'], $data['Email'],); 
+        return new Entidad ($data['id'], $data['CIF_DNI'], $data['Nombre'], $data['Observaciones'], $data['Direccion'], $data['Telefono'], $data['Email'],); 
     }
 }

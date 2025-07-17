@@ -1,32 +1,58 @@
-
-Variable: No se puede borrar la entidad porque hay relacionados. 
-Variable:  
-Variable:  
-Variable: No se puede borrar la entidad porque hay relacionados. 
-Variable:  
-Variable: No se puede borrar la entidad porque hay relacionados. 
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable: No se puede borrar la entidad porque hay relacionados. 
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable: No se puede borrar la entidad porque hay relacionados. 
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable: No se puede crear una entidad sin nombre 
-Variable: No se puede crear una entidad sin nombre 
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable:  
-Variable:  
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades:nombre
+ruta limpiada: entidades:campo_ord
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //pages/nueva_entidad/1
+ruta limpiada: pages/nueva_entidad/:id
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //pages/nueva_entidad/1
+ruta limpiada: pages/nueva_entidad/:id
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades:nombre
+ruta limpiada: entidades:campo_ord
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades/:nombre
+ruta limpiada: entidades/:campo_ord
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //pages/nueva_entidad
+ruta limpiada: pages/nueva_entidad
+ruta que llega a dispacth //entidades
+ruta limpiada: entidades
+ruta que llega a dispacth //entidades/:nombre
+ruta limpiada: entidades/:campo_ord

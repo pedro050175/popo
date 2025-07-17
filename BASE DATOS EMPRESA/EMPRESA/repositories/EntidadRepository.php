@@ -11,9 +11,10 @@ class EntidadRepository {
     public function __construct() {
         $this->conexion = new BaseDatos();
     }
-    public function findAll(): ?array {
-        
-        $this->conexion->consulta ("SELECT * FROM entidad");
+    public function findAll(? string $campo_ord=NULL): ?array {
+        if ($campo_ord) {
+            $this->conexion->consulta ("SELECT * FROM entidad ORDER BY $campo_ord");
+        } else{ $this->conexion->consulta ("SELECT * FROM entidad");}
         return $this->extraer_todos();
     }    
     public function extraer_registro(): ?Entidad {
@@ -33,9 +34,6 @@ class EntidadRepository {
         } else { $this->create($entidad);}
     }
     public function create (array $entidad):void{
-        /* $this->conexion->consulta ("insert into entidad (CIF_DNI, Nombre, Apellidos, Direccion, Telefono, Email) 
-        values ($entidad[entidad][CIF_DNI], $entidad[entidad][Nombre], $entidad[entidad][Apellidos], $entidad[entidad][Direccion], $entidad[entidad][Telefono], $entidad[entidad][Email])"); */
-//esta manera de hacerlo obliga a modificar la consulta cada vez que se añade o elimina un campo a la base de datos
         $fields = implode(',', array_keys($entidad['entidad']));
         $values = implode("', '", $entidad['entidad']);
         $this->conexion->consulta ("INSERT INTO entidad ($fields) VALUES ('$values')");
@@ -58,11 +56,15 @@ class EntidadRepository {
        $this->conexion->consulta("DELETE FROM entidad WHERE (id=$id)");
     }
     public function relacionados(int $id): bool {
-        $consulta = "SELECT COUNT(*) as total FROM vehiculos WHERE Propietario = $id";
-        $this->conexion->consulta($consulta);
-        $resultado = $this->conexion->extraer_registro();
-        //file_put_contents("log.txt", "Hay relacionados: ".$resultado['total']. "\n" , FILE_APPEND);
-        return $resultado && $resultado['total'] > 0; //$resultado (existe) AND $resultado['total']>0
-}    
+        $encontrados=0; //he definido una constante de tipo array asociativo que contiene ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla']  
+        foreach (TABLAS as $campo => $tabla){
+            $consulta = "SELECT COUNT(*) as total FROM $tabla WHERE $campo = $id";
+            $this->conexion->consulta($consulta);
+            $resultado = $this->conexion->extraer_registro();
+            $encontrados += $resultado['total']; 
+        }
+        // return $resultado && $resultado['total'] > 0; //$resultado (existe) AND $resultado['total']>0
+        return $encontrados > 0;
+    }    
 }
 ?>
