@@ -9,8 +9,8 @@ class EntidadService {
     public function __construct() {
         $this->repository = new EntidadRepository();
     }
-    public function findAll(? string $campo_ord=NULL): ?array { 
-        return $this->repository->findAll($campo_ord);
+    public function findAll(): ?array { 
+        return $this->repository->findAll();
     }
     public function save(array $entidad):void{
         $this->repository->save($entidad);

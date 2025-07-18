@@ -11,10 +11,17 @@ class EntidadRepository {
     public function __construct() {
         $this->conexion = new BaseDatos();
     }
-    public function findAll(? string $campo_ord=NULL): ?array {
+    public function findAll(): ?array {
+        $campo_ord= $_GET['ordenar'] ?? null;
         if ($campo_ord) {
             $this->conexion->consulta ("SELECT * FROM entidad ORDER BY $campo_ord");
-        } else{ $this->conexion->consulta ("SELECT * FROM entidad");}
+        } else {
+            $busca = $_GET['texto_buscar'] ?? null;
+            if ($busca) {
+                file_put_contents("log.txt", "busca: ". $busca. " \n" , FILE_APPEND);
+                $this->conexion->consulta ("SELECT * FROM entidad WHERE Nombre LIKE '%$busca%'");
+            } else{ $this->conexion->consulta ("SELECT * FROM entidad");}
+        }
         return $this->extraer_todos();
     }    
     public function extraer_registro(): ?Entidad {

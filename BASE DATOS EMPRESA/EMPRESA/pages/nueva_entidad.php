@@ -12,7 +12,7 @@
             </div>
             <div class="col text-end">  
                 <a href="/mis_pruebas/entidades" role="button" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary"> <?= (isset($entidad)) ? 'Modificar' : 'Crear' ?></button>
+                <button type="submit" class="btn btn-primary"> <?= (isset($entidad)) ? 'Guardar' : 'Crear' ?></button>
             </div>
         </div>
         <div class="form-floating mb-3">

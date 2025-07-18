@@ -3,8 +3,12 @@
         <div class="col">
             <h4>Entidades</h4>
         </div>
-        <div class="col text-end">
-            <a href="entidades=nombre" role="button" class="btn btn-primary">Ordenar</a>
+        <div class="col-md-6">
+            <form action="entidades" method="get" class="d-flex">
+                <input type="text" name="texto_buscar" class="form-control me-2" id="floatingInput" placeholder="Buscar nombre">
+                <input type="text" name="texto_buscar" class="form-control me-2" id="floatingInput" placeholder="Buscar DNI/CIF">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
         </div>
         <div class="col text-end">
             <a href="pages/nueva_entidad" role="button" class="btn btn-primary">Nueva entidad</a>
@@ -22,7 +26,9 @@
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">DNI/CIF</th>
-                <th scope="col">Nombre</th>
+                <th scope="col">
+                    <a href="entidades?ordenar=nombre">Nombre</a>
+                </th>
                 <th scope="col">Dirección</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Email</th>

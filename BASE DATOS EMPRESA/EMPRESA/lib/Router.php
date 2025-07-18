@@ -25,14 +25,8 @@ class Router {
             $param = $match[0];
             $action = preg_replace('/'.$match[0].'/',':id',$action);
         } 
-        //si uso alguna ruta mas que lleve : o = ejecutaria dos if y el 2º if machacaria los datos del 1º, :id lo puede cambiar por :algo por eso en ordenar uso =. Tmb podria hacerlo arreglado con un else despues del 1º if
-        preg_match('/=[a-zA-Z]+/', $action, $match);//busca la expresion regular :texto en action y lo que en coincida con la empresion lo guarda en match ya que es un parametro para la funcion
-        if (!empty($match)) { //le quita los : al parametro y sustituye el paramentro de la URL por :campo_ord que es lo que se puso en add para encontrar la funcion [GET][action]
-            $param = $match[0];
-            $param = trim($param, '=');
-            $action = preg_replace('/'.$match[0].'/','=campo_ord',$action);
-        }
-        
+               
+        //para quitar de la URL los parametros ?campo=valor
         $action = preg_replace('/[?].+/','',$action); //elimino todo lo que hay en la url al encontrar un ? porque detras de ? vienen parametros que no puedo usar para acceder a la tabla routes
         //file_put_contents("log.txt", "ruta limpiada: ".$action."\n" , FILE_APPEND);
         //file_put_contents("log.txt", "PARAMETRO: ".$param."\n" , FILE_APPEND);

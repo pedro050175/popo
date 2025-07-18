@@ -14,8 +14,8 @@ class EntidadController {
         $this->pages = new Pages();
     }
         
-    public function list(? string $campo_ord=NULL): void {
-        $entidades = $this->service->findAll($campo_ord);
+    public function list(): void {
+        $entidades = $this->service->findAll();
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
         $this->pages->render('entidades', ['entidades' => $entidades, 'error' => $error]);//ver explicacion de la IA
@@ -28,16 +28,6 @@ class EntidadController {
         $this->service->save($entidad);
         header('Location: /mis_pruebas/entidades');   
         exit;
-        //Esto era para que no dejaran el Nombre vacio pero lo he hecho en el propio formulario de nueva_entidad
-        /*$nombre=$_POST['data']['entidad']['Nombre'];
-         if ($_POST['data']['entidad']['Nombre']!=''){
-            $this->service->save($entidad);
-            header('Location: /mis_pruebas/entidades');   
-            exit;
-        }     */
-        /* $mensaje = urlencode('No se puede crear una entidad sin nombre');
-        header("Location: /mis_pruebas/entidades?error=$mensaje");
-        exit; */
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
         $entidad = $this->service->read($id);
