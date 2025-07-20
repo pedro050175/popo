@@ -6,7 +6,6 @@ use lib\Router;
 use controllers\EntidadController;
 
 //Cuando da error en eo router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
-Router::add('GET', '/pages/detalles_entidad/:id', function($entidadId) {return (new EntidadController())->detalles_entidad($entidadId);});
 Router::add('GET', '/pages/borrar/:id', function($entidadId){return (new EntidadController())->delete($entidadId);});
 Router::add('GET', '/pages/nueva_entidad/:id', function($entidadId) {return (new EntidadController())->edit($entidadId);}); 
 Router::add('POST', '/pages/nueva_entidad', function () {return (new EntidadController())->save();});

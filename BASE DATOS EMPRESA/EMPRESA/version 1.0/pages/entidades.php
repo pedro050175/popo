@@ -47,15 +47,13 @@
                     <td><?=$entidad->getObservaciones()?></td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="pages/nueva_entidad/<?=$entidad->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="pages/borrar/<?=$entidad->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta entidad?');"> 
-                              <i class="bi bi-trash"></i>
-                            </a>
-                            <a href="pages/detalles_entidad/<?=$entidad->getId()?>" class= "btn btn-sm btn-outline-primary"> 
-                              <i class="bi bi-eye"></i>
-                            </a>    
+                        <a href="pages/nueva_entidad/<?=$entidad->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="pages/borrar/<?=$entidad->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta entidad?');"> 
+                            <i class="bi bi-trash"></i>
+                        </a>
+                        </button>    
                         </div>
                     </td>          
                 </tr>

@@ -13,11 +13,7 @@ class EntidadController {
         $this->service = new EntidadService();
         $this->pages = new Pages();
     }
-    public function detalles_entidad(int $id):void{
-        $entidad=$this->service->read($id);
-        $this->pages->render('detalles_entidad', ['entidad' => $entidad]);
-
-    }    
+        
     public function list(): void {
         $entidades = $this->service->findAll();
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  

@@ -1,0 +1,1 @@
+alter table compraventas drop column `no_se_declara`;
