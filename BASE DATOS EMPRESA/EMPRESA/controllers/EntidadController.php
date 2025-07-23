@@ -2,20 +2,26 @@
 namespace controllers;
 
 use services\EntidadService;
+use repositories\AlquilerRepository;
+
 use lib\Pages;
 //las llamadas a metodo reder es para cargar una nueva pagina y las llamadas a service es para acceder a datos de la base de datos
 class EntidadController {
 
     private EntidadService $service;
+    private AlquilerRepository $repository;
     private Pages $pages;
 
     function __construct(){
         $this->service = new EntidadService();
         $this->pages = new Pages();
+        $this->repository = new AlquilerRepository();
     }
     public function detalles_entidad(int $id):void{
         $entidad=$this->service->read($id);
-        $this->pages->render('detalles_entidad', ['entidad' => $entidad]);
+        $alquileres=$this->repository->findAll($id);
+        //var_dump($alquileres);
+        $this->pages->render('detalles_entidad', ['entidad' => $entidad, 'alquileres' => $alquileres]);
 
     }    
     public function list(): void {

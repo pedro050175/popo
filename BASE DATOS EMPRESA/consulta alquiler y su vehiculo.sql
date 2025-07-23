@@ -1,0 +1,1 @@
+SELECT alquileres.id, alquileres.Contrato, alquileres.Vehiculo, alquileres.Fecha_inicio, alquileres.Fecha_fin, alquileres.Precio, alquileres.Comercial, alquileres.Empresa, alquileres.Ciudad, vehiculos.Marca_modelo, vehiculos.Matricula FROM alquileres, vehiculos WHERE alquileres.cliente=14 && alquileres.Vehiculo=vehiculos.id;

@@ -39,3 +39,14 @@ class Router {
          } else { echo "Funcion nula";}    
     } 
 }
+class duplicar_tabla {
+
+    public static function duplica (array $modelo, array $data): array{
+        
+        $resultado = $modelo;
+        foreach ($data as $indice => $valor){ //paso los datos de data a modelo, si falta algun campo en data, modelo lo tiene creado
+            $resultado[$indice] = $data[$indice];
+        } 
+        return $resultado;
+    }
+}   

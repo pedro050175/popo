@@ -24,7 +24,7 @@ class EntidadRepository {
                 $busca = $_GET['buscar_dnicif'] ?? null;
                 if ($busca) {
                     $this->conexion->consulta ("SELECT * FROM entidad WHERE CIF_DNI LIKE '%$busca%'");
-                } else $this->conexion->consulta ("SELECT * FROM entidad");
+                } else $this->conexion->consulta ("SELECT * FROM entidad"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
         return $this->extraer_todos();    
@@ -35,13 +35,14 @@ class EntidadRepository {
     public function extraer_todos(): ?array {
         $entidades = [];
         $entidadData = $this->conexion->extraer_todos();
+        //var_dump($entidadData);
         foreach ($entidadData as $data){
             $entidades[] = Entidad::fromArray($data);
         }
         return $entidades;
     }
     public function save (array $entidad):void {
-        if (isset($entidad['entidad']['id'])) {
+        if (isset($entidad['entidad']['id_entidad'])) {
             $this->update($entidad);
         } else { $this->create($entidad);}
     }
@@ -57,15 +58,15 @@ class EntidadRepository {
             $updates[] = "$indice='{$valor}'";
         }
         $changes=implode(', ', $updates);
-        $this->conexion->consulta("UPDATE entidad SET $changes where id =".$entidad['entidad']['id']); //vease que se cierra la consulta con " y se concatena con . Esto se hace porque
+        $this->conexion->consulta("UPDATE entidad SET $changes where id_entidad =".$entidad['entidad']['id_entidad']); //vease que se cierra la consulta con " y se concatena con . Esto se hace porque
         //para poner un array dentro de dobles comillas hay que quitar las comillas simples a los indices asociativos, y entonces falla en tiempo de ejecucion pk intenta hacer una conversion arry to string  
     }
     public function read (int $id): ?Entidad {
-        $this->conexion->consulta("SELECT * FROM entidad WHERE (id=$id)");
+        $this->conexion->consulta("SELECT * FROM entidad WHERE (id_entidad=$id)");
         return $this->extraer_registro();
     }
     public function delete (int $id): void {
-       $this->conexion->consulta("DELETE FROM entidad WHERE (id=$id)");
+       $this->conexion->consulta("DELETE FROM entidad WHERE (id_entidad=$id)");
     }
     public function relacionados(int $id): bool {
         $encontrados=0; //he definido una constante de tipo array asociativo que contiene ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla']  

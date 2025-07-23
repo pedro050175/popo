@@ -1,17 +1,18 @@
 <?php
 namespace models;
+use lib\duplicar_tabla;
 
 class Alquiler {
     
-    function __construct (private int $id, private string $Contrato, private int $Vehiculo, private int $Cliente, private string $Fecha_inicio, private ?string $Fecha_fin, private ?int $km,
-    private ?int $Km_inicio, private ?int $Km_fin, private ?string $Dias, private ?int $Precio, private ?int $Precio_km, private ?int $comercial, private ?int $Empresa, private ?string $Ciudad, 
+    function __construct (private int $id_alquiler, private string $Contrato, private int $id_vehiculo, private int $Cliente, private string $Fecha_inicio, private ?string $Fecha_fin, private ?int $Km,
+    private ?int $Km_inicio, private ?int $Km_fin, private ?string $Dias, private ?int $Precio, private ?int $Precio_km, private ?int $id_comercial, private ?int $Empresa, private ?string $Ciudad, 
     private ?string $Entrega, private ?int $Comision_comercial, private ?int $Ganancia, private ?string $Observaciones){}
 
     public function getId(): int {
-        return $this->id;
+        return $this->id_alquiler;
     }
     public function setId(int $id) {
-        $this->id = $id;
+        $this->id_alquiler = $id;
     }
     public function getContrato(): string {
         return $this->Contrato;
@@ -20,16 +21,10 @@ class Alquiler {
         $this->Contrato = $contrato;
     }
     public function getVehiculo(): int {
-        return $this->Vehiculo;
+        return $this->id_vehiculo;
     }
     public function setVehiculo(int $vehiculo) {
-        $this->Vehiculo = $vehiculo;
-    }
-    public function getObservaciones(): ?string {
-        return $this->Observaciones;
-    }
-    public function setObservaciones(?string $Observaciones) {
-        $this->Observaciones = $Observaciones;
+        $this->id_vehiculo = $vehiculo;
     }
     public function getCliente(): int {
         return $this->Cliente;
@@ -49,80 +44,88 @@ class Alquiler {
     public function setFecha_fin(?string $fecha_fin) {
         $this->Fecha_fin = $fecha_fin;
     }
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-    public function get
-    public function set
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static function fromArray(array $data): Entidad {
-        return new Entidad ($data['id'], $data['CIF_DNI'], $data['Nombre'], $data['Observaciones'], $data['Direccion'], $data['Telefono'], $data['Email'],); 
+    public function setkm(?int $km){
+        $this->Km = $km;
+    }
+    public function getKm(): ?int {
+        return $this->Km;
+    }
+    public function setKm_inicio (?int $km_inicio) {
+        $this->Km_inicio = $km_inicio;
+    }
+    public function getKm_inicio (): ?int {
+        return $this->Km_inicio;
+    }
+    public function setKm_fin (?int $km_fin){
+        $this->Km_fin = $km_fin;
+    }
+    public function getKm_fin (): ?int {
+        return $this->Km_fin;
+    }
+    public function setDias (?int $dias) {
+        $this->Dias = $dias;
+    }
+    public function getDias (): ?int {
+        return $this->Dias;
+    }
+    public function setPrecio (?int $precio) {
+        $this->Precio = $precio;
+    }
+    public function getPrecio (): ?int {
+        return $this->Precio;
+    } 
+    public function setPrecio_km (?int $precio) {
+        $this->Precio_km = $precio;
+    }
+    public function getPrecio_km (): ?int {
+        return $this->Precio_km;
+    }
+    public function setComercial (?int $comercial) {
+        $this->id_comercial = $comercial;
+    }
+    public function getComercial (): ?int {
+        return $this->id_comercial;
+    }
+    public function setEmpresa (?int $empresa) {
+        $this->Empresa = $empresa;
+    }
+    public function getEmpresa (): ?int {
+        return $this->Empresa;
+    }
+    public function setCiudad (?string $ciudad) {
+        $this->Ciudad = $ciudad;
+    }
+    public function getCiudad (): ?string {
+        return $this->Ciudad;
+    }
+    public function setEntrega (?string $entrega) {
+        $this->Entrega = $entrega;
+    }
+    public function getEntrega (): ?string {
+        return $this->Entrega;
+    }
+    public function setComision_comercial (?int $comision) {
+        $this->Comision_comercial = $comision;
+    }
+    public function getComision_comercial (): ?int {
+        return $this->Comision_comercial;
+    }
+    public function setGanancia (?int $ganancia) {
+        $this->Ganancia = $ganancia;
+    }
+    public function getGanancia(): ?int {
+        return $this->Ganancia;
+    }
+    public function getObservaciones(): ?string {
+        return $this->Observaciones;
+    }
+    public function setObservaciones(?string $Observaciones) {
+        $this->Observaciones = $Observaciones;
+    }
+    public static function fromArray(array $data): Alquiler {
+        $modelo = duplicar_tabla::duplica (CAMPOS_ALQUILER, $data);
+        return new Alquiler ($modelo['id_alquiler'], $modelo['Contrato'], $modelo['id_vehiculo'], $modelo['Cliente'], $modelo['Fecha_inicio'], $modelo['Fecha_fin'], $modelo['Km'],
+        $modelo['Km_inicio'], $modelo['Km_fin'], $modelo['Dias'], $modelo['Precio'], $modelo['Precio_km'], $modelo['id_comercial'], $modelo['Empresa'],
+        $modelo['Ciudad'], $modelo['Entrega'], $modelo['Comision_comercial'], $modelo['Ganancia'], $modelo['Observaciones']); 
     }
 }

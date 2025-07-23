@@ -2,7 +2,7 @@
 
 <form action="/mis_pruebas/pages/nueva_entidad" method="post">
     <?php if (isset($entidad)) :?>
-    <input type="hidden" name="data[entidad][id]" value="<?=$entidad->getId()?>">
+    <input type="hidden" name="data[entidad][id_entidad]" value="<?=$entidad->getId()?>">
     <?php endif;?>    
     <!--<p><?// sleep(3); echo "hola";?></p> hay que poner comentarios para html y tmb comentarios para el codigo incrustado PHP -->  
     <div class="container mt-4">

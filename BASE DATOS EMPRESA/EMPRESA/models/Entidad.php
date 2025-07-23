@@ -1,17 +1,19 @@
 <?php
 namespace models;
 
+use lib\duplicar_tabla;
+
 class Entidad {
     
-    function __construct (private int $id, private string $CIF_DNI, private string $Nombre, 
+    function __construct (private int $id_entidad, private string $CIF_DNI, private string $Nombre, 
     private ?string $Observaciones,private ?string $Direccion, private ?string $Telefono,
     private ?string $Email){}
 
     public function getId(): int {
-        return $this->id;
+        return $this->id_entidad;
     }
     public function setId(int $id) {
-        $this->id = $id;
+        $this->id_entidad = $id;
     }
     public function getCIF_DNI(): string {
         return $this->CIF_DNI;
@@ -49,7 +51,11 @@ class Entidad {
     public function setEmail(?string $email) {
         $this->Email = $email;
     }
+    /* he tenido que crear una tabla $modelo con todos los campos de la tabla entidad vacios, porque la tabla $data podria venir con menos campos si se hace un SELECT que no lleve el * 
+    en el repositorio, para para ver solo algunos campos */
     public static function fromArray(array $data): Entidad {
-        return new Entidad ($data['id'], $data['CIF_DNI'], $data['Nombre'], $data['Observaciones'], $data['Direccion'], $data['Telefono'], $data['Email'],); 
+        $modelo = duplicar_tabla::duplica (CAMPOS_ENTIDAD, $data); //CAMPOS_ENTIDAD tiene esto ('id' => 0, 'CIF_DNI' => '', 'Nombre' => '', 'Observaciones' => '', 'Direccion' => '', 'Telefono' =>'', 'Email' => ''); todos los campos
+        return new Entidad ($modelo['id_entidad'], $modelo['CIF_DNI'], $modelo['Nombre'], $modelo['Observaciones'], $modelo['Direccion'], $modelo['Telefono'], $modelo['Email'],); 
+        //return new Entidad ($data['id_entidad'], $data['CIF_DNI'], $data['Nombre'], $data['Observaciones'], $data['Direccion'], $data['Telefono'], $data['Email'],); 
     }
 }

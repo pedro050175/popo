@@ -1,6 +1,8 @@
 <?php
 namespace services;
+
 use repositories\EntidadRepository;
+use repositories\AlquilerRepository;
 
 class EntidadService {
 
@@ -23,5 +25,5 @@ class EntidadService {
     }
     public function relacionados(int $id): bool {
         return $this->repository->relacionados($id);
-}
+    }
 }
