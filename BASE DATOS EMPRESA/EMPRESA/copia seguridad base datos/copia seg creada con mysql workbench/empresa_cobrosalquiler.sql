@@ -23,9 +23,9 @@ DROP TABLE IF EXISTS `cobrosalquiler`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cobrosalquiler` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id_cobros` int NOT NULL AUTO_INCREMENT,
   `Fecha` date DEFAULT NULL,
-  `Alquiler` int NOT NULL,
+  `id_alquiler` int NOT NULL,
   `Tipo` int NOT NULL,
   `Facturado` tinyint(1) DEFAULT NULL,
   `Contrato_hacienda` varchar(10) DEFAULT NULL,
@@ -33,8 +33,9 @@ CREATE TABLE `cobrosalquiler` (
   `Fianza_devuelta` tinyint(1) DEFAULT NULL,
   `Banco` varchar(10) DEFAULT NULL,
   `Comentarios` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Alquiler` (`Alquiler`)
+  PRIMARY KEY (`id_cobros`),
+  KEY `fk_alquil` (`id_alquiler`),
+  CONSTRAINT `fk_alquil` FOREIGN KEY (`id_alquiler`) REFERENCES `alquileres` (`id_alquiler`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-16 17:22:41
+-- Dump completed on 2025-07-24 13:01:49

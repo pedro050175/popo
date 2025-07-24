@@ -23,14 +23,18 @@ DROP TABLE IF EXISTS `gastosvehiculo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `gastosvehiculo` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id_gastos` int NOT NULL AUTO_INCREMENT,
   `Tipo` int NOT NULL,
   `Importe` decimal(10,2) DEFAULT NULL,
   `Fecha` date NOT NULL,
   `Paga_otro` tinyint(1) DEFAULT NULL,
   `Comentarios` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Tipo` (`Tipo`)
+  `id_vehiculo` int NOT NULL,
+  PRIMARY KEY (`id_gastos`),
+  KEY `fk_vehiculo` (`id_vehiculo`),
+  KEY `fk_tipo` (`Tipo`),
+  CONSTRAINT `fk_tipo` FOREIGN KEY (`Tipo`) REFERENCES `tipogasto` (`id_gasto`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vehiculo` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-16 17:22:41
+-- Dump completed on 2025-07-24 13:01:50

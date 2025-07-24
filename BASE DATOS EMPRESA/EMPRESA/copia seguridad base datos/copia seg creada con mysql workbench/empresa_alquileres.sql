@@ -23,31 +23,35 @@ DROP TABLE IF EXISTS `alquileres`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alquileres` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id_alquiler` int NOT NULL AUTO_INCREMENT,
   `Contrato` varchar(10) NOT NULL,
-  `Vehiculo` int NOT NULL,
-  `Cliente` int DEFAULT NULL,
+  `id_vehiculo` int NOT NULL,
+  `Cliente` int NOT NULL,
   `Fecha_inicio` date NOT NULL,
   `Fecha_fin` date DEFAULT NULL,
-  `km` smallint unsigned DEFAULT NULL,
+  `Kilometros` smallint unsigned DEFAULT NULL,
   `Km_inicio` smallint unsigned DEFAULT NULL,
   `Km_fin` smallint unsigned DEFAULT NULL,
   `Dias` smallint unsigned DEFAULT NULL,
   `Precio` decimal(10,2) DEFAULT NULL,
-  `Precio km` decimal(10,2) DEFAULT NULL,
-  `Comercial` int DEFAULT NULL,
+  `Precio_km` decimal(10,2) DEFAULT NULL,
+  `id_comercial` int DEFAULT NULL,
   `Empresa` int DEFAULT NULL,
   `Ciudad` varchar(15) DEFAULT NULL,
   `Entrega` int DEFAULT NULL,
   `Comision_comercial` decimal(10,2) DEFAULT NULL,
   `Ganancia` decimal(10,2) DEFAULT NULL,
   `Observaciones` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `Empresa` (`Empresa`),
-  KEY `Vehiculo` (`Vehiculo`),
-  KEY `Cliente` (`Cliente`),
-  KEY `Comercial` (`Comercial`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id_alquiler`),
+  KEY `fk_vehicul` (`id_vehiculo`),
+  KEY `fk_comerc` (`id_comercial`),
+  KEY `fk_empresa` (`Empresa`),
+  KEY `fk_cliente` (`Cliente`),
+  CONSTRAINT `fk_cliente` FOREIGN KEY (`Cliente`) REFERENCES `entidad` (`id_entidad`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_comerc` FOREIGN KEY (`id_comercial`) REFERENCES `comercial` (`id_comercial`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_empresa` FOREIGN KEY (`Empresa`) REFERENCES `entidad` (`id_entidad`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vehicul` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,6 +60,7 @@ CREATE TABLE `alquileres` (
 
 LOCK TABLES `alquileres` WRITE;
 /*!40000 ALTER TABLE `alquileres` DISABLE KEYS */;
+INSERT INTO `alquileres` VALUES (7,'10725',1,14,'2025-07-01','2025-07-10',NULL,NULL,NULL,NULL,2.00,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL),(8,'20725',2,15,'2025-07-05','2025-07-11',NULL,NULL,NULL,NULL,1.00,NULL,1,1,'alguazas',NULL,NULL,NULL,NULL),(9,'30725',2,16,'2025-07-07','2025-07-12',NULL,NULL,NULL,NULL,1.50,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `alquileres` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -68,4 +73,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-16 17:22:42
+-- Dump completed on 2025-07-24 13:01:50

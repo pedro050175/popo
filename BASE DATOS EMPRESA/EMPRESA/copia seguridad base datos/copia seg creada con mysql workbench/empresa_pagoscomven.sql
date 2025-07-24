@@ -23,13 +23,14 @@ DROP TABLE IF EXISTS `pagoscomven`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pagoscomven` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id_pagos` int NOT NULL AUTO_INCREMENT,
   `Fecha` date NOT NULL,
-  `CompraVenta` int NOT NULL,
+  `id_compraventa` int NOT NULL,
   `Banco` varchar(20) DEFAULT NULL,
   `Cometarios` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `CompraVenta` (`CompraVenta`)
+  PRIMARY KEY (`id_pagos`),
+  KEY `fk_compraventa` (`id_compraventa`),
+  CONSTRAINT `fk_compraventa` FOREIGN KEY (`id_compraventa`) REFERENCES `compraventas` (`id_compraventa`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-16 17:22:40
+-- Dump completed on 2025-07-24 13:01:49

@@ -3,7 +3,6 @@ namespace repositories;
 
 use lib\BaseDatos;
 use models\Alquiler;
-use models\Alquiler_vehiculo;
 
 class AlquilerRepository {
 
@@ -14,8 +13,7 @@ class AlquilerRepository {
     }
     public function findAll(?int $id): ?array {   
         if ($id) { 
-            $this->conexion->consulta ("SELECT alquileres.id_alquiler, alquileres.Contrato, alquileres.Fecha_inicio, alquileres.Fecha_fin, alquileres.Precio, alquileres.id_comercial, alquileres.Empresa,
-                                        alquileres.Ciudad, vehiculos.Marca_modelo, vehiculos.Matricula FROM alquileres, vehiculos WHERE alquileres.Cliente=$id && alquileres.id_vehiculo=vehiculos.id_vehiculo");
+            $this->conexion->consulta ("SELECT alquileres.*, vehiculos.* FROM alquileres, vehiculos WHERE alquileres.Cliente=$id && alquileres.id_vehiculo=vehiculos.id_vehiculo");
         }else {
             $campo_ord= $_GET['ordenar'] ?? null;
             if ($campo_ord) {
@@ -39,7 +37,7 @@ class AlquilerRepository {
         $alquileres = [];
         $alquilerData = $this->conexion->extraer_todos();
         foreach ($alquilerData as $data){
-            $alquileres[] = Alquiler_vehiculo::fromArray($data);
+            $alquileres[] = Alquiler::fromArray($data);
         }
         //var_dump($alquilerData);
         return $alquileres;

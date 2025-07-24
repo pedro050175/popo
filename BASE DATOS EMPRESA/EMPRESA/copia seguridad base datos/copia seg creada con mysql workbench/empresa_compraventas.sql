@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `compraventas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `compraventas` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `Fecha` date DEFAULT NULL,
+  `id_compraventa` int NOT NULL AUTO_INCREMENT,
+  `Fecha_compra` date DEFAULT NULL,
   `Comprador` int DEFAULT NULL,
   `Vendedor` int DEFAULT NULL,
   `Vehiculo` int NOT NULL,
@@ -32,17 +32,26 @@ CREATE TABLE `compraventas` (
   `Comercial` int DEFAULT NULL,
   `Precio_real` decimal(10,2) DEFAULT NULL,
   `Precio_declarado` decimal(10,2) DEFAULT NULL,
-  `Tipo_impuesto` int DEFAULT NULL,
+  `id_impuesto` int DEFAULT NULL,
   `Anulada` tinyint(1) DEFAULT NULL,
-  `No se declara` tinyint(1) DEFAULT NULL,
-  `No se hace nada` tinyint(1) DEFAULT NULL,
   `Observaciones` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk1` (`Comprador`),
-  KEY `fk2` (`Vendedor`),
-  KEY `fk3` (`Vehiculo`),
-  KEY `fk4` (`Comercial`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Fecha_venta` date DEFAULT NULL,
+  `Fecha_fact_comp` date DEFAULT NULL,
+  `Fecha_fact_vent` date DEFAULT NULL,
+  `Declara_comp` tinyint(1) DEFAULT '1',
+  `Declara_vent` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id_compraventa`),
+  KEY `fk_comprador` (`Comprador`),
+  KEY `fk_vendedor` (`Vendedor`),
+  KEY `fk_vehi` (`Vehiculo`),
+  KEY `fk_comercial` (`Comercial`),
+  KEY `fk_impuesto` (`id_impuesto`),
+  CONSTRAINT `fk_comercial` FOREIGN KEY (`Comercial`) REFERENCES `Comercial` (`id_comercial`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_comprador` FOREIGN KEY (`Comprador`) REFERENCES `entidad` (`id_entidad`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_impuesto` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vehi` FOREIGN KEY (`Vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vendedor` FOREIGN KEY (`Vendedor`) REFERENCES `entidad` (`id_entidad`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,6 +60,7 @@ CREATE TABLE `compraventas` (
 
 LOCK TABLES `compraventas` WRITE;
 /*!40000 ALTER TABLE `compraventas` DISABLE KEYS */;
+INSERT INTO `compraventas` VALUES (1,NULL,14,15,1,NULL,NULL,10000.00,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1),(2,NULL,14,3,2,NULL,NULL,150255.00,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1),(3,NULL,16,2,3,NULL,NULL,200154.00,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1);
 /*!40000 ALTER TABLE `compraventas` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -63,4 +73,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-16 17:22:42
+-- Dump completed on 2025-07-24 13:01:50

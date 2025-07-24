@@ -29,7 +29,8 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($alquileres as $alquiler) :?>
+                <?php foreach ($alquileres as $alquiler):?>
+                    <?php $vehiculo=$alquiler->getVehiculo()?> <!--saco el obj vehiculo que hay dentro de $alquiler y lo meto en $vehiculo para usarlo abajo-->
                     <tr>
                     <th scope="row"><?=$alquiler->getId()?></th>
                     <td><?=$alquiler->getContrato()?></td>
@@ -39,8 +40,8 @@
                     <td><?=$alquiler->getComercial()?></td>
                     <td><?=$alquiler->getEmpresa()?></td>
                     <td><?=$alquiler->getCiudad()?></td>
-                    <td><?=$alquiler->getMarca_modelo()?></td>
-                    <td><?=$alquiler->getMatricula()?></td>
+                    <td><?=$alquiler->getVehiculo()->getMarca_modelo()?></td> <!--aqui lo hago todo a la vez-->
+                    <td><?=$vehiculo->getMatricula()?></td><!--y aqui uso la variable de tipo vehiculo creada arriba-->
                     </tr>
                 <?php endforeach; ?>
             </tbody>
