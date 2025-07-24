@@ -80,6 +80,7 @@ class Vehiculo {
         $this->propietario = $propietario;
     }
     public static function fromArray(array $data): Vehiculo {
+        $modelo = duplicar_tabla::duplica(CAMPOS_VEHICULO, $data);
         return new Vehiculo ($data['id_vehiculo'], $data['Matricula'], $data['Bastidor'], $data['Marca_modelo'], $data['Km'], $data['Fecha_matricula'], $data['Observaciones'], $data['Combustible'], 
                             $data['Fecha_itv'], $data['Estado'], $data['Clase'], $data['propietario']); 
          

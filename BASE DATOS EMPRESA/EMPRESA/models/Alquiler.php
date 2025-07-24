@@ -131,14 +131,19 @@ class Alquiler {
         $this->Observaciones = $Observaciones;
     }
     public static function fromArray(array $data): Alquiler {
-        //$modelo = duplicar_tabla::duplica (CAMPOS_ALQUILER, $data);
-        /* return new Alquiler ($modelo['id_alquiler'], $modelo['Contrato'], $modelo['id_vehiculo'], $modelo['Cliente'], $modelo['Fecha_inicio'], $modelo['Fecha_fin'], $modelo['Km'],
+        $modelo = duplicar_tabla::duplica (CAMPOS_ALQUILER, $data);
+        $modelo_vehiculo = duplicar_tabla::duplica (CAMPOS_VEHICULO, $data);
+        $vehiculo = new Vehiculo ($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], 
+              $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'],
+              $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario']);
+        return new Alquiler ($modelo['id_alquiler'], $modelo['Contrato'], $modelo['id_vehiculo'], $modelo['Cliente'], $modelo['Fecha_inicio'], $modelo['Fecha_fin'], $modelo['Kilometros'],
         $modelo['Km_inicio'], $modelo['Km_fin'], $modelo['Dias'], $modelo['Precio'], $modelo['Precio_km'], $modelo['id_comercial'], $modelo['Empresa'],
-        $modelo['Ciudad'], $modelo['Entrega'], $modelo['Comision_comercial'], $modelo['Ganancia'], $modelo['Observaciones']);  */
-        $vehiculo = new Vehiculo ($data['id_vehiculo'], $data['Matricula'], $data['Bastidor'], $data['Marca_modelo'], $data['Km'], $data['Fecha_matricula'], $data['Observaciones'], $data['Combustible'], 
-                            $data['Fecha_itv'], $data['Estado'], $data['Clase'], $data['propietario']);
-        return new Alquiler ($data['id_alquiler'], $data['Contrato'], $data['id_vehiculo'], $data['Cliente'], $data['Fecha_inicio'], $data['Fecha_fin'], $data['Kilometros'],
+        $modelo['Ciudad'], $modelo['Entrega'], $modelo['Comision_comercial'], $modelo['Ganancia'], $modelo['Observaciones'], $vehiculo); 
+       
+        /* $vehiculo = new Vehiculo ($data['id_vehiculo'], $data['Matricula'], $data['Bastidor'], $data['Marca_modelo'], $data['Km'], $data['Fecha_matricula'], $data['Observaciones'], $data['Combustible'], 
+                            $data['Fecha_itv'], $data['Estado'], $data['Clase'], $data['propietario']); */
+        /* return new Alquiler ($data['id_alquiler'], $data['Contrato'], $data['id_vehiculo'], $data['Cliente'], $data['Fecha_inicio'], $data['Fecha_fin'], $data['Kilometros'],
         $data['Km_inicio'], $data['Km_fin'], $data['Dias'], $data['Precio'], $data['Precio_km'], $data['id_comercial'], $data['Empresa'],
-        $data['Ciudad'], $data['Entrega'], $data['Comision_comercial'], $data['Ganancia'], $data['Observaciones'], $vehiculo);  
+        $data['Ciudad'], $data['Entrega'], $data['Comision_comercial'], $data['Ganancia'], $data['Observaciones'], $vehiculo); */  
     }
 }

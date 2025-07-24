@@ -26,6 +26,7 @@ class EntidadController {
     }    
     public function list(): void {
         $entidades = $this->service->findAll();
+        //var_dump($entidades);
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
         $this->pages->render('entidades', ['entidades' => $entidades, 'error' => $error]);//ver explicacion de la IA

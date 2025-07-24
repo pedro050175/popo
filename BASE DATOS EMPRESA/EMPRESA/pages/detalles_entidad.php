@@ -21,8 +21,6 @@
                 <th scope="col">Fecha_inicio:</th>
                 <th scope="col">Fecha_fin</th>
                 <th scope="col">Precio</th>
-                <th scope="col">Comercial</th>
-                <th scope="col">Empresa</th>
                 <th scope="col">Ciudad</th>
                 <th scope="col">Marca_modelo</th>
                 <th scope="col">Matricula</th>
@@ -37,8 +35,6 @@
                     <td><?=$alquiler->getFecha_inicio()?></td>
                     <td><?=$alquiler->getFecha_fin()?></td>
                     <td><?=$alquiler->getPrecio()?></td>
-                    <td><?=$alquiler->getComercial()?></td>
-                    <td><?=$alquiler->getEmpresa()?></td>
                     <td><?=$alquiler->getCiudad()?></td>
                     <td><?=$alquiler->getVehiculo()->getMarca_modelo()?></td> <!--aqui lo hago todo a la vez-->
                     <td><?=$vehiculo->getMatricula()?></td><!--y aqui uso la variable de tipo vehiculo creada arriba-->

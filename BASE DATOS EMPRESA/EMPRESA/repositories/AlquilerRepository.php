@@ -13,7 +13,7 @@ class AlquilerRepository {
     }
     public function findAll(?int $id): ?array {   
         if ($id) { 
-            $this->conexion->consulta ("SELECT alquileres.*, vehiculos.* FROM alquileres, vehiculos WHERE alquileres.Cliente=$id && alquileres.id_vehiculo=vehiculos.id_vehiculo");
+            $this->conexion->consulta ("SELECT id_alquiler, Contrato, Fecha_inicio, Fecha_fin, Precio, Ciudad, Marca_modelo, Matricula FROM alquileres, vehiculos WHERE alquileres.Cliente=$id && alquileres.id_vehiculo=vehiculos.id_vehiculo");
         }else {
             $campo_ord= $_GET['ordenar'] ?? null;
             if ($campo_ord) {
