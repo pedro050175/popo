@@ -18,7 +18,11 @@ private function conectar (): Mysqli {
 }
 public function consulta(string $consultaSQL) : void {   //Si la consulta es incorrecta, $this->resultado es false. de lo contrario contiene registros de datos
     $this->resultado = $this->conexion->query($consultaSQL);
-   // if ($this->resultado == false){ file_put_contents("log.txt", "Ha fallado error: ".$this->conexion->error. "\n" , FILE_APPEND);}
+    if ($this->resultado == false){ 
+        //file_put_contents("log.txt", "Ha fallado error: ".$this->conexion->error. "\n" , FILE_APPEND);
+        var_dump($this->conexion->error);
+    }
+    
 } 
 
 public function extraer_registro(): mixed{

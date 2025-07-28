@@ -2,60 +2,55 @@
 namespace controllers;
 
 use repositories\EntidadRepository;
-use repositories\AlquilerRepository;
+use repositories\VehiculoRepository;
 
 use lib\Pages;
 //las llamadas a metodo reder es para cargar una nueva pagina y las llamadas a service es para acceder a datos de la base de datos
-class EntidadController {
+class VehiculoController {
 
     private EntidadRepository $entidad_repository;
-    private AlquilerRepository $alquiler_repository;
+    private VehiculoRepository $vehiculo_repository;
 
     private Pages $pages;
 
     function __construct(){
         $this->entidad_repository = new EntidadRepository();
         $this->pages = new Pages();
-        $this->alquiler_repository = new AlquilerRepository();
-    }
-    public function detalles_entidad(int $id):void{
-        $entidad=$this->entidad_repository->read($id);
-        $alquileres=$this->alquiler_repository->findAll($id);
-        $this->pages->render('detalles_entidad', ['entidad' => $entidad, 'alquileres' => $alquileres]);
-
-    }    
+        $this->vehiculo_repository = new VehiculoRepository();
+    }  
     public function list(): void {
-        $entidades = $this->entidad_repository->findAll();
+        $vehiculos = $this->vehiculo_repository->findAll();
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
-        $this->pages->render('entidades', ['entidades' => $entidades, 'error' => $error]);//ver explicacion de la IA
+        $this->pages->render('vehiculos', ['vehiculos' => $vehiculos, 'error' => $error]);//ver explicacion de la IA
     }
     public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
-        $this->pages->render('nueva_entidad');
+        $this->pages->render('nuevo_vehiculo');
     }
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
-        $entidad=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
-        $this->entidad_repository->save($entidad);
-        header('Location: /mis_pruebas/entidades');   
+        $vehiculo=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
+        //print_r($vehiculo);
+        $this->vehiculo_repository->save($vehiculo);
+        header('Location: /mis_pruebas/vehiculos');   
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
-        $entidad = $this->entidad_repository->read($id);
-        $this->pages->render('nueva_entidad', ['entidad' => $entidad]);
+        $vehiculo = $this->vehiculo_repository->read($id);
+        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo]);
     }
     public function delete(int $id): void {
-        $relacionados=$this->entidad_repository->relacionados($id);
+        $relacionados=$this->vehiculo_repository->relacionados($id);
         
         if ($relacionados) {
-            $mensaje = urlencode('No se puede borrar la entidad porque tiene registros relacionados en otras tablas.');
-            header("Location: /mis_pruebas/entidades?error=$mensaje");
+            $mensaje = urlencode('No se puede borrar el vehiculo porque tiene registros relacionados en otras tablas.');
+            header("Location: /mis_pruebas/vehiculos?error=$mensaje");
             exit;
             /* $entidades = $this->service->findAll(); Estas dos lineas hacen lo mismo que lo anterior y sin cargar una nueva pagina con header
             $this->pages->render('entidades', ['entidades' => $entidades,'error' => 'No se puede borrar hay asociados.']); */
             
         }
         $this->entidad_repository->delete($id);
-        header('Location: /mis_pruebas/entidades');
+        header('Location: /mis_pruebas/vehiculos');
         exit; 
     }
 }

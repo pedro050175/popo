@@ -5,7 +5,7 @@ use lib\duplicar_tabla;
 class Vehiculo {
 
     function __construct (private int $id_vehiculo, private ?string $Matricula, private ?string $Bastidor, private string $Marca_modelo, private ?int $Km, private ?string $Fecha_matricula, 
-                            private ?string $Observaciones, private ?string $Combustible, private ?string $Fecha_itv, private ?string $Estado, private ?string $Clase, private ?int $propietario){}
+                            private ?string $Observaciones, private ?string $Combustible, private ?string $Fecha_itv, private ?string $Estado, private ?string $Clase, private ?int $propietario, private ?string $Prox_itv){}
  
     public function getId(): int {
         return $this->id_vehiculo;
@@ -79,10 +79,17 @@ class Vehiculo {
     public function setpropietario(string $propietario) {
         $this->propietario = $propietario;
     }
+    public function getProx_itv(): ?string {
+        return $this->Prox_itv;
+    }
+    public function setProx_itv(string $Prox_itv) {
+        $this->propietario = $Prox_itv;
+    }
+
     public static function fromArray(array $data): Vehiculo {
         $modelo = duplicar_tabla::duplica(CAMPOS_VEHICULO, $data);
         return new Vehiculo ($data['id_vehiculo'], $data['Matricula'], $data['Bastidor'], $data['Marca_modelo'], $data['Km'], $data['Fecha_matricula'], $data['Observaciones'], $data['Combustible'], 
-                            $data['Fecha_itv'], $data['Estado'], $data['Clase'], $data['propietario']); 
+                            $data['Fecha_itv'], $data['Estado'], $data['Clase'], $data['propietario'], $data['Prox_itv']); 
          
     }
 
