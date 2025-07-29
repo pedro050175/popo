@@ -3,9 +3,11 @@ define ('SERVIDOR', 'mysql');
 define ('USUARIO', 'root');
 define ('PASS', 'root');
 define ('BASE_DATOS', 'empresa');
-define ('DIRECTORIO', '/mis_pruebas/'); //carpeta donde esta index.php.   
-define ('TABLAS', ["Cliente" => 'alquileres', "Comprador" => 'compraventas', "Vendedor" => 'compraventas', "propietario" => 'vehiculos']); // tablas que esta relacionas con entidad ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla']
-define ('TABLAS_VEHICULO', ["id_entidad" => "entidad"]);
+define ('DIRECTORIO', '/mis_pruebas/'); //carpeta donde esta index.php.  
+// tablas que esta relacionas con entidad ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla'] 
+define ('TABLAS', ["alquileres" => 'Cliente', "compraventas" => 'Comprador', "compraventas" => 'Vendedor', "vehiculos" => 'propietario']); 
+//CUIDADO con poner indices iguales que se machacan
+define ('TABLA_VEHICULO', ["gastosvehiculo" => 'id_vehiculo', "alquileres" => 'id_vehiculo', "compraventas" => 'id_vehiculo']);
 define ('CAMPOS_ENTIDAD', ["id_entidad" => 0, "CIF_DNI" => '', "Nombre" => '', "Observaciones" => '', "Direccion" => '', "Telefono" =>'', "Email" => '']);//todos los campos de la tabla entidad
 define ('CAMPOS_VEHICULO', ["id_vehiculo" => 0, "Matricula" =>'', "Bastidor" => '', "Marca_modelo" => '', "Km" => 0, "Fecha_matricula" => '', "Observaciones" => '',
                         "Combustible" => '', "Fecha_itv" => '', "Estado" => '', "Clase" => '', "propietario" => 0, "Prox_itv" => '']);    

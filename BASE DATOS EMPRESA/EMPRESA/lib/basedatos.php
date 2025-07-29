@@ -20,7 +20,7 @@ public function consulta(string $consultaSQL) : void {   //Si la consulta es inc
     $this->resultado = $this->conexion->query($consultaSQL);
     if ($this->resultado == false){ 
         //file_put_contents("log.txt", "Ha fallado error: ".$this->conexion->error. "\n" , FILE_APPEND);
-        var_dump($this->conexion->error);
+        //var_dump($this->conexion->error);
     }
     
 } 

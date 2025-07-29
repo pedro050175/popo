@@ -42,6 +42,7 @@ class VehiculoController {
         $relacionados=$this->vehiculo_repository->relacionados($id);
         
         if ($relacionados) {
+            // echo "esta relacionado";
             $mensaje = urlencode('No se puede borrar el vehiculo porque tiene registros relacionados en otras tablas.');
             header("Location: /mis_pruebas/vehiculos?error=$mensaje");
             exit;
@@ -49,7 +50,7 @@ class VehiculoController {
             $this->pages->render('entidades', ['entidades' => $entidades,'error' => 'No se puede borrar hay asociados.']); */
             
         }
-        $this->entidad_repository->delete($id);
+        $this->vehiculo_repository->delete($id);
         header('Location: /mis_pruebas/vehiculos');
         exit; 
     }

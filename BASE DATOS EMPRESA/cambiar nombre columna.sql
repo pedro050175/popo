@@ -1,1 +1,1 @@
-alter table `vehiculos` rename column `Marca y modelo`to `Marca_modelo`; 
+alter table `compraventas` rename column `Comercial` to `id_comercial`; 

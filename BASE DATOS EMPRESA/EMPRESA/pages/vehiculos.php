@@ -56,10 +56,10 @@
                             <a href="pages/nuevo_vehiculo/<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="pages/borrar/<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este vehículo?');"> 
+                            <a href="pages/borrar_vehiculo/<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este vehículo?');"> 
                               <i class="bi bi-trash"></i>
                             </a>
-                            <a href="pages/detalles_entidad/<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-primary"> 
+                            <a href="pages/detalles_vehiculo/<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-primary"> 
                               <i class="bi bi-eye"></i>
                             </a>    
                         </div>

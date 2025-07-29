@@ -19,17 +19,35 @@ class b extends a {
     }
 }
 
-$objeto = new b ("hijo", 5, "padre");
+/* $objeto = new b ("hijo", 5, "padre");
 echo $objeto->getcadena();
 echo $objeto->getnumero();
 echo $objeto->gettexto();
+ */
+function create(array $data): array {
+    // Limpia campos vacíos
+    foreach ($data as $indice => $campo) {
+        if (isset($campo) && trim($campo) === '') {
+            $data[$indice] = null;
+        }
+    }
 
-/* $modelo = array('id' => 0, 'nombre' => '', 'apellido' => '', 'dir' => '');
-$duplicar = array('id' => 1, 'nombre' => 'pedro', 'dir' => 'xxx');
-$modelo = $duplicar; 
-foreach ($duplicar as $indice => $valor ){
-    $modelo[$indice] = $duplicar[$indice]; 
+    $campos = array_keys($data);
+    $placeholders = array_map(fn($campo) => ':' . $campo, $campos);
+
+    $sql = "INSERT INTO vehiculos (" . implode(', ', $campos) . ") VALUES (" . implode(', ', $placeholders) . ")";
+
+    // Armar array de parámetros
+    $parametros = [];
+    foreach ($data as $campo => $valor) {
+        $parametros[":$campo"] = $valor;
+    }
+    return $parametros;
 }
-echo $indice; */
+$tabla = array("Matricula" => '1234', "Bastidor" => '', "Marca_modelo" => 'audi', "Km" => 23, "Fecha_matricula" => '202-12-04', "Observaciones" => '', "Combustible" => '', "Fecha_itv" => '', 
+                "Estado" => '', "Clase" => '', "propietario" => '', "Prox_itv" =>'2025-12-12');
+
+$preparada= create($tabla);
+print_r($preparada);
 
 ?>
