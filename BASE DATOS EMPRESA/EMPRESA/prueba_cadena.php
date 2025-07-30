@@ -48,6 +48,17 @@ $tabla = array("Matricula" => '1234', "Bastidor" => '', "Marca_modelo" => 'audi'
                 "Estado" => '', "Clase" => '', "propietario" => '', "Prox_itv" =>'2025-12-12');
 
 $preparada= create($tabla);
+
 print_r($preparada);
 
+
+<option selected> Selecciona tipo de combustible</option>
+                <?php if (isset($vehiculo)) :?>
+                    <option value="<?=$vehiculo->getCombustible()?>" selected style="font-weight: bold"><?=$vehiculo->getCombustible()?></option>
+                <?php endif ;?>
+                <option value="Gasolina">Gasolina</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Hibrido">Hibrido</option>
+                <option value="Electrico">Electrico</option>
+            
 ?>

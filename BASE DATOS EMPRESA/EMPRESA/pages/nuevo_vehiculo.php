@@ -26,33 +26,37 @@
             <label for="floatingInput">Bastidor</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[vehiculo][Km]" class="form-control" id="floatingInput" placeholder="Kilometros" value="<?=(isset($vehiculo))?$vehiculo->getKm():''?>">
+            <input type="number" name="data[vehiculo][Km]" class="form-control" id="floatingInput" placeholder="Kilometros" value="<?=(isset($vehiculo))?$vehiculo->getKm():''?>">
             <label for="floatingInput">Kilometros actuales</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[vehiculo][Fecha_matricula]" class="form-control" id="floatingInput" placeholder="Fecha_matricula" value="<?=(isset($vehiculo))?$vehiculo->getFecha_matricula():''?>">
+            <input type="date" name="data[vehiculo][Fecha_matricula]" class="form-control" id="floatingInput" placeholder="Fecha_matricula" value="<?=(isset($vehiculo))?$vehiculo->getFecha_matricula():''?>">
             <label for="floatingInput">Fecha matricula </label>
-            <div id="Fecha_itv_HelpBlock" class="form-text">
-                Fecha con formato año-mes-dia (aaaa-mm-dd)
+        </div>
+        <?php
+            $combustibleActual = isset($vehiculo) ? $vehiculo->getCombustible() : '';
+            $opciones = ['Gasolina', 'Diesel', 'Hibrido', 'Electrico'];
+        ?>  
+            <div class="form-floating mb-3">
+                <select name="data[vehiculo][Combustible]" class="form-select" id="floatingInput">
+                    <option disabled <?= $combustibleActual === '' ? 'selected' : '' ?>>Selecciona tipo de combustible</option>
+
+                <?php foreach ($opciones as $opcion): ?>
+                    <option value="<?= $opcion ?>" <?= $opcion === $combustibleActual ? 'selected' : '' ?>>
+                    <?= $opcion ?>
+                    </option>
+                <?php endforeach; ?>
+                
+                </select> 
+                <label for="floatingInput">Combustible</label>
             </div>
+            <div class="form-floating mb-3">
+            <input type="date" name="data[vehiculo][Fecha_itv]" class="form-control" id="floatingInput" placeholder="Fecha_itv" value="<?=(isset($vehiculo))?$vehiculo->getFecha_itv():''?>">
+            <label for="floatingInput">Fecha itv</label> 
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[vehiculo][Combustible]" class="form-control" id="floatingInput" placeholder="Combustible" value="<?=(isset($vehiculo))?$vehiculo->getCombustible():''?>">
-            <label for="floatingInput">Combustible</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" name="data[vehiculo][Fecha_itv]" class="form-control" id="floatingInput" placeholder="Fecha_itv" value="<?=(isset($vehiculo))?$vehiculo->getFecha_itv():''?>">
-            <label for="floatingInput">Fecha_itv</label>
-            <div id="Fecha_itv_HelpBlock" class="form-text">
-                Fecha con formato año-mes-dia (aaaa-mm-dd)
-            </div> 
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" name="data[vehiculo][Prox_itv]" class="form-control" id="floatingInput" placeholder="Prox_itv" value="<?=(isset($vehiculo))?$vehiculo->getProx_itv():''?>">
+            <input type="date" name="data[vehiculo][Prox_itv]" class="form-control" id="floatingInput" placeholder="Prox_itv" value="<?=(isset($vehiculo))?$vehiculo->getProx_itv():''?>">
             <label for="floatingInput">Proxima itv</label>
-            <div id="Fecha_itv_HelpBlock" class="form-text">
-             Fecha con formato año-mes-dia (aaaa-mm-dd)
-            </div>
         </div>
         <div class="form-floating mb-3">
             <input type="text" name="data[vehiculo][Estado]" class="form-control" id="floatingInput" placeholder="Estado" value="<?=(isset($vehiculo))?$vehiculo->getEstado():''?>">
@@ -63,7 +67,7 @@
             <label for="floatingInput">Clase vehiculo</label>
         </div>
         <div class="form-floating mb-3">
-            <input type="text" name="data[vehiculo][propietario]" class="form-control" id="floatingInput" placeholder="propietario" value="<?=(isset($vehiculo))?$vehiculo->getpropietario():''?>">
+            <input type="number" name="data[vehiculo][propietario]" class="form-control" id="floatingInput" placeholder="propietario" value="<?=(isset($vehiculo))?$vehiculo->getpropietario():''?>">
             <label for="floatingInput">Propietario</label>
         </div>
         <div class="form-floating mb-3">

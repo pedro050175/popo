@@ -1,6 +1,7 @@
 <?php
 require_once "autoloader.php";
 require_once "config.php";
+require_once "Funciones.php";
 
 use lib\Router;
 use controllers\EntidadController;

@@ -35,7 +35,6 @@ class EntidadRepository {
     public function extraer_todos(): ?array {
         $entidades = [];
         $entidadData = $this->conexion->extraer_todos();
-        //var_dump($entidadData);
         foreach ($entidadData as $data){
             $entidades[] = Entidad::fromArray($data);
         }
@@ -48,14 +47,21 @@ class EntidadRepository {
     }
     public function create (array $entidad):void{
         $fields = implode(',', array_keys($entidad['entidad']));
-        $values = implode("', '", $entidad['entidad']);
+        foreach ($entidad['entidad'] as $indice => $valor){
+            $valor_escapado = addslashes($valor);//esto es por si el valor que inserta el usuario en el formulario lleva 'xxx' le pone \'xxx\' lo escapa, si no lo escapara no se insertaria correctamente porque confundiria las 'xxx' con los delimitadores de campo de la consulta sql
+            $entidad['entidad'][$indice] = $valor_escapado;
+        }
+        //echo "<br/>";
+        //print_r($entidad['entidad']);
+        $values = implode("', '", $entidad['entidad']);$fields = implode(',', array_keys($entidad['entidad']));
         $this->conexion->consulta ("INSERT INTO entidad ($fields) VALUES ('$values')");
 
     }
     public function update (array $entidad): void{
         $updates=[];
         foreach ($entidad['entidad'] as $indice => $valor){
-            $updates[] = "$indice='{$valor}'";
+            $valor_escapado = addslashes($valor); //esto es por si el valor que inserta el usuario en el formulario lleva 'xxx' le pone \'xxx\' lo escapa, si no lo escapara no se insertaria correctamente porque confundiria las 'xxx' con los delimitadores de campo de la consulta sql
+            $updates[] = "$indice='$valor_escapado'";
         }
         $changes=implode(', ', $updates);
         $this->conexion->consulta("UPDATE entidad SET $changes where id_entidad =".$entidad['entidad']['id_entidad']); //vease que se cierra la consulta con " y se concatena con . Esto se hace porque

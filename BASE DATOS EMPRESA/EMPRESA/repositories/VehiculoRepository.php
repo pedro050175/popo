@@ -5,7 +5,6 @@ use lib\BaseDatos;
 use lib\BaseDatosPDO;
 use models\Entidad;
 use models\Vehiculo;
-use lib\Limpiar_parametros;
 
 class VehiculoRepository {
 
@@ -53,6 +52,7 @@ class VehiculoRepository {
     }
 
     public function create (array $data):void{
+        
         $parametros = [
             ':Matricula'=> $data['vehiculo']['Matricula'],
             ':Bastidor' => $data['vehiculo']['Bastidor'],
@@ -68,7 +68,7 @@ class VehiculoRepository {
             ':Prox_itv' => $data['vehiculo']['Prox_itv']        
         ];
         // Limpiar automáticamente
-        $parametros = Limpiar_parametros::limpiar($parametros);
+        $parametros = Limpiar_parametros($parametros);
         $sql = "INSERT INTO vehiculos (Matricula, Bastidor, Marca_modelo, Km, Fecha_matricula, Observaciones, Combustible, Fecha_itv, Estado, Clase, propietario, Prox_itv) VALUES 
                                      (:Matricula,:Bastidor,:Marca_modelo,:Km,:Fecha_matricula,:Observaciones,:Combustible,:Fecha_itv,:Estado,:Clase,:propietario,:Prox_itv)"; 
         $this->conexionPDO->consulta($sql, $parametros);
@@ -89,7 +89,7 @@ class VehiculoRepository {
             ':propietario' => $data['vehiculo']['propietario'],
             ':Prox_itv' => $data['vehiculo']['Prox_itv']        
         ];
-        $parametros = Limpiar_parametros::limpiar($parametros);
+        $parametros = Limpiar_parametros($parametros);
         $sql = "UPDATE vehiculos SET Matricula = :Matricula, Bastidor = :Bastidor, Marca_modelo = :Marca_modelo, Km = :Km, Fecha_matricula = :Fecha_matricula, Observaciones = :Observaciones, 
                                         Combustible = :Combustible, Fecha_itv = :Fecha_itv, Estado = :Estado, Clase = :Clase, propietario = :propietario, Prox_itv = :Prox_itv
                                      WHERE id_vehiculo =".$data['vehiculo']['id_vehiculo'];
@@ -130,7 +130,7 @@ class VehiculoRepository {
             if (is_null($valor)) {
                 $valores[] = "NULL";
             } else {
-               // $valor_escapado = addslashes($valor); $valores[] = "'{$valor_escapado}'";
+               // $valor_escapado = addslashes($valor); $valores[] = "'$valor_escapado'";
                 $valores[] = "'{$valor}'";
             }
         }
@@ -143,7 +143,7 @@ class VehiculoRepository {
 
     /* public function create(array $data): void {PARA USAR CON LA CLASE PDO
     // Limpia campos vacíos
-    foreach (['Fecha_itv', 'Fecha_matricula', 'Prox_itv', 'Km', 'propietario'] as $campo) {
+    foreach ($data[vehiculo] as $campo) {
         if (isset($data['vehiculo'][$campo]) && trim($data['vehiculo'][$campo]) === '') {
             $data['vehiculo'][$campo] = null;
         }
@@ -188,7 +188,7 @@ class VehiculoRepository {
     } */ 
    /* public function update(array $data): void { PARA USAR CON LA CLASE PDO
     // Limpia campos vacíos
-    foreach (['Fecha_itv', 'Fecha_matricula', 'Prox_itv', 'Km', 'propietario'] as $campo) {
+    foreach ($data[vehiculo] as $campo) {
         if (isset($data['vehiculo'][$campo]) && trim($data['vehiculo'][$campo]) === '') {
             $data['vehiculo'][$campo] = null;
         }

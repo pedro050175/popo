@@ -26,7 +26,7 @@
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">
-                    <a href="entidades?ordenar=nombre">Vehiculo</a>
+                    <a href="vehiculos?ordenar=Marca_modelo">Vehiculo</a>
                 </th>
                 <th scope="col">Matrícula</th>
                 <th scope="col">Bastidor</th>
@@ -46,9 +46,9 @@
                     <td><?=$vehiculo->getMatricula()?></td>
                     <td><?=$vehiculo->getBastidor()?></td>
                     <td><?=$vehiculo->getKm()?></td>
-                    <td><?=$vehiculo->getFecha_matricula()?></td>
-                    <td><?=$vehiculo->getFecha_itv()?></td>
-                    <td><?=$vehiculo->getProx_itv()?></td>
+                    <td><?=formatea_fecha($vehiculo->getFecha_matricula())?></td>
+                    <td><?=formatea_fecha($vehiculo->getFecha_itv())?></td>
+                    <td><?=formatea_fecha($vehiculo->getProx_itv())?></td>
                     <td><?=$vehiculo->getPropietario()?></td>
                     <td><?=$vehiculo->getObservaciones()?></td>
                     <td>
