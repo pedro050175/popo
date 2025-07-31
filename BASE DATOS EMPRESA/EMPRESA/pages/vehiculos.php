@@ -1,12 +1,12 @@
 <div class="container mt-4">
     <div class="row">
-        <div class="col">
+        <div class="col-md-2">
             <h4>Vehículos</h4>
         </div>
         <div class="col-md-6">
             <form action="vehiculos" method="get" class="d-flex">
-                <input type="text" name="buscar_matr_bast" class="form-control me-2" id="floatingInput" placeholder="Buscar matrícula o bastidor">
-                <input type="text" name="buscar_marca" class="form-control me-2" id="floatingInput" placeholder="Buscar marca">
+                <input type="text" name="buscar_matr_bast" class="form-control me-1" id="floatingInput" placeholder="Buscar matrícula o bastidor">
+                <input type="text" name="buscar_marca" class="form-control me-1" id="floatingInput" placeholder="Buscar marca">
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>

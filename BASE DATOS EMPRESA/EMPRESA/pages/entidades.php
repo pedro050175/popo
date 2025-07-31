@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <div class="row">
-        <div class="col">
+        <div class="col-md-2">
             <h4>Entidades</h4>
         </div>
         <div class="col-md-6">

@@ -60,10 +60,10 @@ class VehiculoRepository {
             ':Km' => $data['vehiculo']['Km'],
             ':Fecha_matricula' => $data['vehiculo']['Fecha_matricula'],
             ':Observaciones' => $data['vehiculo']['Observaciones'],
-            ':Combustible' => $data['vehiculo']['Combustible'],
-            ':Fecha_itv' => $data['vehiculo']['Fecha_itv'],
-            ':Estado' => $data['vehiculo']['Estado'],
-            ':Clase' => $data['vehiculo']['Clase'],
+            ':Combustible' => $data['vehiculo']['Combustible'] ?? '', //si no existe le asigo vacio. Podria no existir si en select no se pusiera value="" en el texto del mensaje y se diera a crear sin elejir una opcion
+            ':Fecha_itv' => $data['vehiculo']['Fecha_itv'],           //con esto se eliminarian espacios vacios ':Combustible' => trim($data['vehiculo']['Combustible'] ?? '') y sino exote le asigna ''
+            ':Estado' => $data['vehiculo']['Estado'] ?? '',
+            ':Clase' => $data['vehiculo']['Clase'] ?? '',
             ':propietario' => $data['vehiculo']['propietario'],
             ':Prox_itv' => $data['vehiculo']['Prox_itv']        
         ];
