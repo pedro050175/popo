@@ -1,11 +1,20 @@
 <?php
 namespace models;
+use models\Entidad;
+require_once "Funciones.php";
 
 class Vehiculo {
 
     function __construct (private int $id_vehiculo, private ?string $Matricula, private ?string $Bastidor, private string $Marca_modelo, private ?int $Km, private ?string $Fecha_matricula, 
-                            private ?string $Observaciones, private ?string $Combustible, private ?string $Fecha_itv, private ?string $Estado, private ?string $Clase, private ?int $propietario, private ?string $Prox_itv){}
+                            private ?string $Observaciones, private ?string $Combustible, private ?string $Fecha_itv, private ?string $Estado, private ?string $Clase, 
+                            private ?string $Prox_itv, private ?Entidad $propietario=null){}
  
+    public function getpropietario(): ?Entidad {
+        return $this->propietario;
+    }
+    public function setpropietario(Entidad $propietario) {
+        $this->propietario = $propietario;
+    }
     public function getId(): int {
         return $this->id_vehiculo;
     }
@@ -72,23 +81,19 @@ class Vehiculo {
     public function setClase(string $clase) {
         $this->Clase = $clase;
     }
-    public function getpropietario(): ?string {
-        return $this->propietario;
-    }
-    public function setpropietario(string $propietario) {
-        $this->propietario = $propietario;
-    }
     public function getProx_itv(): ?string {
         return $this->Prox_itv;
     }
     public function setProx_itv(string $Prox_itv) {
-        $this->propietario = $Prox_itv;
+        $this->Prox_itv = $Prox_itv;
     }
 
     public static function fromArray(array $data): Vehiculo {
+        $modelo_propietario = duplicar_tabla (CAMPOS_ENTIDAD, $data);
         $modelo = duplicar_tabla(CAMPOS_VEHICULO, $data);
-        return new Vehiculo ($data['id_vehiculo'], $data['Matricula'], $data['Bastidor'], $data['Marca_modelo'], $data['Km'], $data['Fecha_matricula'], $data['Observaciones'], $data['Combustible'], 
-                            $data['Fecha_itv'], $data['Estado'], $data['Clase'], $data['propietario'], $data['Prox_itv']); 
+        $propietario = new Entidad ($modelo_propietario['id_entidad'], $modelo_propietario['CIF_DNI'], $modelo_propietario['Nombre'], $modelo_propietario['Observaciones'], $modelo_propietario['Direccion'], $modelo_propietario['Telefono'], $modelo_propietario['Email']);
+        return new Vehiculo ($modelo['id_vehiculo'], $modelo['Matricula'], $modelo['Bastidor'], $modelo['Marca_modelo'], $modelo['Km'], $modelo['Fecha_matricula'], $modelo['Observaciones'], $modelo['Combustible'], 
+                            $modelo['Fecha_itv'], $modelo['Estado'], $modelo['Clase'], $modelo['propietario'], $modelo['Prox_itv'], $propietario); 
          
     }
 

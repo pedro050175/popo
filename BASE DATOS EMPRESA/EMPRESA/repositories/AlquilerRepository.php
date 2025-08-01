@@ -12,9 +12,10 @@ class AlquilerRepository {
         $this->conexion = new BaseDatos();
     }
     public function findAll(?int $id): ?array {   
-        if ($id) { 
+        if ($id) { //lee los alquileres de una entidad
             $this->conexion->consulta ("SELECT id_alquiler, Contrato, Fecha_inicio, Fecha_fin, Precio, Ciudad, Marca_modelo, Matricula FROM alquileres, vehiculos WHERE alquileres.Cliente=$id && alquileres.id_vehiculo=vehiculos.id_vehiculo");
-        }else {
+        }
+            /* }else {//todo esto de abajo aun no se usa es un copia pega
             $campo_ord= $_GET['ordenar'] ?? null;
             if ($campo_ord) {
                 $this->conexion->consulta ("SELECT * FROM alquileres ORDER BY $campo_ord");
@@ -30,7 +31,7 @@ class AlquilerRepository {
                     } else $this->conexion->consulta ("SELECT * FROM alquileres");
                 }
             }
-        }    
+        }  */   
         return $this->extraer_todos();    
     }
     public function extraer_todos(): ?array {
@@ -39,7 +40,6 @@ class AlquilerRepository {
         foreach ($alquilerData as $data){
             $alquileres[] = Alquiler::fromArray($data);
         }
-        //var_dump($alquilerData);
         return $alquileres;
     }
     public function extraer_registro(): ?Alquiler {

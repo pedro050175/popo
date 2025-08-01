@@ -2,6 +2,7 @@
 namespace models;
 use models\Vehiculo;
 use lib\duplicar_tabla;
+require_once "Funciones.php";
 
 class Alquiler {
     
@@ -15,7 +16,6 @@ class Alquiler {
     public function setVehiculo(Vehiculo $vehiculo) {
         $this->vehiculo = $vehiculo;
     }
-
     public function getId(): int {
         return $this->id_alquiler;
     }
@@ -131,11 +131,11 @@ class Alquiler {
         $this->Observaciones = $Observaciones;
     }
     public static function fromArray(array $data): Alquiler {
-        $modelo = duplicar_tabla::duplica (CAMPOS_ALQUILER, $data);
-        $modelo_vehiculo = duplicar_tabla::duplica (CAMPOS_VEHICULO, $data);
+        $modelo = duplicar_tabla (CAMPOS_ALQUILER, $data);
+        $modelo_vehiculo = duplicar_tabla (CAMPOS_VEHICULO, $data);
         $vehiculo = new Vehiculo ($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], 
               $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'],
-              $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario']);
+              $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario'], $modelo_vehiculo['Prox_itv']);
         return new Alquiler ($modelo['id_alquiler'], $modelo['Contrato'], $modelo['id_vehiculo'], $modelo['Cliente'], $modelo['Fecha_inicio'], $modelo['Fecha_fin'], $modelo['Kilometros'],
         $modelo['Km_inicio'], $modelo['Km_fin'], $modelo['Dias'], $modelo['Precio'], $modelo['Precio_km'], $modelo['id_comercial'], $modelo['Empresa'],
         $modelo['Ciudad'], $modelo['Entrega'], $modelo['Comision_comercial'], $modelo['Ganancia'], $modelo['Observaciones'], $vehiculo); 

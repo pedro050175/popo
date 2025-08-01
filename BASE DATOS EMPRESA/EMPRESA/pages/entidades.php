@@ -14,7 +14,6 @@
             <a href="pages/nueva_entidad" role="button" class="btn btn-primary">Nueva entidad</a>
         </div>
     </div>
-
     <?php if (!empty($error)): ?>
         <div class="alert alert-danger" role="alert">
             <?= htmlspecialchars($error) ?>

@@ -28,7 +28,7 @@ class VehiculoRepository {
                 $busca = $_GET['buscar_matr_bast'] ?? null;
                 if ($busca) {
                     $this->conexion->consulta ("SELECT * FROM vehiculos WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
-                } else $this->conexion->consulta ("SELECT * FROM vehiculos"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
+                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos, entidad WHERE propietario=id_entidad"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
         return $this->extraer_todos();    
@@ -64,7 +64,7 @@ class VehiculoRepository {
             ':Fecha_itv' => $data['vehiculo']['Fecha_itv'],           //con esto se eliminarian espacios vacios ':Combustible' => trim($data['vehiculo']['Combustible'] ?? '') y sino exote le asigna ''
             ':Estado' => $data['vehiculo']['Estado'] ?? '',
             ':Clase' => $data['vehiculo']['Clase'] ?? '',
-            ':propietario' => $data['vehiculo']['propietario'],
+            ':propietario' => $data['vehiculo']['propietario'] ?? '',
             ':Prox_itv' => $data['vehiculo']['Prox_itv']        
         ];
         // Limpiar automáticamente
@@ -82,17 +82,18 @@ class VehiculoRepository {
             ':Km' => $data['vehiculo']['Km'],
             ':Fecha_matricula' => $data['vehiculo']['Fecha_matricula'],
             ':Observaciones' => $data['vehiculo']['Observaciones'],
-            ':Combustible' => $data['vehiculo']['Combustible'],
+            ':Combustible' => $data['vehiculo']['Combustible'] ?? '',
             ':Fecha_itv' => $data['vehiculo']['Fecha_itv'],
-            ':Estado' => $data['vehiculo']['Estado'],
-            ':Clase' => $data['vehiculo']['Clase'],
-            ':propietario' => $data['vehiculo']['propietario'],
+            ':Estado' => $data['vehiculo']['Estado']?? '',
+            ':Clase' => $data['vehiculo']['Clase']?? '',
+            ':propietario' => $data['vehiculo']['propietario'] ?? '',
             ':Prox_itv' => $data['vehiculo']['Prox_itv']        
         ];
         $parametros = Limpiar_parametros($parametros);
         $sql = "UPDATE vehiculos SET Matricula = :Matricula, Bastidor = :Bastidor, Marca_modelo = :Marca_modelo, Km = :Km, Fecha_matricula = :Fecha_matricula, Observaciones = :Observaciones, 
                                         Combustible = :Combustible, Fecha_itv = :Fecha_itv, Estado = :Estado, Clase = :Clase, propietario = :propietario, Prox_itv = :Prox_itv
                                      WHERE id_vehiculo =".$data['vehiculo']['id_vehiculo'];
+       
         $this->conexionPDO->consulta($sql, $parametros);
     }
 
@@ -118,7 +119,7 @@ class VehiculoRepository {
     }  
     /* public function create (array $data):void{ PARA USAR CON LA CLASE BaseDatos de mysql
         //en un campo date, o int o uno que sea unique como matricula o bastidor de mysql no se puede guaradar un '' hay que guardar null. en los campos unique da error de que ya existe y en los date o int dice que el tipo no es correcto
-        foreach ($data[vehiculo] as $campo) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo
+        foreach ($data[vehiculo] as $campo => $valor) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo
             if (isset($data['vehiculo'][$campo]) && trim($data['vehiculo'][$campo]) === '') {//trim nos dice si hay 1 o mas espacios en blanco, el usuario podria poner varios '   ' espacios y daria error
                 $data['vehiculo'][$campo] = null;
             }
@@ -143,7 +144,7 @@ class VehiculoRepository {
 
     /* public function create(array $data): void {PARA USAR CON LA CLASE PDO
     // Limpia campos vacíos
-    foreach ($data[vehiculo] as $campo) {
+    foreach ($data[vehiculo] as $campo => $valor) {
         if (isset($data['vehiculo'][$campo]) && trim($data['vehiculo'][$campo]) === '') {
             $data['vehiculo'][$campo] = null;
         }
@@ -166,7 +167,7 @@ class VehiculoRepository {
     
     /* public function update (array $data): void{   PARA USAR CON LA CLASE BaseDatos de mysql    
         //en un campo date, o int o uno que sea unique como matricula o bastidor de mysql no se puede guaradar un '' hay que guardar null. en los campos unique da error de que ya existe y en los date o int dice que el tipo no es correcto    
-        foreach ($data[vehiculo] as $campo) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo
+        foreach ($data[vehiculo] as $campo => $valor) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo
             if (isset($data['vehiculo'][$campo]) && trim($data['vehiculo'][$campo]) === '') {//trim nos dice si hay 1 o mas espacios en blanco, el usuario podria poner varios '   ' espacios y daria error
                 $data['vehiculo'][$campo] = null;
             }
@@ -188,7 +189,7 @@ class VehiculoRepository {
     } */ 
    /* public function update(array $data): void { PARA USAR CON LA CLASE PDO
     // Limpia campos vacíos
-    foreach ($data[vehiculo] as $campo) {
+    foreach ($data[vehiculo] as $campo => $valor) {
         if (isset($data['vehiculo'][$campo]) && trim($data['vehiculo'][$campo]) === '') {
             $data['vehiculo'][$campo] = null;
         }

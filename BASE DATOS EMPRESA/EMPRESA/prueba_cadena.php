@@ -24,7 +24,7 @@ echo $objeto->getcadena();
 echo $objeto->getnumero();
 echo $objeto->gettexto();
  */
-function create(array $data): array {
+/* function create(array $data): array {
     // Limpia campos vacíos
     foreach ($data as $indice => $campo) {
         if (isset($campo) && trim($campo) === '') {
@@ -49,4 +49,13 @@ $tabla = array("Matricula" => '1234', "Bastidor" => '', "Marca_modelo" => 'audi'
 
 $preparada= create($tabla);
 
-print_r($preparada);
+print_r($preparada); */
+
+$estados = ['Usado', 'Nuevo'];
+foreach ($estados as $valor){
+    echo $valor;
+}
+$estados = ['popo', 'pepe'];
+foreach ($estados as $valor){
+    echo $valor;
+}

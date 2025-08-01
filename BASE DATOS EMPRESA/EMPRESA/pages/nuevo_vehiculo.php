@@ -1,8 +1,7 @@
 <form action="/mis_pruebas/pages/nuevo_vehiculo" method="post">
     <?php if (isset($vehiculo)) :?>
     <input type="hidden" name="data[vehiculo][id_vehiculo]" value="<?=$vehiculo->getId()?>">
-    <?php endif;?>    
-    <!--<p><?// sleep(1); echo "hola";?></p> hay que poner comentarios para html y tmb comentarios para el codigo incrustado PHP -->  
+    <?php endif;?>      
     <div class="container mt-1">
         <div class="row">
             <div class="col">
@@ -17,7 +16,7 @@
     <div class="col-md-4">    
         <div class="form-floating mb-1">
             <input type="text" name="data[vehiculo][Marca_modelo]" class="form-control" id="floatingInput" placeholder="Marca_modelo" value="<?=(isset($vehiculo))?$vehiculo->getMarca_modelo():''?>" required> 
-            <label for="floatingInput">Marca y mode</label>
+            <label for="floatingInput">Marca y modelo</label>
         </div>
     </div>
     <div class="col-md-2">
@@ -46,11 +45,11 @@
             <label for="floatingInput">Fecha matricula </label>
         </div>
     </div>    
-        <?php
-            $combustibleActual = isset($vehiculo) ? $vehiculo->getCombustible() : '';
-            $combustibleActual= $CombustibleActual ?? ''; //si hago editar y en la tabla SQL hay un NULL en el foreach selecciona el 1º de la lista cuando no es cierto, es NULL
-            $opciones = ['Gasolina', 'Diesel', 'Hibrido', 'Electrico'];
-        ?>
+    <?php
+        $combustibleActual = isset($vehiculo) ? $vehiculo->getCombustible() : '';
+        $combustibleActual= $combustibleActual ?? ''; //si hago editar y en la tabla SQL hay un NULL en el foreach selecciona el 1º de la lista cuando no es cierto, es NULL
+        $combustibles = ['Gasolina', 'Diesel', 'Hibrido', 'Electrico'];
+    ?>
     <div class="col-md-3">  
         <div class="form-floating mb-1">
             <select name="data[vehiculo][Combustible]" class="form-select" id="floatingInput">
@@ -58,7 +57,7 @@
         <!-- el mensaje es un elemento de la lista mas y se comporta como tal por eso hay que llevar cuidado con los atributos que le damos-->
                 <option disabled <?= $combustibleActual === '' ? 'selected' : '' ?>>--Seleccione combustible--</option> <!--si combustible ==='' (crear vehiculo)->"selected" el mesanje se muestra-->
        
-                <?php foreach ($opciones as $opcion): ?>
+                <?php foreach ($combustibles as $opcion): ?>
 <!--<option <1ºphp(para asignar valor)value=elemento_tabla><2ºphp(para ver si se muestra por defecto)si el elemen de la tabla==combustible ->'selected' este elem. se muestra por defec, sino ->'' -->
     <!--para crear siempre sera selected el mensaje, porque en el foreach nunca se dara la igualdad option==combustibleactual, y si es update se dara la igualdad para uno de los elemen que sera el selectd para mostrar por defecto-->
                     <option value="<?= $opcion ?>" <?= $opcion === $combustibleActual ? 'selected' : '' ?>><?= $opcion ?><!--si no pongo el atributo value por fecto value = al element de la lista elejido-->
@@ -81,32 +80,55 @@
         </div>
     </div>
 </div>
-<?php
-    $estadoActual = isset($vehiculo) ? $vehiculo->getEstado() : '';
-    $estadoActual= $estadoActual ?? '';
-    $estados = ['Usado', 'Nuevo'];
-?>
 <div class="row">
+    <?php
+        $estadoActual = isset($vehiculo) ? $vehiculo->getEstado() : '';
+        $estadoActual= $estadoActual ?? '';
+        $estados = ['Usado', 'Nuevo'];
+    ?>
     <div class="col-md-3">
         <div class="form-floating mb-1">
             <select name="data[vehiculo][Estado]" class="form-select" id="floatingInput">
-                <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc. estado--</option>
-                <?php foreach ($estados as $estado): ?>
-                    <option value="<?= $estado ?>" <?= $estado === $estadoActual ? 'selected' : '' ?>><?= $estado ?></option>
+                <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
+                <?php foreach ($estados as $opcion): ?>
+                    <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : '' ?>><?= $opcion ?></option>
                 <?php endforeach; ?>
             </select> 
             <label for="floatingInput">Estado</label>
         </div>
     </div>
+    <?php
+        $calseActual = isset($vehiculo) ? $vehiculo->getclase() : '';
+        $claseActual= $claseActual ?? '';
+        $clases = ['Turismo', 'Furgoneta', 'Moto', 'Camion'];
+    ?>    
     <div class="col-md-3">
         <div class="form-floating mb-1">
-            <input type="text" name="data[vehiculo][Clase]" class="form-control" id="floatingInput" placeholder="Clase" value="<?=(isset($vehiculo))?$vehiculo->getClase():''?>">
+            <select name="data[vehiculo][Clase]" class="form-select" id="floatingInput">
+                <option disabled <?= $claseActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
+                <?php foreach ($clases as $opcion): ?>
+                    <option value="<?= $opcion ?>" <?= $opcion === $claseActual ? 'selected' : '' ?>><?= $opcion ?></option>
+                <?php endforeach; ?>
+            </select> 
             <label for="floatingInput">Clase vehiculo</label>
         </div>
     </div>
+    <?php
+        $propietarioActual = isset($vehiculo) ? $vehiculo->getpropietario() : '';
+        $propietarioActual= $propietarioActual ?? '';
+        foreach ($entidades as $entidad){
+            $listapropietarios[$entidad->getId()] = $entidad->getNombre();
+        }
+    ?>
+
     <div class="col-md-3">
         <div class="form-floating mb-1">
-            <input type="number" name="data[vehiculo][propietario]" class="form-control" id="floatingInput" placeholder="propietario" value="<?=(isset($vehiculo))?$vehiculo->getpropietario():''?>">
+            <select name="data[vehiculo][propietario]" class="form-select" id="floatingInput">
+                <option disabled <?= $propietarioActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
+                <?php foreach ($listapropietarios as $id => $propietario): ?>
+                    <option value="<?= $id?>" <?= $propietario === $propietarioActual ? 'selected' : '' ?>><?= $propietario ?></option>
+                <?php endforeach; ?>
+            </select> 
             <label for="floatingInput">Propietario</label>
         </div>
     </div>

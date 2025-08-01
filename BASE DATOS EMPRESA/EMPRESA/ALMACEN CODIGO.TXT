@@ -6,5 +6,6 @@
 <option value="Diesel">Diesel</option>
 <option value="Hibrido">Hibrido</option>
 <option value="Electrico">Electrico</option>
+<?php var_dump($entidades);?>
             
 ?>
