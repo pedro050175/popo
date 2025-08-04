@@ -28,7 +28,7 @@ class VehiculoRepository {
                 $busca = $_GET['buscar_matr_bast'] ?? null;
                 if ($busca) {
                     $this->conexion->consulta ("SELECT * FROM vehiculos WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
-                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos, entidad WHERE propietario=id_entidad"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
+                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
         return $this->extraer_todos();    
@@ -39,7 +39,7 @@ class VehiculoRepository {
     public function extraer_todos(): ?array {
         $vehiculos = [];
         $vehiculoData = $this->conexion->extraer_todos();
-        //var_dump($entidadData);
+        //var_dump($vehiculoData);
         foreach ($vehiculoData as $data){
             $vehiculos[] = Vehiculo::fromArray($data);
         }
@@ -99,6 +99,10 @@ class VehiculoRepository {
 
     public function read (int $id): ?Vehiculo {
         $this->conexion->consulta("SELECT * FROM vehiculos WHERE (id_vehiculo=$id)");
+        return $this->extraer_registro();
+    }
+    public function detalles_vehiculo (int $id): ?Vehiculo{
+        $this->conexion->consulta("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad && id_vehiculo=$id");
         return $this->extraer_registro();
     }
     public function delete (int $id): void {

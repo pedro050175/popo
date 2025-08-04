@@ -18,6 +18,11 @@ class VehiculoController {
         $this->vehiculo_repository = new VehiculoRepository();
 
     }  
+    public function detalles_vehiculo(int $id) {
+        $vehiculo = $this->vehiculo_repository->detalles_vehiculo($id);
+        $this->pages->render('detalles_vehiculo', ['vehiculo' => $vehiculo]);
+
+    }
     public function list(): void {
         $vehiculos = $this->vehiculo_repository->findAll();
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
@@ -37,7 +42,7 @@ class VehiculoController {
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
         $vehiculo = $this->vehiculo_repository->read($id);
-        $entidades = $this->entidad_repository->findAll();
+        $entidades = $this->entidad_repository->findAll();//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades]);
     }
     public function delete(int $id): void {

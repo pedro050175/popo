@@ -1,7 +1,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-2">
-            <h4>Vehículos</h4>
+            <h5><strong>Vehículos</strong></h5>
         </div>
         <div class="col-md-6">
             <form action="vehiculos" method="get" class="d-flex">
@@ -49,7 +49,7 @@
                     <td><?=formatea_fecha($vehiculo->getFecha_matricula())?></td>
                     <td><?=formatea_fecha($vehiculo->getFecha_itv())?></td>
                     <td><?=formatea_fecha($vehiculo->getProx_itv())?></td>
-                    <td><?=$vehiculo->getPropietario()?></td>
+                    <td><?=$vehiculo->getdatos_propietario()->getNombre()?></td>
                     <td><?=$vehiculo->getObservaciones()?></td>
                     <td>
                         <div class="btn-group" role="group">

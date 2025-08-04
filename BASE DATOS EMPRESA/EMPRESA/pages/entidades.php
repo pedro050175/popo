@@ -1,7 +1,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-2">
-            <h4>Entidades</h4>
+            <h5><strong>Entidades</strong></h5>
         </div>
         <div class="col-md-6">
             <form action="entidades" method="get" class="d-flex">

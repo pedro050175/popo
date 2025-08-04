@@ -18,6 +18,7 @@ Router::add('GET', '/entidades', function () {return (new EntidadController())->
 //file_put_contents("log.txt", $_SERVER['REQUEST_METHOD'] . " - " . $_SERVER['REQUEST_URI'] . "\n", FILE_APPEND);
 //Rutas de Vehiculos
 
+Router::add('GET', '/pages/detalles_vehiculo/:id', function($vehiculoId) {return (new VehiculoController())->detalles_vehiculo($vehiculoId);});
 Router::add('GET', '/pages/borrar_vehiculo/:id', function($id_vehiculo){return (new VehiculoController())->delete($id_vehiculo);});
 Router::add('GET', '/pages/nuevo_vehiculo/:id', function($id_vehiculo) {return (new VehiculoController())->edit($id_vehiculo);}); 
 Router::add('POST', '/pages/nuevo_vehiculo', function () {return (new VehiculoController())->save();});

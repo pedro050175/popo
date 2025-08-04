@@ -4,26 +4,26 @@ require_once "Funciones.php";
 
 class Entidad {
     
-    function __construct (private int $id_entidad, private string $CIF_DNI, private string $Nombre, 
-    private ?string $Observaciones,private ?string $Direccion, private ?string $Telefono,
+    function __construct (private ?int $id_entidad, private ?string $CIF_DNI, private ?string $Nombre, 
+    private ?string $Observaciones, private ?string $Direccion, private ?string $Telefono,
     private ?string $Email){}
 
-    public function getId(): int {
+    public function getId(): ?int {
         return $this->id_entidad;
     }
-    public function setId(int $id) {
+    public function setId(?int $id) {
         $this->id_entidad = $id;
     }
-    public function getCIF_DNI(): string {
+    public function getCIF_DNI(): ?string {
         return $this->CIF_DNI;
     }
-    public function setCIF_DNI(string $cif_dni){
+    public function setCIF_DNI(?string $cif_dni){
         $this->CIF_DNI = $cif_dni;
     }
-    public function getNombre(): string {
+    public function getNombre(): ?string {
         return $this->Nombre;
     }
-    public function setNombre(string $nombre) {
+    public function setNombre(?string $nombre) {
         $this->Nombre = $nombre;
     }
     public function getObservaciones(): ?string {
@@ -32,7 +32,7 @@ class Entidad {
     public function setObservaciones(?string $Observaciones) {
         $this->Observaciones = $Observaciones;
     }
-    public function getDireccion(): string {
+    public function getDireccion(): ?string {
         return $this->Direccion;
     }
     public function setDireccion(?string $direccion) {

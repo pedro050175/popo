@@ -20,8 +20,8 @@ class EntidadController {
     }
     public function detalles_entidad(int $id):void{
         $entidad=$this->entidad_repository->read($id);
-        $alquileres=$this->alquiler_repository->findAll($id);
-        $this->pages->render('detalles_entidad', ['entidad' => $entidad, 'alquileres' => $alquileres]);
+        /* $alquileres=$this->alquiler_repository->findAll($id);*/
+        $this->pages->render('detalles_entidad', ['entidad' => $entidad]); // esto esra para ver los alquileres de una entidad, se pasaban dos tablas de datos una con la entidad y otra con los alquilres, 'alquileres' => $alquileres]);
 
     }    
     public function list(): void {

@@ -1,49 +1,48 @@
 <?php
 namespace models;
 use models\Vehiculo;
-use lib\duplicar_tabla;
 require_once "Funciones.php";
 
 class Alquiler {
     
-    function __construct (private int $id_alquiler, private string $Contrato, private int $id_vehiculo, private int $Cliente, private string $Fecha_inicio, private ?string $Fecha_fin, private ?int $Kilometros,
+    function __construct (private ?int $id_alquiler, private ?string $Contrato, private ?int $id_vehiculo, private ?int $Cliente, private ?string $Fecha_inicio, private ?string $Fecha_fin, private ?int $Kilometros,
     private ?int $Km_inicio, private ?int $Km_fin, private ?string $Dias, private ?int $Precio, private ?int $Precio_km, private ?int $id_comercial, private ?int $Empresa, private ?string $Ciudad, 
     private ?string $Entrega, private ?int $Comision_comercial, private ?int $Ganancia, private ?string $Observaciones, private ?Vehiculo $vehiculo = null){}
 
     public function getVehiculo(): ?Vehiculo {
         return $this->vehiculo;
     }
-    public function setVehiculo(Vehiculo $vehiculo) {
+    public function setVehiculo(?Vehiculo $vehiculo) {
         $this->vehiculo = $vehiculo;
     }
-    public function getId(): int {
+    public function getId(): ?int {
         return $this->id_alquiler;
     }
-    public function setId(int $id) {
+    public function setId(?int $id) {
         $this->id_alquiler = $id;
     }
-    public function getContrato(): string {
+    public function getContrato(): ?string {
         return $this->Contrato;
     }
-    public function setContrato(string $contrato){
+    public function setContrato(?string $contrato){
         $this->Contrato = $contrato;
     }
-    public function getid_vehiculo(): int {
+    public function getid_vehiculo(): ?int {
         return $this->id_vehiculo;
     }
-    public function setid_vehiculo(int $vehiculo) {
+    public function setid_vehiculo(?int $vehiculo) {
         $this->id_vehiculo = $vehiculo;
     }
-    public function getCliente(): int {
+    public function getCliente(): ?int {
         return $this->Cliente;
     }
-    public function setCliente(int $cliente) {
+    public function setCliente(?int $cliente) {
         $this->Cliente = $cliente;
     }
-    public function getFecha_inicio(): string {
+    public function getFecha_inicio(): ?string {
         return $this->Fecha_inicio;
     }
-    public function setFecha_inicio(string $fecha_inicio) {
+    public function setFecha_inicio(?string $fecha_inicio) {
         $this->Fecha_inicio = $fecha_inicio;
     }
     public function getFecha_fin(): ?string {

@@ -1,47 +1,29 @@
-  
-    
-    <h4>Información Entidad</h4>        
-    
-    <div class="container mt-4">
-        <p>CIF_DNI: <?=$entidad->getCIF_DNI()?></p>
-        <p>Nombre: <?=$entidad->getNombre()?></p>
-        <p>Dirección: <?=$entidad->getDireccion()?></p>
-        <p>Teléfono: <?=$entidad->getTelefono()?></p>
-        <p>Email: <?=$entidad->getEmail()?></p>
-        <p>Observaciones: <?=$entidad->getObservaciones()?></p>
+<div class="container mt-4">
+    <div class="card bg-secondary text-white">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-car-front-fill me-2"></i>Información Entidad</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-2"><p><strong>CIF/DNI </strong><?=$entidad->getCIF_DNI()?></p></div>
+                <div class="col-md-5"><p><strong>Nombre: </strong><?=$entidad->getNombre()?></p></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-8"><p><strong>Dirección: </strong><?=$entidad->getDireccion()?></p></div>
+                <div class="col-md-3"><p><strong>Teléfono: </strong><?=$entidad->getTelefono()?></p></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-12"><p><strong>Mail: </strong><?=$entidad->getEmail()?></p></div>
+            </div>    
+            <div class="row mb-3">
+                <div class="col-md-12"><p><strong>Observaciones: </strong><?=$entidad->getObservaciones()?></p></div>
+            </div>    
+        </div>
+        </div>
     </div>
-    <h5>Alquileres de la Entidad</h5>
-    
-    <div class="row">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                <th scope="col">#</th>
-                <th scope="col">Contrato:</th>
-                <th scope="col">Fecha_inicio:</th>
-                <th scope="col">Fecha_fin</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Ciudad</th>
-                <th scope="col">Marca_modelo</th>
-                <th scope="col">Matricula</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($alquileres as $alquiler):?>
-                    <tr>
-                    <th scope="row"><?=$alquiler->getId()?></th>
-                    <td><?=$alquiler->getContrato()?></td>
-                    <td><?=$alquiler->getFecha_inicio()?></td>
-                    <td><?=$alquiler->getFecha_fin()?></td>
-                    <td><?=$alquiler->getPrecio()?></td>
-                    <td><?=$alquiler->getCiudad()?></td>
-                    <td><?=$alquiler->getVehiculo()->getMarca_modelo()?></td> 
-                    <td><?=$alquiler->getVehiculo()->getMatricula()?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+</div>
+
+
         
 
 
