@@ -24,7 +24,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/mis_pruebas/entidades?num_pagina=1">Entidades</a>
+        <a class="navbar-brand" href="/mis_pruebas/entidades">Entidades</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>

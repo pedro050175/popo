@@ -7,7 +7,6 @@
             <form action="entidades" method="get" class="d-flex">
                 <input type="text" name="buscar_nombre" class="form-control me-2" id="floatingInput" placeholder="Buscar nombre">
                 <input type="text" name="buscar_dnicif" class="form-control me-2" id="floatingInput" placeholder="Buscar DNI/CIF">
-                <input type="text" name="num_pagina"   clas="form-control me-2" id="floatingInput" value="1" hidden><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
@@ -27,7 +26,7 @@
                 <th scope="col">#</th>
                 <th scope="col">DNI/CIF</th>
                 <th scope="col">
-                    <a href="entidades?ordenar=nombre&num_pagina=1">Nombre</a>
+                    <a href="entidades?ordenar=nombre">Nombre</a>
                 </th>
                 <th scope="col">Dirección</th>
                 <th scope="col">Teléfono</th>
@@ -62,22 +61,8 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-
-        <div class="row mb-3">       
-            <div class="col-md-6"><a class="nav-link active" aria-current="page">Entidades: <?=count($entidades)?></a></div>
-            <div class="col-md-4"><a class="nav-link active" aria-current="page">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></a></div>
-                
-            <?php if ($_GET['num_pagina']<$num_paginas) {$num_pagina_sig = strval(intval($_GET['num_pagina'])+1);} else { $num_pagina_sig = 1;}?><!--calculo numero de pagina siguiente-->
-            <?php if ($_GET['num_pagina']>1) {$num_pagina_atras = strval(intval($_GET['num_pagina'])-1);} else { $num_pagina_atras = 1;}?><!--calculo numero de pagina atras-->
-            <?php if (!isset($_GET['ordenar'])) :?> <!--si el listado no esta ordenado el enlace siguiente y atras no llevan variable ordenar -->
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_sig?>" class="nav-link active" aria-controls="page">Siguiente</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_atras?>" class="nav-link active" aria-controls="page">Atras</a></div>
-            <? endif ;?>
-            <?php if (isset($_GET['ordenar'])) :?><!--si el listado si esta ordenado el enlace siguiente y atras si llevan variable ordenar -->
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$_GET['ordenar']?>" class="nav-link active" aria-controls="page">Siguiente</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$_GET['ordenar']?>" class="nav-link active" aria-controls="page">Atras</a></div>
-            <? endif ;?>
-
-        </div>  
+        <a class="nav-link active" aria-current="page">Entidades encontradas: <?=count($entidades)?></a>
+        <a href="/mis_pruebas/entidades" class="nav-link active" aria-controls="page" onclick=<?php if (!isset($_GET['pagina'])){$_GET['pagina']=1;}  else {$_GET['pagina]'] ++;}?>>
+        Sig->Pagina</a>
     </div>
 </div>

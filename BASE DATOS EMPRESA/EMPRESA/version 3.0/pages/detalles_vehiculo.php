@@ -28,11 +28,7 @@
                     <div class="col-md-2"><p><strong>Observaciones: </strong><?=$vehiculo->getObservaciones()?></p></div>
                 </div> 
                 </div>
-                
             </div>
-        </div>
-        <div class="btn-group" role="group">
-            <a href="/mis_pruebas/pages/nuevo_vehiculo/<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
         </div>
     </div>
 

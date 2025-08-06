@@ -6,49 +6,25 @@ use models\Entidad;
 
 class EntidadRepository {
 
-    private int $num_paginas;
     private BaseDatos $conexion;
-    
-    public function setnumpaginas(int $paginas){
-        $this->num_paginas = $paginas;
-    }
-    public function getnumpaginas():int{
-        return $this->num_paginas;
-    }
+
     public function __construct() {
         $this->conexion = new BaseDatos();
     }
-    public function numero_paginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
-        $num_filas = $this->conexion->contar_filas ($consulta);
-        intval($num_filas%FILAS_PAGINA)==0 ? $numero_paginas = intval($num_filas/FILAS_PAGINA) : $numero_paginas = intval(($num_filas/FILAS_PAGINA)+1);
-        //$numero_paginas = intval($num_filas/FILAS_PAGINA);
-        return $numero_paginas;
-    }
     public function findAll(): ?array {
-        if ($_GET['num_pagina']=="0"){
-            $this->conexion->consulta ("SELECT * FROM entidad ORDER BY ".$_GET['ordenar']);
-            return $this->extraer_todos();
-        }
-        $desplazamiento = 0;
-        $this->num_paginas = $this->numero_paginas("SELECT COUNT(*) FROM entidad");
-        if (($_GET['num_pagina']) <= $this->num_paginas) {
-            $num_pagina = intval($_GET['num_pagina']);
-            $desplazamiento = ($num_pagina-1) * FILAS_PAGINA;
-        }
-        //file_put_contents("log.txt", "deplazamiento: ". $num_filas. "num paginas: ". $numero_paginas. " \n" , FILE_APPEND);
-        //solo voy a paginar cuando se saca un listado de todas o se saca listado ordenado, cuando se hacen busquedas no pagino
         $campo_ord= $_GET['ordenar'] ?? null;
         if ($campo_ord) {
-            $this->conexion->consulta ("SELECT * FROM entidad ORDER BY $campo_ord LIMIT $desplazamiento, ".FILAS_PAGINA);
+            $this->conexion->consulta ("SELECT * FROM entidad ORDER BY $campo_ord");
         } else {
             $busca = $_GET['buscar_nombre'] ?? null;
             if ($busca) {
+                //file_put_contents("log.txt", "busca: ". $busca. " \n" , FILE_APPEND);
                 $this->conexion->consulta ("SELECT * FROM entidad WHERE Nombre LIKE '%$busca%'");
             } else {
                 $busca = $_GET['buscar_dnicif'] ?? null;
                 if ($busca) {
                     $this->conexion->consulta ("SELECT * FROM entidad WHERE CIF_DNI LIKE '%$busca%'");
-                } else $this->conexion->consulta ("SELECT * FROM entidad LIMIT $desplazamiento, ".FILAS_PAGINA); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
+                } else $this->conexion->consulta ("SELECT * FROM entidad"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
         return $this->extraer_todos();    

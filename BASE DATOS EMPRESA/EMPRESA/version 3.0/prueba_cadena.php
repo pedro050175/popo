@@ -50,19 +50,15 @@ $tabla = array("Matricula" => '1234', "Bastidor" => '', "Marca_modelo" => 'audi'
 $preparada= create($tabla);
 
 print_r($preparada); */
-/* for ($i=0; $i<3; $i++){
+for ($i=0; $i<3; $i++){
 if (!isset($pagina["numero_pagina"])){
     $pagina = array("numero_pagina" => "1");
 }else {
     $pagina["numero_pagina"] = strval((intval($pagina["numero_pagina"])+1));
 }
 }
-print_r ($pagina["numero_pagina"]); */
-$numero = 10;
-$divisor = 5;
-$resultado = $numero/$divisor;
-$resultado = $numero%$divisor;
-echo $resultado;
+print_r ($pagina["numero_pagina"]);
+
 /* $estados = ['Usado', 'Nuevo'];
 foreach ($estados as $valor){
     echo $valor;

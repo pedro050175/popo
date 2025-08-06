@@ -19,14 +19,12 @@ private function conectar (): Mysqli {
 public function consulta(string $consultaSQL) : void {   //Si la consulta es incorrecta, $this->resultado es false. de lo contrario contiene registros de datos
     $this->resultado = $this->conexion->query($consultaSQL);
     if ($this->resultado == false){ 
+        //file_put_contents("log.txt", "Ha fallado error: ".$this->conexion->error. "\n" , FILE_APPEND);
         var_dump($this->conexion->error);
     }
+    
 } 
-public function contar_filas (string $consultaSQL): int {
-    $this->resultado = $this->conexion->query($consultaSQL);
-    $fila = $this->resultado->fetch_array();
-    return intval($fila[0]);
-}
+
 public function extraer_registro(): mixed{
     return ($fila = $this->resultado->fetch_array(MYSQLI_ASSOC)) ? $fila:false; //puede ser llamado reiteradas veces hasta sacar todos los registros leidos por eso se consulta que no sea null
 }
