@@ -11,7 +11,7 @@
                 <h5><?= (isset($entidad)) ? 'Modificar' : 'Nueva'?> Entidad</h5>
             </div>
             <div class="col text-end">  
-                <a href="/mis_pruebas/entidades" role="button" class="btn btn-secondary">Cancelar</a>
+                <a href="/mis_pruebas/entidades?num_pagina=1" role="button" class="btn btn-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-primary"> <?= (isset($entidad)) ? 'Guardar' : 'Crear' ?></button>
             </div>
         </div>

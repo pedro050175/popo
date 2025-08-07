@@ -7,7 +7,7 @@
             <form action="entidades" method="get" class="d-flex">
                 <input type="text" name="buscar_nombre" class="form-control me-2" id="floatingInput" placeholder="Buscar nombre">
                 <input type="text" name="buscar_dnicif" class="form-control me-2" id="floatingInput" placeholder="Buscar DNI/CIF">
-                <input type="text" name="num_pagina"   clas="form-control me-2" id="floatingInput" value="1" hidden><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
+                <input type="text" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1" hidden><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
@@ -65,19 +65,19 @@
 
         <div class="row mb-3">       
             <div class="col-md-6"><a class="nav-link active" aria-current="page">Entidades: <?=count($entidades)?></a></div>
-            <div class="col-md-4"><a class="nav-link active" aria-current="page">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></a></div>
-                
-            <?php if ($_GET['num_pagina']<$num_paginas) {$num_pagina_sig = strval(intval($_GET['num_pagina'])+1);} else { $num_pagina_sig = 1;}?><!--calculo numero de pagina siguiente-->
-            <?php if ($_GET['num_pagina']>1) {$num_pagina_atras = strval(intval($_GET['num_pagina'])-1);} else { $num_pagina_atras = 1;}?><!--calculo numero de pagina atras-->
-            <?php if (!isset($_GET['ordenar'])) :?> <!--si el listado no esta ordenado el enlace siguiente y atras no llevan variable ordenar -->
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_sig?>" class="nav-link active" aria-controls="page">Siguiente</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_atras?>" class="nav-link active" aria-controls="page">Atras</a></div>
-            <? endif ;?>
-            <?php if (isset($_GET['ordenar'])) :?><!--si el listado si esta ordenado el enlace siguiente y atras si llevan variable ordenar -->
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$_GET['ordenar']?>" class="nav-link active" aria-controls="page">Siguiente</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$_GET['ordenar']?>" class="nav-link active" aria-controls="page">Atras</a></div>
-            <? endif ;?>
+        <!--todo esto que sigue es para la paginacion-->
 
-        </div>  
+            <div class="col-md-2"><a class="nav-link active" aria-current="page">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></a></div>
+                
+            <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
+            <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
+            <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
+
+            <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Siguiente</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Atras]</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=1&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Inicio</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/entidades?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Fin]</a></div>
+        </div>
+            </div>  
     </div>
 </div>

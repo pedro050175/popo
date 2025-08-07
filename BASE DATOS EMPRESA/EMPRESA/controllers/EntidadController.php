@@ -20,15 +20,14 @@ class EntidadController {
     }
     public function detalles_entidad(int $id):void{
         $entidad=$this->entidad_repository->read($id);
-        /* $alquileres=$this->alquiler_repository->findAll($id);*/
-        $this->pages->render('detalles_entidad', ['entidad' => $entidad]); // esto esra para ver los alquileres de una entidad, se pasaban dos tablas de datos una con la entidad y otra con los alquilres, 'alquileres' => $alquileres]);
+        /* $alquileres=$this->alquiler_repository->findAll($id); esto era para mostrar los alquileres de  una entidad*/
+        $this->pages->render('detalles_entidad', ['entidad' => $entidad]); // para ver los alquileres de una entidad, se pasaban dos tablas de datos una con la entidad y otra con los alquilres, 'alquileres' => $alquileres]);
 
     }    
     public function list(): void {
         
-        $entidades = $this->entidad_repository->findAll();
+        $entidades = $this->entidad_repository->findAll($paginar=true);
         $numero_paginas = $this->entidad_repository->getnumpaginas();
-        //echo $numero_paginas;
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
         $this->pages->render('entidades', ['entidades' => $entidades, 'error' => $error, 'num_paginas' => $numero_paginas]);//en el otro lado la variable tiene el nombre de 'xxxx' y el valor de $xxxx

@@ -8,5 +8,5 @@
 <option value="Electrico">Electrico</option>
 <?php var_dump($entidades);?>
 
-onclick="<?php if (isset($_COOKIE['numero_pagina'])){$_COOKIE['numero_pagina'] = strval((intval($_COOKIE['numero_pagina'])+1)); print_r($_COOKIE['numero_pagina']);}?>"            
+           
 ?>

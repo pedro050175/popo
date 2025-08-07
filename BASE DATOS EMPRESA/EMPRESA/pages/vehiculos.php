@@ -7,6 +7,7 @@
             <form action="vehiculos" method="get" class="d-flex">
                 <input type="text" name="buscar_matr_bast" class="form-control me-1" id="floatingInput" placeholder="Buscar matrícula o bastidor">
                 <input type="text" name="buscar_marca" class="form-control me-1" id="floatingInput" placeholder="Buscar marca">
+                <input type="text" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1" hidden><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
@@ -26,7 +27,7 @@
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">
-                    <a href="vehiculos?ordenar=Marca_modelo">Vehiculo</a>
+                    <a href="vehiculos?ordenar=Marca_modelo&num_pagina=1">Vehiculo</a>
                 </th>
                 <th scope="col">Matrícula</th>
                 <th scope="col">Bastidor</th>
@@ -68,6 +69,18 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a class="nav-link active" aria-current="page">Vehículos encontrados: <?=count($vehiculos)?></a>
-    </div>
+        <div class="row mb-3">       
+            <div class="col-md-6"><a class="nav-link active" aria-current="page">Vehículos: <?=count($vehiculos)?></a></div>
+            <!--todo esto que sigue es para la paginacion-->
+                <div class="col-md-2"><a class="nav-link active" aria-current="page">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></a></div>    
+                <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
+                <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
+                <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
+
+                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Siguiente</a></div>
+                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Atras]</a></div>
+                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=1&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Inicio</a></div>
+                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Fin]</a></div>
+        </div>  
+        </div>
 </div>

@@ -1,22 +1,34 @@
 <div class="container mt-4">
-    <div class="card bg-secondary text-white">
-        <div class="card-header bg-primary text-white">
+    <div class="card bg-white text-dark border">
+        <div class="card-header bg-light text-dark border-bottom">
             <h4 class="mb-0"><i class="bi bi-car-front-fill me-2"></i>Información Entidad</h4>
         </div>
         <div class="card-body">
             <div class="row mb-3">
-                <div class="col-md-2"><p><strong>CIF/DNI </strong><?=$entidad->getCIF_DNI()?></p></div>
-                <div class="col-md-5"><p><strong>Nombre: </strong><?=$entidad->getNombre()?></p></div>
+                <div class="col-md-3">
+                    <div class="border p-2 rounded"><strong>CIF/DNI </strong><?=$entidad->getCIF_DNI()?></div>
+                </div>
+                <div class="col-md-5">
+                    <div class="border p-2 rounded"><strong>Nombre: </strong><?=$entidad->getNombre()?></div>
+                </div>
             </div>
             <div class="row mb-3">
-                <div class="col-md-8"><p><strong>Dirección: </strong><?=$entidad->getDireccion()?></p></div>
-                <div class="col-md-3"><p><strong>Teléfono: </strong><?=$entidad->getTelefono()?></p></div>
+                <div class="col-md-8">
+                    <div class="border p-2 rounded"><strong>Dirección: </strong><?=$entidad->getDireccion()?></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="border p-2 rounded"><strong>Teléfono: </strong><?=$entidad->getTelefono()?></div>
+                </div>
             </div>
             <div class="row mb-3">
-                <div class="col-md-12"><p><strong>Mail: </strong><?=$entidad->getEmail()?></p></div>
+                <div class="col-md-12">
+                    <div class="border p-2 rounded"><strong>Mail: </strong><?=$entidad->getEmail()?></div>
+                </div>
             </div>    
             <div class="row mb-3">
-                <div class="col-md-12"><p><strong>Observaciones: </strong><?=$entidad->getObservaciones()?></p></div>
+                <div class="col-md-12">
+                    <div class="border p-2 rounded"><strong>Observaciones: </strong><?=$entidad->getObservaciones()?></div>
+                </div>
             </div>    
         </div>
         </div>

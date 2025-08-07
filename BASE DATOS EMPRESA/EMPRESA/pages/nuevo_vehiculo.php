@@ -8,7 +8,7 @@
                 <h5><?= (isset($vehiculo)) ? 'Modificar' : 'Nuevo'?> Vehiculo</h5>
             </div>
             <div class="col text-end">  
-                <a href="/mis_pruebas/vehiculos" role="button" class="btn btn-secondary">Cancelar</a>
+                <a href="/mis_pruebas/vehiculos?num_pagina=1" role="button" class="btn btn-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-primary"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
             </div>
         </div>
@@ -114,22 +114,22 @@
         </div>
     </div>
     <?php
-        $propietarioActual = isset($vehiculo) ? $vehiculo->getpropietario() : '';
-        $propietarioActual= $propietarioActual ?? '';
+        $propietarioActual = isset($vehiculo) ? $vehiculo->getpropietario() : '';//estoy editando un vehiculo
+        //echo $propietarioActual;
         foreach ($entidades as $entidad){
-            $listapropietarios[$entidad->getId()] = $entidad->getNombre();
+            $listapropietarios[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
         }
     ?>
 
     <div class="col-md-3">
-        <div class="form-floating mb-1">
-            <select name="data[vehiculo][propietario]" class="form-select" id="floatingInput">
+         <label for="select-propietario" class="form-label">Propietario</label>
+        <div class="form-floating mb-3">
+            <select name="data[vehiculo][propietario]" class="form-select" id="select-propietario">
                 <option disabled <?= $propietarioActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                 <?php foreach ($listapropietarios as $id => $propietario): ?>
-                    <option value="<?= $id?>" <?= $propietario === $propietarioActual ? 'selected' : '' ?>><?= $propietario ?></option>
-                <?php endforeach; ?>
-            </select> 
-            <label for="floatingInput">Propietario</label>
+                    <option value="<?= $id?>" <?= $id == $propietarioActual ? 'selected' : '' ?>><?= $propietario ?></option>
+                    <?php endforeach; ?>
+                </select> 
         </div>
     </div>
 </div>   
@@ -141,3 +141,13 @@
     </div>           
 </div>
 </form>
+<script>
+    $(document).ready(function() {
+        $('#select-propietario').select2({
+            placeholder: "Buscar propietario",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
+

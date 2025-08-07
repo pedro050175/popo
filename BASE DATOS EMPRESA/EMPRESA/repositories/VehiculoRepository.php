@@ -10,15 +10,38 @@ class VehiculoRepository {
 
     private BaseDatos $conexion;
     private BaseDatosPDO $conexionPDO;
+    private int $num_paginas;
 
     public function __construct() {
         $this->conexion = new BaseDatos();
         $this->conexionPDO = new BaseDatosPDO();
     }
-    public function findAll(): ?array {
+    public function setnumpaginas(int $paginas){
+        $this->num_paginas = $paginas;
+    }
+    public function getnumpaginas():int{
+        return $this->num_paginas;
+    }
+    public function numero_paginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
+        $num_filas = $this->conexion->contar_filas ($consulta);
+        intval($num_filas%FILAS_PAGINA)==0 ? $numero_paginas = intval($num_filas/FILAS_PAGINA) : $numero_paginas = intval(($num_filas/FILAS_PAGINA)+1);
+        
+        return $numero_paginas;
+    }
+    public function findAll(?bool $paginar=true): ?array {
+        if (!$paginar){//$paginar=false no pagina, se usa para campo de lista desplegable en formularios relacionados donde deben cargarse todos los vehiculos
+            $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo FROM vehiculos ORDER BY Marca_modelo");
+            return $this->extraer_todos();
+        }
+        $desplazamiento = 0;
+        $this->num_paginas = $this->numero_paginas("SELECT COUNT(*) FROM vehiculos");
+        if (($_GET['num_pagina']) <= $this->num_paginas) {
+            $num_pagina = intval($_GET['num_pagina']);
+            $desplazamiento = ($num_pagina-1) * FILAS_PAGINA;
+        }
         $campo_ord= $_GET['ordenar'] ?? null;
         if ($campo_ord) {
-            $this->conexion->consulta ("SELECT * FROM vehiculos ORDER BY $campo_ord");
+            $this->conexion->consulta ("SELECT * FROM vehiculos ORDER BY $campo_ord LIMIT $desplazamiento, ".FILAS_PAGINA);
         } else {
             $busca = $_GET['buscar_marca'] ?? null;
             if ($busca) {
@@ -28,7 +51,7 @@ class VehiculoRepository {
                 $busca = $_GET['buscar_matr_bast'] ?? null;
                 if ($busca) {
                     $this->conexion->consulta ("SELECT * FROM vehiculos WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
-                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad"); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
+                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad LIMIT $desplazamiento, ".FILAS_PAGINA); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
         return $this->extraer_todos();    

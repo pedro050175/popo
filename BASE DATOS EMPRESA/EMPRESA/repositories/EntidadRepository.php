@@ -9,24 +9,25 @@ class EntidadRepository {
     private int $num_paginas;
     private BaseDatos $conexion;
     
+    
+    public function __construct() {
+        $this->conexion = new BaseDatos();
+    }
     public function setnumpaginas(int $paginas){
         $this->num_paginas = $paginas;
     }
     public function getnumpaginas():int{
         return $this->num_paginas;
     }
-    public function __construct() {
-        $this->conexion = new BaseDatos();
-    }
     public function numero_paginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
         $num_filas = $this->conexion->contar_filas ($consulta);
         intval($num_filas%FILAS_PAGINA)==0 ? $numero_paginas = intval($num_filas/FILAS_PAGINA) : $numero_paginas = intval(($num_filas/FILAS_PAGINA)+1);
-        //$numero_paginas = intval($num_filas/FILAS_PAGINA);
+    
         return $numero_paginas;
     }
-    public function findAll(): ?array {
-        if ($_GET['num_pagina']=="0"){
-            $this->conexion->consulta ("SELECT * FROM entidad ORDER BY ".$_GET['ordenar']);
+    public function findAll(?bool $paginar=true): ?array {//$paginar=false no pagina, se usa para campo de lista desplegable en formularios relacionados (propietarios) donde deben cargarse todas las entidades 
+        if (!$paginar){
+            $this->conexion->consulta ("SELECT id_entidad, Nombre FROM entidad ORDER BY Nombre");
             return $this->extraer_todos();
         }
         $desplazamiento = 0;
