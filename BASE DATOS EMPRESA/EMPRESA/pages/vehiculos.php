@@ -70,17 +70,17 @@
             </tbody>
         </table>
         <div class="row mb-3">       
-            <div class="col-md-6"><a class="nav-link active" aria-current="page">Vehículos: <?=count($vehiculos)?></a></div>
+            <div class="col-md-2"> <a class="nav-link active" aria-current="page">Vehículos: <?=count($vehiculos)?></a></div>
             <!--todo esto que sigue es para la paginacion-->
-                <div class="col-md-2"><a class="nav-link active" aria-current="page">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></a></div>    
-                <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
-                <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
-                <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
+            <div class="col-md-6"><a class="nav-link active" aria-current="page">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></a></div>    
+            <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
+            <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
+            <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
 
-                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Siguiente</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Atras]</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=1&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Inicio</a></div>
-                <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Fin]</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Siguiente</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Atras]</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=1&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Inicio</a></div>
+            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Fin]</a></div>
         </div>  
         </div>
 </div>

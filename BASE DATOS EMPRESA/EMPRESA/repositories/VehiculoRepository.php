@@ -3,7 +3,6 @@ namespace repositories;
 
 use lib\BaseDatos;
 use lib\BaseDatosPDO;
-use models\Entidad;
 use models\Vehiculo;
 
 class VehiculoRepository {
@@ -115,7 +114,7 @@ class VehiculoRepository {
         $parametros = Limpiar_parametros($parametros);
         $sql = "UPDATE vehiculos SET Matricula = :Matricula, Bastidor = :Bastidor, Marca_modelo = :Marca_modelo, Km = :Km, Fecha_matricula = :Fecha_matricula, Observaciones = :Observaciones, 
                                         Combustible = :Combustible, Fecha_itv = :Fecha_itv, Estado = :Estado, Clase = :Clase, propietario = :propietario, Prox_itv = :Prox_itv
-                                     WHERE id_vehiculo =".$data['vehiculo']['id_vehiculo'];
+                                     WHERE id_vehiculo =".$data['vehiculo']['id_vehiculo'];//pasarle el data[vehiculo][id_vehiculo] igual que los otros parametros
        
         $this->conexionPDO->consulta($sql, $parametros);
     }
