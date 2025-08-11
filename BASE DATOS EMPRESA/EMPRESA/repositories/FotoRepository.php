@@ -14,7 +14,7 @@ class FotoRepository {
     
     public function fotos_vehiculo($id): ?array {
         $parametros = [':id' =>$id];
-        $sql = "SELECT * FROM fotos WHERE id=:id";
+        $sql = "SELECT * FROM fotos WHERE id_vehiculo=:id";
         $this->conexionPDO->consulta ($sql, $parametros);
         return $this->extraer_todos();    
     }
@@ -68,13 +68,13 @@ class FotoRepository {
 
     public function read (int $id): ?Foto {
         $parametros = [':id' =>$id];
-        $sql = "SELECT * FROM fotos WHERE id=:id";
-        $this->conexionPDO->consulta("$sql, $parametros)");
+        $sql = "SELECT * FROM fotos WHERE id_vehiculo=:id";
+        $this->conexionPDO->consulta($sql, $parametros);
         return $this->extraer_registro();
     }
     public function delete (int $id): void {
        $parametros = [':id' =>$id];
-       $sql = "DELETE FROM fotos WHERE id=:id"; 
+       $sql = "DELETE FROM fotos WHERE id_vehiculo=:id"; 
        $this->conexionPDO->consulta($sql, $parametros);
     }
 }

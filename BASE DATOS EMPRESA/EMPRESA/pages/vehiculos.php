@@ -77,10 +77,10 @@
             <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
             <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
 
-            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Siguiente</a></div>
-            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Atras]</a></div>
-            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=1&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">[Inicio</a></div>
-            <div class="col-md-1"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>" class="nav-link active" aria-controls="page">Fin]</a></div>
+            <div class="col-md-4"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>">[Atras</a>
+            <a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>">Siguiente]</a>
+            <a href="/mis_pruebas/vehiculos?num_pagina=1&ordenar=<?=$ordenar?>">[Inicio</a>
+            <a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
         </div>  
         </div>
 </div>

@@ -5,6 +5,7 @@ define ('PASS', 'root');
 define ('BASE_DATOS', 'empresa');
 define ('DIRECTORIO', '/mis_pruebas/'); //carpeta donde esta index.php.  
 define ('FILAS_PAGINA', 5);
+define ('RUTA_FOTOS', "/mis_pruebas/fotos/");
 // tablas que esta relacionas con entidad ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla'] 
 define ('TABLAS', ["alquileres" => 'Cliente', "compraventas" => 'Comprador', "compraventas" => 'Vendedor', "vehiculos" => 'propietario']); 
 //CUIDADO con poner indices iguales que se machacan

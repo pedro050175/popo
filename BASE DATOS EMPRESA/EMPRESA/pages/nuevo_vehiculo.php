@@ -1,4 +1,4 @@
-<form action="/mis_pruebas/pages/nuevo_vehiculo" method="post">
+<form action="/mis_pruebas/pages/nuevo_vehiculo" method="post" enctype="multipart/form-data">
     <?php if (isset($vehiculo)) :?>
     <input type="hidden" name="data[vehiculo][id_vehiculo]" value="<?=$vehiculo->getId()?>">
     <?php endif;?>      
@@ -140,6 +140,7 @@
         </div>
     </div>           
 </div>
+<!-- formulario para nuevas fotos -->
 </form>
 <script>
     $(document).ready(function() {
