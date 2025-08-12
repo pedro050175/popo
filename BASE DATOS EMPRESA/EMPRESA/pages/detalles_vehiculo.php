@@ -65,7 +65,8 @@
     <?php foreach($fotos as $foto) :?>
     <div>
         <div>
-            <img src=<?= RUTA_FOTOS.rawurlencode($foto->geturl())?> width="250" height="200" alt=<?= rawurlencode($foto->geturl())?>>
+            <img src="<?=RUTA_FOTOS.$foto->geturl()?>" width="250" height="200" alt=<?= rawurlencode($foto->geturl())?>><!--rawurlencode sirve para cambiar los espacios por %20. si el nombre de la imagen lleva espacio daria error si no se usa rawurlencode, eso hace falta si pongo la ruta sin "ruta", si la pongo entre comillas no hace falt usar rawurlencode-->
+<!--he puesto un src con "" y sin rawurlencode y otro sin "" y con rawurlencode-->
             <div class="border p-2 rounded"><strong>Descripcion: </strong><?=$foto->getdescripcion()?></div>
         </div>
     </div> 

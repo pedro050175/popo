@@ -7,7 +7,7 @@
             <form action="entidades" method="get" class="d-flex">
                 <input type="text" name="buscar_nombre" class="form-control me-2" id="floatingInput" placeholder="Buscar nombre">
                 <input type="text" name="buscar_dnicif" class="form-control me-2" id="floatingInput" placeholder="Buscar DNI/CIF">
-                <input type="text" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1" hidden><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
+                <input type="hidden" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1"><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>

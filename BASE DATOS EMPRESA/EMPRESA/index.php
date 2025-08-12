@@ -6,6 +6,7 @@ require_once "Funciones.php";
 use lib\Router;
 use controllers\EntidadController;
 use controllers\VehiculoController;
+use controllers\FotoController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -25,7 +26,11 @@ Router::add('POST', '/pages/nuevo_vehiculo', function () {return (new VehiculoCo
 Router::add('GET', '/pages/nuevo_vehiculo', function() {return (new VehiculoController())->add();});
 Router::add('GET', '/vehiculos', function () {return (new VehiculoController())->list();});
 
-
+Router::add('GET', '/pages/detalles_foto_vehiculo/:id', function($id_foto) {return (new FotoController())->detalles_foto($id_foto);});
+Router::add('GET', '/pages/borrar_foto_vehiculo/:id', function($id_foto){return (new FotoController())->delete($id_foto);});
+Router::add('GET', '/pages/nuevo_foto/:id', function($id_foto) {return (new FotoController())->edit($id_foto);}); 
+Router::add('POST', '/pages/nueva_foto', function () {return (new FotoController())->save();});
+//Router::add('GET', '/pages/nueva_foto', function() {return (new FotoController())->add();});
 
 
 Router::dispatch();

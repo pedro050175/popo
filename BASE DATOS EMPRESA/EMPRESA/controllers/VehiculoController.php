@@ -48,7 +48,8 @@ class VehiculoController {
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
         $vehiculo = $this->vehiculo_repository->read($id);
         $entidades = $this->entidad_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
-        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades]);
+        $fotos = $this->foto_repository->fotos_vehiculo($id);
+        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos]);
     }
     public function delete(int $id): void {
         $relacionados=$this->vehiculo_repository->relacionados($id);

@@ -12,7 +12,7 @@ class FotoRepository {
         $this->conexionPDO = new BaseDatosPDO();
     }
     
-    public function fotos_vehiculo($id): ?array {
+    public function fotos_vehiculo(int $id): ?array {
         $parametros = [':id' =>$id];
         $sql = "SELECT * FROM fotos WHERE id_vehiculo=:id";
         $this->conexionPDO->consulta ($sql, $parametros);
@@ -30,34 +30,37 @@ class FotoRepository {
         }
         return $fotos;
     }
-    public function save (array $foto):void {
+    public function save (array $foto, array $imagen):void {
         if (isset($foto['foto']['id'])) {
-            $this->update($foto);
-        } else { $this->create($foto);}
+            $this->update($foto, $imagen);
+        } else { $this->create($foto, $imagen);}
     }
 
-    public function create (array $data):void{
+    public function create (array $foto, array $imagen):void{
         
         $parametros = [
-            ':url'=> $data['foto']['url'],
-            ':destacada' => $data['foto']['destacada'] ?? 0,
-            ':id_vehiculo' => $data['foto']['id_vehiculo'],
-            ':descripcion' => $data['foto']['descripcion']       
+            ':url'=> $imagen['name'],
+            ':destacada' => (isset($foto['destacada'])) ? 1 : '',
+            ':id_vehiculo' => $foto['id_vehiculo'],
+            ':descripcion' => $foto['descripcion']       
         ];
         // Limpia
         $parametros = Limpiar_parametros($parametros);
-        $sql = "INSERT INTO fotos (url, destacada, id_vehiculo, descripcion, VALUES 
+        $sql = "INSERT INTO fotos (url, destacada, id_vehiculo, descripcion) VALUES 
                                      (:url, :destacada, :id_vehiculo, :descripcion)"; 
+        echo "$sql <br/>";
+        print_r($parametros);
         $this->conexionPDO->consulta($sql, $parametros);
+        //move_uploaded_file($imagen['tmp_name'], RUTA_FOTOS); //'RUTA_FOTOS', "/mis_pruebas/fotos/"
     }
 
-    public function update (array $data): void{ 
+    public function update (array $foto, array $imagen): void{ 
         $parametros = [
-            ':url'=> $data['foto']['url'],
-            ':destacada' => $data['foto']['destacada'] ?? 0,
-            ':id_vehiculo' => $data['foto']['id_vehiculo'],
-            ':descripcion' => $data['foto']['descripcion'], 
-            ':id' => $data['foto']['id']      
+            ':url'=> $imagen['foto']['url'],
+            ':destacada' => $foto['foto']['destacada'] ?? '',
+            ':id_vehiculo' => $foto['foto']['id_vehiculo'],
+            ':descripcion' => $foto['foto']['descripcion'], 
+            ':id' => $foto['foto']['id']      
         ];
         $parametros = Limpiar_parametros($parametros);
         $sql = "UPDATE fotos SET url = :url, destacada = :destacada, id_vehiculo = :id_vehiculo, descripcion = :descripcion,

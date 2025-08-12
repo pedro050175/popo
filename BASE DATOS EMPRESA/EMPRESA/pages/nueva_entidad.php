@@ -2,7 +2,7 @@
 
 <form action="/mis_pruebas/pages/nueva_entidad" method="post">
     <?php if (isset($entidad)) :?>
-    <input type="hidden" name="data[entidad][id_entidad]" value="<?=$entidad->getId()?>">
+    <input type="hidden" name="data[entidad][id_entidad]" value="<?=$entidad->getId()?>" id="id_entidad">
     <?php endif;?>    
     <!--<p><?// sleep(3); echo "hola";?></p> hay que poner comentarios para html y tmb comentarios para el codigo incrustado PHP -->  
     <div class="container mt-4">
@@ -18,13 +18,13 @@
 <div class="row">
     <div class="col-md-6">       
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Nombre]" class="form-control" id="floatingInput" placeholder="Nombre" value="<?=(isset($entidad))?$entidad->getNombre():''?>"> 
+            <input type="text" name="data[entidad][Nombre]" class="form-control" id="Nombre" placeholder="Nombre" value="<?=(isset($entidad))?$entidad->getNombre():''?>"> 
             <label for="floatingInput">Nombre</label>
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="floatingInput" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>" required>
+            <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="CIF_DNI" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>" required>
             <label for="floatingInput">CIF_DNI</label>
         </div>
     </div>
@@ -32,13 +32,13 @@
 <div class="row">
     <div class="col-md-6"> 
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Direccion]" class="form-control" id="floatingInput" placeholder="Direccion" value="<?=(isset($entidad))?$entidad->getDireccion():''?>">
+            <input type="text" name="data[entidad][Direccion]" class="form-control" id="Direccion" placeholder="Direccion" value="<?=(isset($entidad))?$entidad->getDireccion():''?>">
             <label for="floatingInput">Direccion</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Telefono]" class="form-control" id="floatingInput" placeholder="Telefono" value="<?=(isset($entidad))?$entidad->getTelefono():''?>">
+            <input type="text" name="data[entidad][Telefono]" class="form-control" id="Telefono" placeholder="Telefono" value="<?=(isset($entidad))?$entidad->getTelefono():''?>">
             <label for="floatingInput">Telefono</label>
         </div>
     </div>
@@ -46,13 +46,13 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Email]" class="form-control" id="floatingInput" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
+            <input type="text" name="data[entidad][Email]" class="form-control" id="Email" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
             <label for="floatingInput">Email</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Observaciones]" class="form-control" id="floatingInput" placeholder="Observaciones" value="<?=(isset($entidad))?$entidad->getObservaciones():''?>">
+            <input type="text" name="data[entidad][Observaciones]" class="form-control" id="Observaciones" placeholder="Observaciones" value="<?=(isset($entidad))?$entidad->getObservaciones():''?>">
             <label for="floatingInput">Observaciones</label>
         </div>
     </div>
