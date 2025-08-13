@@ -30,7 +30,7 @@ Router::add('GET', '/pages/detalles_foto_vehiculo/:id', function($id_foto) {retu
 Router::add('GET', '/pages/borrar_foto_vehiculo/:id', function($id_foto){return (new FotoController())->delete($id_foto);});
 Router::add('GET', '/pages/nuevo_foto/:id', function($id_foto) {return (new FotoController())->edit($id_foto);}); 
 Router::add('POST', '/pages/nueva_foto', function () {return (new FotoController())->save();});
-//Router::add('GET', '/pages/nueva_foto', function() {return (new FotoController())->add();});
+
 
 
 Router::dispatch();

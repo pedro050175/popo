@@ -48,10 +48,28 @@ class FotoRepository {
         $parametros = Limpiar_parametros($parametros);
         $sql = "INSERT INTO fotos (url, destacada, id_vehiculo, descripcion) VALUES 
                                      (:url, :destacada, :id_vehiculo, :descripcion)"; 
-        echo "$sql <br/>";
-        print_r($parametros);
-        $this->conexionPDO->consulta($sql, $parametros);
-        //move_uploaded_file($imagen['tmp_name'], RUTA_FOTOS); //'RUTA_FOTOS', "/mis_pruebas/fotos/"
+        
+        $ok = $this->conexionPDO->consulta($sql, $parametros);
+        $carpetaDestino = __DIR__ ."/../fotos_vehiculo/";// __DIR__ constante de PHP que devuelve la ruta absoluta del directorio donde está el archivo PHP actual
+        //en mi caso tiene /srv/www/api/mis_pruebas/repositories/FotoRepository.php  /../fotos/ con .. sale de repositories y pone /fotos al final obtengo /srv/www/api/mis_pruebas/fotos/ que es donde estan las fotos en el servidor
+        //podria usar la constante FOTOS_VEHICULOS_SERVIDOR pero dejo esto porque es interesante
+        if ($ok) {//si se inserta la foto en la BBDD
+            if (!is_dir($carpetaDestino)) {//si no existe la carpeta de destino la crea
+            mkdir($carpetaDestino, 0777, true);
+            }
+            //a la foto le pongo el numero del id de la foto insertada para que no coincida con otras fotos de la caperpeta fotos
+            $id_ultimo_insertado = $this->conexionPDO->id_ultimo_insertado();
+            $obj_foto = new Foto ($id_ultimo_insertado, $imagen['name'], 0, $foto['id_vehiculo'], $foto['descripcion']);//para poder usar la funcion get_nombre_foto_server tengo que crear un objeto clase Foto
+            $nombre = $obj_foto->nombre_foto_server();
+            $Destino=$carpetaDestino.$nombre;//destino es la carpeta y el nombre del archivo
+            
+            if (!@move_uploaded_file($imagen['tmp_name'], $Destino)){//si falla el traslado de la foto a la carpeta fotos borro el registro de la base de datos. 
+                //la @ es para que no salgan warning en pantalla al fallar la copia del archivo
+                $parametros = [':id' => $id_ultimo_insertado];
+                $sql = "DELETE FROM fotos WHERE id=:id"; 
+                $this->conexionPDO->consulta($sql, $parametros);
+            }
+        }
     }
 
     public function update (array $foto, array $imagen): void{ 
@@ -77,7 +95,7 @@ class FotoRepository {
     }
     public function delete (int $id): void {
        $parametros = [':id' =>$id];
-       $sql = "DELETE FROM fotos WHERE id_vehiculo=:id"; 
+       $sql = "DELETE FROM fotos WHERE id=:id"; 
        $this->conexionPDO->consulta($sql, $parametros);
     }
 }

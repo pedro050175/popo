@@ -142,15 +142,53 @@
 </div>
 <!-- formulario para nuevas fotos -->
 </form>
+
 <?php if (isset($vehiculo)) :?>
-    <form action="/mis_pruebas/pages/nueva_foto" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="MAX_FILE_SIZE" value="1000000">
-        Foto: <input size="100" type="file" name="imagen" id="foto" placeholder="Añada una imagen tipo jpeg/jpg de menos de 1MB" required><br/>
-        Destacada: <input type="checkbox" name="foto[destacada]" id="destacada"><br/>
-        <input type="hidden" name="foto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo"><br/>
-        Descripcion: <input size="100" type="text" name="foto[descripcion]" id="descripcion"><br/><br/>
-        <button type="submit">Guardar Foto</button>
-    </form>
+    <div><h5><strong>Nueva Foto</strong></h5></div>
+<form action="/mis_pruebas/pages/nueva_foto" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
+    Foto: <input size="100" type="file" name="imagen" id="foto" placeholder="Añada una imagen 2MB" required><br/>
+    Destacada: <input type="checkbox" name="foto[destacada]" id="destacada"><br/>
+    <input type="hidden" name="foto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo"><br/>
+    Descripcion: <input size="100" type="text" name="foto[descripcion]" id="descripcion"><br/><br/>
+    <button type="submit">Guardar Foto</button>
+</form>
+<div>
+    <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Foto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($fotos as $foto) :?>
+                    <tr>
+                        <?php                            
+                            $foto->getdestacada() ? $w = 80 : $w = 45;
+                            $foto->getdestacada() ? $h = 40 : $h = 35;
+                        ?>
+                        <td><?=$foto->geturl()?></td>
+                        <td><?=$foto->getdescripcion()?></td>
+                        <td><img src="<?=FOTOS_VEHICULOS_SERVIDOR.$foto->nombre_foto_server()?>" width="<?=$w?>" height="<?=$h?>" alt=<?= rawurlencode($foto->nombre_foto_server())?>></td><!--rawurlencode sirve para cambiar los espacios por %20. si el nombre de la imagen lleva espacio daria error si no se usa rawurlencode, eso hace falta si pongo la ruta sin "ruta", si la pongo entre comillas no hace falt usar rawurlencode-->
+                <!--he puesto un src con "" y sin rawurlencode y otro sin "" y con rawurlencode-->            
+                        <td>
+                        <div class="btn-group" role="group">
+                            <a href="/pages/nuevo_foto_vehiculo/<?=$foto->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <!-- estoy en /mis_pruebas/pages/nuevo_vehiculo con ..subo un directorio y voy a /mis_pruebas/pages/ y añado /borrar_foto... y me quedo en /mis_pruebas/pages/borrar_foto_vehiculo-->
+                            <a href="../borrar_foto_vehiculo/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este vehículo?');"> 
+                            <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
+                            <i class="bi bi-trash"></i>
+                            </a>   
+                        </div>
+                    </td>   
+                <?php endforeach ;?>      
+            </tbody>
+    </table>            
+</div> 
 <?php endif;?>
 
 <script>

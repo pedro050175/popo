@@ -1,5 +1,4 @@
 
-
-alt=<?= $foto->geturl()?>
-           
+<?$foto->get_nombre_foto_server()?>
+          
 ?>

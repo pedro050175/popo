@@ -62,17 +62,32 @@
 </div>
 
 <div>
-    <?php foreach($fotos as $foto) :?>
-    <div>
-        <div>
-            <img src="<?=RUTA_FOTOS.$foto->geturl()?>" width="250" height="200" alt=<?= rawurlencode($foto->geturl())?>><!--rawurlencode sirve para cambiar los espacios por %20. si el nombre de la imagen lleva espacio daria error si no se usa rawurlencode, eso hace falta si pongo la ruta sin "ruta", si la pongo entre comillas no hace falt usar rawurlencode-->
-<!--he puesto un src con "" y sin rawurlencode y otro sin "" y con rawurlencode-->
-            <div class="border p-2 rounded"><strong>Descripcion: </strong><?=$foto->getdescripcion()?></div>
-        </div>
-    </div> 
-    <?php endforeach ;?> 
-<!--     <img src="/mis_pruebas/fotos/bmw%20m4%201.jpeg"> -->
-</div>
+    <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Foto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($fotos as $foto) :?>
+                    <tr>
+                        <?php                            
+                            $foto->getdestacada() ? $w = 150 : $w = 100;
+                            $foto->getdestacada() ? $h = 100 : $h = 70;
+                        ?>
+                        <td><?=$foto->geturl()?></td>
+                        <td><?=$foto->getdescripcion()?></td>
+                        <td><img src="<?=FOTOS_VEHICULOS_SERVIDOR.$foto->nombre_foto_server()?>" width="<?=$w?>" height="<?=$h?>" alt=<?= rawurlencode($foto->nombre_foto_server())?>></td><!--rawurlencode sirve para cambiar los espacios por %20. si el nombre de la imagen lleva espacio daria error si no se usa rawurlencode, eso hace falta si pongo la ruta sin "ruta", si la pongo entre comillas no hace falt usar rawurlencode-->
+                <!--he puesto un src con "" y sin rawurlencode y otro sin "" y con rawurlencode-->            
+                    
+                <?php endforeach ;?> 
+                <!--     <img src="/mis_pruebas/fotos/bmw%20m4%201.jpeg"> -->      
+            </tbody>
+    </table>            
+</div> 
+
 
     
         

@@ -28,13 +28,15 @@ class BaseDatosPDO {
         }
     }
 
-    public function consulta(string $sql, array $params = []): void {
+    public function consulta(string $sql, array $params = []): bool {
         try {
             $stmt = $this->conexion->prepare($sql);
-            $stmt->execute($params);
-            $this->resultado = $stmt;
+            $ok = $stmt->execute($params);
+            if ($ok){$this->resultado = $stmt;}
+            return $ok;
         } catch (PDOException $e) {
             var_dump($e->getMessage());
+            return false;
         }
     }
 
@@ -46,7 +48,7 @@ class BaseDatosPDO {
         return $this->resultado ? $this->resultado->fetchAll(PDO::FETCH_ASSOC) : false;
     }
 
-    public function ultimoInsertId(): string {
+    public function id_ultimo_insertado(): string {
         return $this->conexion->lastInsertId();
     }
 }

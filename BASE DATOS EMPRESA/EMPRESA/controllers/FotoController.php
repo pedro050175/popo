@@ -25,21 +25,27 @@ class FotoController {
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
         $this->pages->render('fotos', ['fotos' => $fotos, 'error' => $error]);//ver explicacion de la IA
     }
-   /*  public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
-        $this->pages->render('nueva_foto');
-    } */
+   /*  public function add(): void {//no existe metodo add porque el formulario de añadir foto se carga en editar vehiculo */
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $foto=$_POST['foto']; //coge los datos del metodo POST, los graba y salta al listado entidades
-        //print_r($foto);
 
         $imagen=$_FILES['imagen'];
         //print_r($imagen);
-        if ($imagen["type"] == "image/jpeg") {
+        //move_uploaded_file($imagen['tmp_name'], "mis_pruebas/fotos/");
+
+        if ($imagen["type"] == "image/jpeg" && $imagen['error'] == UPLOAD_ERR_OK) {
             $this->foto_repository->save($foto, $imagen);
-            header('Location: /mis_pruebas/nuevo_vehiculo/'.$foto['id_vehiculo']);//cargo el mismo vehiculo que estaba editando   
+            header('Location: /mis_pruebas/pages/nuevo_vehiculo/'.$foto['id_vehiculo']);//cargo el mismo vehiculo que estaba editando   
             exit;
         }else {
-            $mensaje = urlencode('La imagen debe ser jpeg');
+            switch ($imagen['error']){
+                case UPLOAD_ERR_FORM_SIZE: $mensaje = "Archivo mayor de 2.000.000 bytes"; break;
+                case UPLOAD_ERR_INI_SIZE: $mensaje = "Archivo supera limite directiva servidor"; break;
+                case UPLOAD_ERR_PARTIAL: $mensaje = "Error durante la transferencia al servidor"; break;
+                case UPLOAD_ERR_NO_TMP_DIR: $mensaje = "Error directorio temporal del servidor"; break;
+                case UPLOAD_ERR_CANT_WRITE: $mensaje = "Error al escribir en disco"; break;
+                case UPLOAD_ERR_EXTENSION: $mesanje = "Transferencia detenida por la extension"; break;
+            }
             header("Location: /mis_pruebas/vehiculos?num_pagina=1&error=$mensaje");
         }
     }
@@ -49,7 +55,8 @@ class FotoController {
     }
     public function delete(int $id): void {
         $this->foto_repository->delete($id);
-        header('Location: /mis_pruebas/vehiculos?num_pagina=1');
+        $id_vehiculo = $_GET['vehiculo'];
+        header('Location: /mis_pruebas/pages/nuevo_vehiculo/'.$id_vehiculo);//cargo el mismo vehiculo que estaba editando    
         exit; 
     }
 }
