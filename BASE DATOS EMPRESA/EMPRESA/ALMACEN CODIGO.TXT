@@ -1,4 +1,4 @@
 
-<?$foto->get_nombre_foto_server()?>
+<?=$destacada?>
           
 ?>

@@ -58,7 +58,7 @@
                 <option disabled <?= $combustibleActual === '' ? 'selected' : '' ?>>--Seleccione combustible--</option> <!--si combustible ==='' (crear vehiculo)->"selected" el mesanje se muestra-->
        
                 <?php foreach ($combustibles as $opcion): ?>
-<!--<option <1ºphp(para asignar valor)value=elemento_tabla><2ºphp(para ver si se muestra por defecto)si el elemen de la tabla==combustible ->'selected' este elem. se muestra por defec, sino ->'' -->
+<!--<option <1º(asignar valor)value=elemento_tabla><2º(ver si se muestra por defecto)si el elemen de la tabla==combustible ->'selected' este elem. se muestra por defec, sino ->'' -->
     <!--para crear siempre sera selected el mensaje, porque en el foreach nunca se dara la igualdad option==combustibleactual, y si es update se dara la igualdad para uno de los elemen que sera el selectd para mostrar por defecto-->
                     <option value="<?= $opcion ?>" <?= $opcion === $combustibleActual ? 'selected' : '' ?>><?= $opcion ?><!--si no pongo el atributo value por fecto value = al element de la lista elejido-->
                     </option>
@@ -83,7 +83,7 @@
 <div class="row">
     <?php
         $estadoActual = isset($vehiculo) ? $vehiculo->getEstado() : '';
-        $estadoActual= $estadoActual ?? '';
+        $estadoActual = $estadoActual ?? '';
         $estados = ['Usado', 'Nuevo'];
     ?>
     <div class="col-md-3">
@@ -98,8 +98,8 @@
         </div>
     </div>
     <?php
-        $calseActual = isset($vehiculo) ? $vehiculo->getclase() : '';
-        $claseActual= $claseActual ?? '';
+        $claseActual = isset($vehiculo) ? $vehiculo->getClase() : '';
+        $claseActual = $claseActual ?? '';
         $clases = ['Turismo', 'Furgoneta', 'Moto', 'Camion'];
     ?>    
     <div class="col-md-3">
@@ -115,7 +115,6 @@
     </div>
     <?php
         $propietarioActual = isset($vehiculo) ? $vehiculo->getpropietario() : '';//estoy editando un vehiculo
-        //echo $propietarioActual;
         foreach ($entidades as $entidad){
             $listapropietarios[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
         }
@@ -175,7 +174,7 @@
                 <!--he puesto un src con "" y sin rawurlencode y otro sin "" y con rawurlencode-->            
                         <td>
                         <div class="btn-group" role="group">
-                            <a href="/pages/nuevo_foto_vehiculo/<?=$foto->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                            <a href="/mis_pruebas/pages/editar_foto/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <!-- estoy en /mis_pruebas/pages/nuevo_vehiculo con ..subo un directorio y voy a /mis_pruebas/pages/ y añado /borrar_foto... y me quedo en /mis_pruebas/pages/borrar_foto_vehiculo-->

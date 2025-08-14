@@ -124,7 +124,7 @@ class VehiculoRepository {
         return $this->extraer_registro();
     }
     public function detalles_vehiculo (int $id): ?Vehiculo{
-        $this->conexion->consulta("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad && id_vehiculo=$id");
+        $this->conexion->consulta("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE id_vehiculo=$id");
         return $this->extraer_registro();
     }
     public function delete (int $id): void {

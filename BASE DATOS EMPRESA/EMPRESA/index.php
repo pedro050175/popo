@@ -26,9 +26,9 @@ Router::add('POST', '/pages/nuevo_vehiculo', function () {return (new VehiculoCo
 Router::add('GET', '/pages/nuevo_vehiculo', function() {return (new VehiculoController())->add();});
 Router::add('GET', '/vehiculos', function () {return (new VehiculoController())->list();});
 
-Router::add('GET', '/pages/detalles_foto_vehiculo/:id', function($id_foto) {return (new FotoController())->detalles_foto($id_foto);});
+//Router::add('GET', '/pages/detalles_foto_vehiculo/:id', function($id_foto) {return (new FotoController())->detalles_foto($id_foto);});
 Router::add('GET', '/pages/borrar_foto_vehiculo/:id', function($id_foto){return (new FotoController())->delete($id_foto);});
-Router::add('GET', '/pages/nuevo_foto/:id', function($id_foto) {return (new FotoController())->edit($id_foto);}); 
+Router::add('GET', '/pages/editar_foto/:id', function($id_foto) {return (new FotoController())->edit($id_foto);}); 
 Router::add('POST', '/pages/nueva_foto', function () {return (new FotoController())->save();});
 
 

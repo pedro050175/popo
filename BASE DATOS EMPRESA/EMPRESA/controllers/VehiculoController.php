@@ -49,6 +49,7 @@ class VehiculoController {
         $vehiculo = $this->vehiculo_repository->read($id);
         $entidades = $this->entidad_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $fotos = $this->foto_repository->fotos_vehiculo($id);
+        //var_dump($fotos);
         $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos]);
     }
     public function delete(int $id): void {
