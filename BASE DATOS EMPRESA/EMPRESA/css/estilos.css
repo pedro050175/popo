@@ -1,0 +1,66 @@
+.cuadro_text{
+    padding: 7px;
+    font-size: 16px;
+    margin: 4px 2px;
+    box-shadow: 0 8px 16px 0 rgba(95, 95, 95, 0.822);
+    border-radius: 8px;
+}
+.etiqueta{
+    color:rgb(223, 94, 3); 
+}
+.etiqueta_mini{
+    color: rgb(223, 94, 3);
+    font-size: 12px;
+}
+.boton_submit {
+    color: rgb(255, 255, 255);
+    background-color: rgb(223, 94, 3);
+    border: none;
+    padding: 7px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer !important;
+    box-shadow: 0 8px 16px 0 rgba(95, 95, 95, 0.822) !important;
+    border-radius: 8px;
+}
+.boton_link{
+    color: rgb(255, 255, 255);
+    background-color: rgb(223, 94, 3);
+    border: none;
+    padding: 7px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer !important;
+    box-shadow: 0 8px 16px 0 rgba(95, 95, 95, 0.822) !important;
+    border-radius: 8px;
+    text-decoration: none; /*para quitarle el subrayado del enlace*/
+    size-adjust: 100px;
+}
+.boton_link:hover{
+    color:rgb(255, 255, 255); /*para quitarle el colr azul al ponerse encima*/
+}
+.mi-fieldset {
+    border: 2px solid #ccc;   /* Borde gris */
+    padding: 10px;            /* Espacio interior */
+    border-radius: 8px; 
+    margin: 20px;      /* Bordes redondeados */
+}
+.mi-legend {
+                    /* quita todos los estilos aplicados boostrap me esta interfiriendo*/
+    display: block;
+    float: none;               /* evita que se flote raro */
+    width: auto;               /* se ajusta al texto */
+    padding: 0 8px;            /* espacio a los lados del texto */
+    margin: 0;                 
+    font-weight: bold;
+    font-size: 16px;
+    color: rgb(223, 94, 3);
+}
+.titulo_prin{
+    font-size: 24px; 
+    color: rgb(223, 94, 3);
+    text-shadow: 1px 2px 5px  grey;
+    font-weight: bold;/*negrita*/
+}

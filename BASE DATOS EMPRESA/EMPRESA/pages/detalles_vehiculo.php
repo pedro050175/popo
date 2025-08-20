@@ -1,9 +1,11 @@
-
 <div class="container mt-4">
-    <div class="card bg-white text-dark border">
-    <div class="card-header bg-light text-dark border-bottom">
-            <h4 class="mb-0"><i class="bi bi-car-front-fill me-2"></i>Información del Vehículo</h4>
+    <div class="col text-end">  
+        <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>vehiculos?num_pagina=1';">   
     </div>
+    <div class="card bg-white text-dark border">
+        <div class="card-header bg-light text-dark border-bottom">
+                <h4 class="titulo_prin"><i class="bi bi-car-front-fill me-2"></i>Información del Vehículo</h4>
+        </div>
     <div class="card-body">
         <div class="row mb-3">
             <div class="col-md-2">
@@ -56,8 +58,8 @@
         </div>                 
     </div>
 </div>
-    <div class="btn-group" role="group">
-        <a href="/mis_pruebas/pages/nuevo_vehiculo/<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+    <div class="btn-group">
+        <a href="<?= DIRECTORIO ?>nuevo_vehiculo/<?=$vehiculo->getId()?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
     </div>
 </div>
 
@@ -65,9 +67,9 @@
     <table class="table table-hover table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Foto</th>
+                    <th class="etiqueta" scope="col">Nombre</th>
+                    <th class="etiqueta" scope="col">Descripcion</th>
+                    <th class="etiqueta" scope="col">Foto</th>
                 </tr>
             </thead>
             <tbody>

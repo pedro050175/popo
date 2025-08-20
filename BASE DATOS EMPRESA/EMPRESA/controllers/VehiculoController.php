@@ -42,7 +42,7 @@ class VehiculoController {
         $vehiculo=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
         //print_r($vehiculo);
         $this->vehiculo_repository->save($vehiculo);
-        header('Location: /mis_pruebas/vehiculos?num_pagina=1');   
+        header('Location: '.DIRECTORIO.'vehiculos?num_pagina=1');   
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
@@ -58,14 +58,14 @@ class VehiculoController {
         if ($relacionados) {
             // echo "esta relacionado";
             $mensaje = urlencode('No se puede borrar el vehiculo porque tiene registros relacionados en otras tablas.');
-            header("Location: /mis_pruebas/vehiculos?num_pagina=1&error=$mensaje");
+            header("Location: '.DIRECTORIO.'vehiculos?num_pagina=1&error=$mensaje");
             exit;
             /* $entidades = $this->service->findAll(); Estas dos lineas hacen lo mismo que lo anterior y sin cargar una nueva pagina con header
             $this->pages->render('entidades', ['entidades' => $entidades,'error' => 'No se puede borrar hay asociados.']); */
             
         }
         $this->vehiculo_repository->delete($id);
-        header('Location: /mis_pruebas/vehiculos?num_pagina=1');
+        header('Location: '.DIRECTORIO.'vehiculos?num_pagina=1');
         exit; 
     }
 }

@@ -1,6 +1,6 @@
 <div id="error-message" class="alert alert-danger d-none" role="alert"></div> <!-- para mostrar mensaje de error en la pagina HTML al guardar con Nombre vacio-->
 
-<form action="/mis_pruebas/pages/nueva_entidad" method="post">
+<form action="<?= DIRECTORIO ?>nueva_entidad" method="post">
     <?php if (isset($entidad)) :?>
     <input type="hidden" name="data[entidad][id_entidad]" value="<?=$entidad->getId()?>" id="id_entidad">
     <?php endif;?>    
@@ -8,24 +8,25 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col">
-                <h5><?= (isset($entidad)) ? 'Modificar' : 'Nueva'?> Entidad</h5>
+                <h5 class="titulo_prin"><?= (isset($entidad)) ? 'Modificar' : 'Nueva'?> Entidad</h5>
             </div>
             <div class="col text-end">  
-                <a href="/mis_pruebas/entidades?num_pagina=1" role="button" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary"> <?= (isset($entidad)) ? 'Guardar' : 'Crear' ?></button>
+                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>entidades?num_pagina=1';">
+                <button type="submit" class="boton_submit"> <?= (isset($entidad)) ? 'Guardar' : 'Crear' ?></button>
             </div>
         </div>
 <div class="row">
     <div class="col-md-6">       
         <div class="form-floating mb-3">
             <input type="text" name="data[entidad][Nombre]" class="form-control" id="Nombre" placeholder="Nombre" value="<?=(isset($entidad))?$entidad->getNombre():''?>"> 
-            <label for="floatingInput">Nombre</label>
+            <label for="Nombre">Nombre</label><!--la propiedad for en los label asocia la etiqueta con el cuadro usando el nombre del id del cuadro de esta forma
+            al pinchar en la etiqueta el cursor se coloca en el input. Tmb se podria hacer poniendo el input entre las etiquetas label, pero boostrap pone la etiqueta fuera del input-->
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-floating mb-3">
             <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="CIF_DNI" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>" required>
-            <label for="floatingInput">CIF_DNI</label>
+            <label for="CIF_DNI">CIF_DNI</label>
         </div>
     </div>
 </div>
@@ -33,27 +34,27 @@
     <div class="col-md-6"> 
         <div class="form-floating mb-3">
             <input type="text" name="data[entidad][Direccion]" class="form-control" id="Direccion" placeholder="Direccion" value="<?=(isset($entidad))?$entidad->getDireccion():''?>">
-            <label for="floatingInput">Direccion</label>
+            <label for="Direccion">Direccion</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
             <input type="text" name="data[entidad][Telefono]" class="form-control" id="Telefono" placeholder="Telefono" value="<?=(isset($entidad))?$entidad->getTelefono():''?>">
-            <label for="floatingInput">Telefono</label>
+            <label for="Telefono">Telefono</label>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Email]" class="form-control" id="Email" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
-            <label for="floatingInput">Email</label>
+            <input type="email" name="data[entidad][Email]" class="form-control" id="Email" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
+            <label for="Email">Email</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
             <input type="text" name="data[entidad][Observaciones]" class="form-control" id="Observaciones" placeholder="Observaciones" value="<?=(isset($entidad))?$entidad->getObservaciones():''?>">
-            <label for="floatingInput">Observaciones</label>
+            <label for="Observaciones">Observaciones</label>
         </div>
     </div>
 </div>

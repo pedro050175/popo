@@ -38,7 +38,7 @@ class EntidadController {
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $entidad=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
         $this->entidad_repository->save($entidad);
-        header('Location: /mis_pruebas/entidades?num_pagina=1');   
+        header('Location: '.DIRECTORIO.'entidades?num_pagina=1');   
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
@@ -50,14 +50,14 @@ class EntidadController {
         
         if ($relacionados) {
             $mensaje = urlencode('No se puede borrar la entidad porque tiene registros relacionados en otras tablas.');
-            header("Location: /mis_pruebas/entidades?num_pagina=1&error=$mensaje");
+            header('Location: '.DIRECTORIO.'entidades?num_pagina=1&error=$mensaje');
             exit;
             /* $entidades = $this->service->findAll(); Estas dos lineas hacen lo mismo que lo anterior y sin cargar una nueva pagina con header
             $this->pages->render('entidades', ['entidades' => $entidades,'error' => 'No se puede borrar hay asociados.']); */
             
         }
         $this->entidad_repository->delete($id);
-        header('Location: /mis_pruebas/entidades?num_pagina=1');
+        header('Location: '.DIRECTORIO.'entidades?num_pagina=1');
         exit; 
     }
 }

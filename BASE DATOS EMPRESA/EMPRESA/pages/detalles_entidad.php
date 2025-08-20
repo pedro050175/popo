@@ -1,7 +1,10 @@
 <div class="container mt-4">
+    <div class="col text-end">  
+        <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>entidades?num_pagina=1';">   
+    </div>
     <div class="card bg-white text-dark border">
         <div class="card-header bg-light text-dark border-bottom">
-            <h4 class="mb-0"><i class="bi bi-car-front-fill me-2"></i>Información Entidad</h4>
+            <h4 class="titulo_prin"><i class="bi bi-car-front-fill me-2"></i>Información Entidad</h4>
         </div>
         <div class="card-body">
             <div class="row mb-3">
@@ -31,9 +34,9 @@
                 </div>
             </div>    
         </div>
-        </div>
     </div>
 </div>
+
 
 
         

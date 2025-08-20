@@ -76,7 +76,7 @@ div h2, div h3 {/*si no le pongo div delante de h3 aplicaria el color a todos lo
     
     
     text-decoration: underline;
-    text-shadow: 3px 5px 3px grey;/* c1º valor: cuanto se desplz hacia la derecha la sombra, 2º: cuanto se desplaz hacia abajo, 3º difuminado de la sobra*/
+    text-shadow: 3px 5px 3px grey;/*1º valor: cuanto se desplz hacia la derecha la sombra, 2º: cuanto se desplaz hacia abajo, 3º difuminado de la sobra*/
 }
 /*para configurar los colores que toman los links segun se haya activado o no. hay que ponerlos en el orden que salen aqui*/
 a:link { /* color cuando link no se ha visitado */
