@@ -1,1 +1,1 @@
-drop table impuesto;
+drop table tipogasto;

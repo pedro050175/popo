@@ -16,4 +16,5 @@ define ('CAMPOS_VEHICULO', ["id_vehiculo" => 0, "Matricula" =>'', "Bastidor" => 
 define ('CAMPOS_ALQUILER', ["id_alquiler" => 0, "Contrato" => '', "id_vehiculo" => 0, "Cliente" => 0, "Fecha_inicio" => '', "Fecha_fin" => '', "Kilometros" => 0, "Km_inicio" => 0, "Km_fin" => 0, 
         "Dias" => 0, "Precio" => 0, "Precio_km" => 0, "id_comercial" => 0, "Empresa" => 0, "Ciudad" => '', "Entrega" => 0, "Comision_comercial" => 0, "Ganancia" => 0, "Observaciones" => '']);
 define ('CAMPOS_FOTO', ["id" => 0, "url" => '', "destacada" => 0, "id_vehiculo" => '0', "descripcion" => '']);
+define ('CAMPOS_GASTO_VEHICULO', ["id_gasto" =>0, "tipo" =>'', "Importe" => 0, "Fecha" =>'', "Paga_otro" => 0, "Comentarios" => '', "id_vehiculo" => 0, "pagado" => 0]);
 ?>

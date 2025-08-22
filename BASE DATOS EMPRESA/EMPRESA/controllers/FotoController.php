@@ -15,12 +15,11 @@ class FotoController {
 
     }  
     
-    public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
-        $foto=$_POST['foto']; //coge los datos del metodo POST, los graba y salta al listado entidades
-
-        if (!isset($_FILES['imagen'])) {//es una modificadion de datos
+    public function save(): void { 
+        $foto=$_POST['foto']; 
+        if (!isset($_FILES['imagen'])) {
             $this->foto_repository->update($foto);
-            header('Location: /mis_pruebas/nuevo_vehiculo/'.$foto['id_vehiculo']);//cargo el mismo vehiculo que estaba editando 
+            header('Location: '.DIRECTORIO.'nuevo_vehiculo/'.$foto['id_vehiculo']);//cargo el mismo vehiculo que estaba editando 
             exit;
         }
         $imagen = $_FILES['imagen'];

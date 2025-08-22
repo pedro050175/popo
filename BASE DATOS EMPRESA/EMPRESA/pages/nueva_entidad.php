@@ -39,7 +39,8 @@
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Telefono]" class="form-control" id="Telefono" placeholder="Telefono" value="<?=(isset($entidad))?$entidad->getTelefono():''?>">
+            <input type="tel" name="data[entidad][Telefono]" pattern="[0-9+ ]{9,15}" class="form-control" id="Telefono" placeholder="Telefono" value="<?=(isset($entidad))?$entidad->getTelefono():''?>">
+            <!--pattern es una expresion regular para valirdar se puede aplcar a campos type email, search, text-->
             <label for="Telefono">Telefono</label>
         </div>
     </div>
@@ -47,7 +48,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="email" name="data[entidad][Email]" class="form-control" id="Email" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
+            <input type="email" name="data[entidad][Email]" class="form-control" multiple id="Email" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
             <label for="Email">Email</label>
         </div>
     </div>

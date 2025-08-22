@@ -41,11 +41,11 @@ class Foto {
         return $this->descripcion;
     }
 
-    public static function fromArray(array $data): foto {
+    public static function fromArray(array $data): Foto {
         
         $modelo = duplicar_tabla(CAMPOS_FOTO, $data);
         //var_dump($data);
-        return new foto ($modelo['id'], $modelo['url'], $modelo['destacada'], $modelo['id_vehiculo'], $modelo['descripcion']); 
+        return new Foto ($modelo['id'], $modelo['url'], $modelo['destacada'], $modelo['id_vehiculo'], $modelo['descripcion']); 
     }
 
 }

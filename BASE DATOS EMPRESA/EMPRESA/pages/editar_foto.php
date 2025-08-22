@@ -17,6 +17,7 @@
         </div>
         <div class="col-md-6">
             <button type="submit" class="boton_submit">Guardar</button>
+            <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_vehiculo/<?=$foto->getid_vehiculo()?>';"><!--regreso al vehiculo que estaba con DIRECTORIO/nuevo_vehiculo/$foto->getid_vehiculo()-->  
         </div>
         <input type="hidden" name="foto[id_vehiculo]" value="<?=$foto->getid_vehiculo()?>" id="id_veviculo">
         <input type="hidden" name="foto[id]" value="<?=$foto->getid()?>" id="id">

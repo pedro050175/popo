@@ -1,0 +1,1 @@
+alter table gastosvehiculo drop foreign key `fk_tipo`; 

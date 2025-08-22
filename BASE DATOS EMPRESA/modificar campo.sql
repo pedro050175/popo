@@ -1,1 +1,1 @@
-ALTER TABLE entidad CHANGE `Observaciones`  `Observaciones` varchar (255);
+ALTER TABLE `gastosvehiculo` CHANGE `Tipo`  `tipo` varchar (35);

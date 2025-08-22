@@ -2,9 +2,9 @@
 namespace repositories;
 
 use lib\BaseDatosPDO;
-use models\Foto;
+use models\GastoVehiculo;
 
-class FotoRepository {
+class GastoVehiculoRepository {
 
     private BaseDatosPDO $conexionPDO;
     
@@ -12,14 +12,14 @@ class FotoRepository {
         $this->conexionPDO = new BaseDatosPDO();
     }
     
-    public function fotos_vehiculo(int $id): ?array {
+    public function gastos_vehiculo(int $id): ?array {
         $parametros = [':id' =>$id];
-        $sql = "SELECT * FROM fotos WHERE id_vehiculo=:id";
+        $sql = "SELECT * FROM gastosvehiculo WHERE id_vehiculo=:id";
         $this->conexionPDO->consulta ($sql, $parametros);
         return $this->extraer_todos();    
     }
     public function extraer_registro(): ?Foto {
-        return ($foto = $this->conexionPDO->extraer_registro()) ? foto::fromArray($foto):null;
+        return ($gasto = $this->conexionPDO->extraer_registro()) ? GastoVehiculo::fromArray($gasto):null;
     }
     public function extraer_todos(): ?array {
         $fotos = [];

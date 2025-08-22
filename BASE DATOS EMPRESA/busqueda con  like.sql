@@ -1,0 +1,1 @@
+SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Marca_modelo LIKE "%jeep%";

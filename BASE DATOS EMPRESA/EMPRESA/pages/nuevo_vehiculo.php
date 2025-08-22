@@ -9,7 +9,7 @@
             </div>
             <div class="col text-end">  
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>vehiculos?num_pagina=1';">   
-                <button type="submit" class="boton_submit"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
+                <button type="submit" class="boton_submit" onclick="validarFechas(this.form);return false"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
             </div>
         </div>
 <div class="row">
@@ -155,14 +155,16 @@
                     <input size="100" class="cuadro_text" type="file" name="imagen" id="foto" required>
                     <em class="etiqueta_mini">Foto menor de 2MB</em>
                 </div>        
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <label class="etiqueta" for="destacada" >Destacada:</label>&nbsp&nbsp&nbsp&nbsp<input class="cuadro_text" type="checkbox" name="foto[destacada]" id="destacada">
                 </div>
+                <div class="col-md-2">
+                    <button type="submit" class="boton_submit">Guardar Foto</button>
+                </div>
             </div>
-            <input type="hidden" name="foto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo"><br/>
+            <input type="hidden" name="foto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
             <label class="etiqueta" for="descripcion">Descripcion:&nbsp</label>
-            <input size=100 class="cuadro_text" type="text" name="foto[descripcion]" id="descripcion" placeholder="Descripción"><br/><br/>
-            <button type="submit" class="boton_submit">Guardar Foto</button>
+            <input size=100 class="cuadro_text" type="text" name="foto[descripcion]" id="descripcion" placeholder="Descripción"><br/>
         </fieldset>
     </form>
 </div>
