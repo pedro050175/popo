@@ -1,6 +1,6 @@
 <form action="<?= DIRECTORIO ?>nuevo_vehiculo" method="post">
     <?php if (isset($vehiculo)) :?>
-    <input type="hidden" name="data[vehiculo][id_vehiculo]" value="<?=$vehiculo->getId()?>">
+    <input type="hidden" name="data[vehiculo][id_vehiculo]" id='id_vehiculo' value="<?=$vehiculo->getId()?>">
     <?php endif;?>      
     <div class="container mt-1">
         <div class="row">
@@ -139,11 +139,9 @@
         </div>
     </div>           
 </div>
-<!-- formulario para nuevas fotos -->
+<!-- formulario para nueva fotos -->
 </form>
-
-<?php if (isset($vehiculo)) :?>
-    
+<?php if (isset($vehiculo)) :?> 
 <div>
     <form action="<?= DIRECTORIO ?>nueva_foto" method="post" enctype="multipart/form-data">
         <fieldset class="mi-fieldset">
@@ -168,6 +166,8 @@
         </fieldset>
     </form>
 </div>
+<!--listado fotos-->
+<p class="titulo_sec">Fotos</p>
 <div>
     <table class="table table-hover table-striped">
             <thead>
@@ -194,7 +194,7 @@
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <!-- estoy en /mis_pruebas/pages/nuevo_vehiculo con ..subo un directorio y voy a /mis_pruebas/pages/ y añado /borrar_foto... y me quedo en /mis_pruebas/pages/borrar_foto_vehiculo-->
-                            <a href="../borrar_foto_vehiculo/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta foto?');"> 
+                            <a href="../borrar_gasto_vehiculo/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta foto?');"> 
                             <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
                             <i class="bi bi-trash"></i>
                             </a>   
@@ -203,6 +203,86 @@
                 <?php endforeach ;?>      
             </tbody>
     </table>            
+</div> 
+<!--Formulario nuevo gasto-->
+<div>
+    <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post">
+        <fieldset class="mi-fieldset">
+            <legend class="mi-legend">Nuevo Gasto</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="tipo" class="etiqueta">Tipo:</label> 
+                    <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" required placeholder="Tipo">
+                </div>        
+                <div class="col-md-4">
+                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <input class="cuadro_text" type="number" name="gasto[importe]" id="importe" placeholder="Importe">
+                </div>
+                <div class="col-md-4">
+                    <label class="etiqueta" for="fecha" >Fecha:</label>&nbsp
+                    <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" placeholder="Fecha" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="etiqueta" for="paga_otro" >Paga otro:</label>&nbsp
+                    <input class="cuadro_text" type="checkbox" name="gasto[paga_otro]" id="paga_otro">
+                </div>
+                <div class="col-md-2">
+                    <label class="etiqueta" for="pagado" >Pagado:</label>&nbsp
+                    <input class="cuadro_text" type="checkbox" name="gasto[pagado]" id="pagado">
+                </div>
+                <div class="col-md-6">
+                    <label class="etiqueta" for="comentarios" >Comentarios:</label>&nbsp
+                    <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="boton_submit">Guardar Gasto</button>
+                </div>
+            </div>
+            <input type="hidden" name="gasto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
+        </fieldset>
+    </form>
+</div>
+<!--listado Gastos-->
+<p class="titulo_sec">Gastos</p>
+<div>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="etiqueta" scope="col">Tipo</th>
+                <th class="etiqueta" scope="col">Importe</th>
+                <th class="etiqueta" scope="col">Fecha</th>
+                <th class="etiqueta" scope="col">Paga otro</th>
+                <th class="etiqueta" scope="col">Pagado</th>
+                <th class="etiqueta" scope="col">Comentarios</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <?php $totalGastos = 0; ?>
+            <?php foreach($gastos as $gasto) :?>
+                <tr>
+                    <?php $totalGastos += $gasto->getImporte();?> 
+                    <td><?=$gasto->getTipo()?></td>
+                    <td><?=number_format($gasto->getImporte(), 2, ',', '.');?>€</td>         
+                    <td><?=$gasto->getFecha()?></td>         
+                    <td><?=$gasto->getPaga_otro() ? 'SI' : 'NO'?></td>         
+                    <td><?=$gasto->getPagado() ? 'SI' : 'NO'?></td>         
+                    <td><?=$gasto->getComentarios()?></td>         
+                    <td><div class="btn-group" role="group">
+                        <a href="<?= DIRECTORIO ?>editar_gasto_vehiculo/<?=$gasto->getId_gasto()?>?vehiculo=<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="../borrar_gasto_vehiculo/<?=$gasto->getid_gasto()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta foto?');"> 
+                            <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
+                            <i class="bi bi-trash"></i>
+                        </a>   
+                    </div>
+                </td>
+            </tr>    
+            <?php endforeach ;?>   
+        </tbody>
+    </table>            
+    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
 </div> 
 <?php endif;?>
 

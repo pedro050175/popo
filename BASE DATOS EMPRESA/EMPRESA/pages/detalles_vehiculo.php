@@ -62,7 +62,8 @@
         <a href="<?= DIRECTORIO ?>nuevo_vehiculo/<?=$vehiculo->getId()?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
     </div>
 </div>
-
+<!--Fotos-->
+<p class="titulo_sec">Fotos</p>
 <div>
     <table class="table table-hover table-striped">
             <thead>
@@ -83,13 +84,39 @@
                         <td><?=$foto->getdescripcion()?></td>
                         <td><img src="<?=FOTOS_VEHICULOS_SERVIDOR.$foto->nombre_foto_server()?>" width="<?=$w?>" height="<?=$h?>" alt=<?= rawurlencode($foto->nombre_foto_server())?>></td><!--rawurlencode sirve para cambiar los espacios por %20. si el nombre de la imagen lleva espacio daria error si no se usa rawurlencode, eso hace falta si pongo la ruta sin "ruta", si la pongo entre comillas no hace falt usar rawurlencode-->
                 <!--he puesto un src con "" y sin rawurlencode y otro sin "" y con rawurlencode-->            
-                    
-                <?php endforeach ;?> 
-                <!--     <img src="/mis_pruebas/fotos/bmw%20m4%201.jpeg"> -->      
+                    </tr>
+                <?php endforeach ;?>     
             </tbody>
     </table>            
 </div> 
-
+<!--Gastos-->
+<p class="titulo_sec">Gastos</p>
+<div>
+    <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th class="etiqueta" scope="col">Tipo</th>
+                    <th class="etiqueta" scope="col">Importe</th>
+                    <th class="etiqueta" scope="col">Fecha</th>
+                    <th class="etiqueta" scope="col">Paga otro</th>
+                    <th class="etiqueta" scope="col">Pagado</th>
+                    <th class="etiqueta" scope="col">Comentarios</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($gastos as $gasto) :?>
+                    <tr>
+                        <td><?=$gasto->getTipo()?></td>
+                        <td><?=number_format($gasto->getImporte(), 2, ',', '.');?>€</td>         
+                        <td><?=$gasto->getFecha()?></td>         
+                        <td><?=$gasto->getPaga_otro()? 'SI' : 'NO'?></td>         
+                        <td><?=$gasto->getPagado()? 'SI' : 'NO'?></td>         
+                        <td><?=$gasto->getComentarios()?></td>         
+                    </tr>    
+                <?php endforeach ;?>   
+            </tbody>
+    </table>            
+</div> 
 
     
         

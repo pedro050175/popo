@@ -4,6 +4,7 @@ namespace controllers;
 use repositories\EntidadRepository;
 use repositories\VehiculoRepository;
 use repositories\FotoRepository;
+use repositories\GastoVehiculoRepository;
 
 use lib\Pages;
 //las llamadas a metodo reder es para cargar una nueva pagina y las llamadas a service es para acceder a datos de la base de datos
@@ -12,6 +13,7 @@ class VehiculoController {
     private EntidadRepository $entidad_repository;
     private VehiculoRepository $vehiculo_repository;
     private FotoRepository $foto_repository;
+    private GastoVehiculoRepository $gasto_repository;
     private Pages $pages;
 
     function __construct(){
@@ -19,13 +21,14 @@ class VehiculoController {
         $this->pages = new Pages();
         $this->vehiculo_repository = new VehiculoRepository();
         $this->foto_repository = new FotoRepository();
-
+        $this->gasto_repository = new GastoVehiculoRepository();
     }  
     public function detalles_vehiculo(int $id) {
+        $gastos = $this->gasto_repository->gastos_vehiculo($id); 
         $fotos = $this->foto_repository->fotos_vehiculo($id);
         //print_r($fotos);
         $vehiculo = $this->vehiculo_repository->detalles_vehiculo($id);
-        $this->pages->render('detalles_vehiculo', ['vehiculo' => $vehiculo, 'fotos' => $fotos]);
+        $this->pages->render('detalles_vehiculo', ['vehiculo' => $vehiculo, 'fotos' => $fotos, 'gastos' => $gastos]);
     }
     public function list(): void {
         $vehiculos = $this->vehiculo_repository->findAll($paginar=true);
@@ -47,10 +50,11 @@ class VehiculoController {
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
         $vehiculo = $this->vehiculo_repository->read($id);
-        $entidades = $this->entidad_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
+        $entidades = $this->entidad_repository->findAll(false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $fotos = $this->foto_repository->fotos_vehiculo($id);
-        //var_dump($fotos);
-        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos]);
+        $gastos = $this->gasto_repository->gastos_vehiculo($id);
+        //var_dump($gastos);
+        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos, 'gastos' => $gastos]);
     }
     public function delete(int $id): void {
         $relacionados=$this->vehiculo_repository->relacionados($id);

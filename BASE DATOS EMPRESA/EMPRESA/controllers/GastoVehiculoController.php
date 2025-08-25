@@ -15,10 +15,11 @@ class GastoVehiculoController {
 
     }  
     
-    public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
+    public function save(): void { //se usa para guardar una nuevo o uno editado, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $gasto=$_POST['gasto']; //coge los datos del metodo POST, los graba y salta al listado entidades
         
-        if (isset($gasto['gasto']['id_foto'])) {
+        //var_dump($gasto);
+        if (isset($gasto['id_gasto'])) {
             $this->gasto_repository->update($gasto);
             header('Location: /mis_pruebas/nuevo_vehiculo/'.$gasto['id_vehiculo']);//cargo el mismo vehiculo que estaba editando 
             exit;
@@ -29,8 +30,8 @@ class GastoVehiculoController {
         }
     }
     public function edit(int $id): void {
-        $foto = $this->gasto_repository->read($id);
-        $this->pages->render('editar_foto', ['foto' => $foto]);
+        $gasto = $this->gasto_repository->read($id);
+        $this->pages->render('editar_gasto_vehiculo', ['gasto' => $gasto]);
     }
     public function delete(int $id): void {
         $this->gasto_repository->delete($id);

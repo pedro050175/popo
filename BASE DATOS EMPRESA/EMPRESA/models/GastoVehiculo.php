@@ -6,22 +6,22 @@ class GastoVehiculo {
 
     function __construct(private ?int $id_gasto, private ?string $tipo, private ?float $Importe, private ?string $Fecha, private ?int $Paga_otro, private ?string $Comentarios, private ?int $id_vehiculo, private ?int $pagado){}
     
-    public function setid_gasto(?int $id) {
+    public function setId_gasto(?int $id) {
         $this->id_gasto = $id;
     }
-    public function getid(): ?int {
+    public function getId_gasto(): ?int {
         return $this->id_gasto;
     }
-    public function settipo(?string $tipo) {
+    public function setTipo(?string $tipo) {
         $this->tipo = $tipo;
     }
-    public function gettipo(): ?string {
+    public function getTipo(): ?string {
         return $this->tipo;
     }
     public function setImporte(?float $importe) {
         $this->Importe = $importe;
     }
-    public function getimporte(): ?float {
+    public function getImporte(): ?float {
         return $this->Importe;
     }
     public function setFecha(?string $fecha) {
@@ -42,16 +42,16 @@ class GastoVehiculo {
     public function getComentarios(): ?string {
         return $this->Comentarios;
     }
-    public function setid_vehiculo(?int $id_vehiculo) {
+    public function setId_vehiculo(?int $id_vehiculo) {
         $this->id_vehiculo = $id_vehiculo;
     }
-    public function getid_vehiculo(): ?int {
+    public function getId_vehiculo(): ?int {
         return $this->Paga_otro;
     }
-    public function setpagado(?int $pagado) {
+    public function setPagado(?int $pagado) {
         $this->pagado = $pagado;
     }
-    public function getpagado(): ?int {
+    public function getPagado(): ?int {
         return $this->pagado;
     }
     public static function fromArray(array $data): GastoVehiculo {

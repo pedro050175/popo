@@ -35,7 +35,7 @@ class FotoRepository {
         
         $parametros = [
             ':url'=> $imagen['name'],
-            ':destacada' => (isset($foto['destacada'])) ? 1 : '',
+            ':destacada' => (isset($foto['destacada'])) ? 1 : 0,
             ':id_vehiculo' => $foto['id_vehiculo'],
             ':descripcion' => $foto['descripcion']       
         ];
@@ -71,7 +71,7 @@ class FotoRepository {
 
     public function update (array $foto): void{ 
         $parametros = [
-            ':destacada' => (isset($foto['destacada'])) ? 1 : '',
+            ':destacada' => (isset($foto['destacada'])) ? 1 : 0,
             ':descripcion' => $foto['descripcion'], 
             ':id' => $foto['id']       
         ];

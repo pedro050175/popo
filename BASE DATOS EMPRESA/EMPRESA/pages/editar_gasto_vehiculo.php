@@ -1,0 +1,39 @@
+<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspGasto</label>
+<div>
+    <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post">
+        <fieldset class="mi-fieldset">
+            <legend class="mi-legend">Editar Gasto</legend>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="tipo" class="etiqueta">Tipo:</label> 
+                    <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" value=<?=$gasto->getTipo()?> required>
+                </div>        
+                <div class="col-md-4">
+                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <input class="cuadro_text" type="number" name="gasto[importe]" id="importe" placeholder="Importe" value=<?=$gasto->getImporte()?>>
+                </div>
+                <div class="col-md-4">
+                    <label class="etiqueta" for="importe" >Fecha:</label>&nbsp
+                    <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" value=<?=$gasto->getFecha()?> required>
+                </div>
+                <div class="col-md-2">
+                    <label class="etiqueta" for="paga_otro" >Paga otro:</label>&nbsp
+                    <input class="cuadro_text" type="checkbox" name="gasto[paga_otro]" id="paga_otro" <?=($gasto->getPaga_otro()) ? 'checked' : ''?>>
+                </div>
+                <div class="col-md-2">
+                    <label class="etiqueta" for="pagado" >Pagado:</label>&nbsp
+                    <input class="cuadro_text" type="checkbox" name="gasto[pagado]" id="pagado" <?=($gasto->getPagado()==1) ? 'checked' : ''?>>
+                </div>
+                <div class="col-md-6">
+                    <label class="etiqueta" for="comentarios" >Comentarios:</label>&nbsp
+                    <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios" value=<?=$gasto->getComentarios()?>>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="boton_submit">Guardar Gasto</button>
+                </div>
+            </div>
+            <input type="hidden" name="gasto[id_vehiculo]"  id="id_vehiculo" value="<?=$gasto->getId_vehiculo()?>">
+            <input type="hidden" name="gasto[id_gasto]" id="id_gasto" value="<?=$gasto->getId_gasto()?>">
+        </fieldset>
+    </form>
+</div>
