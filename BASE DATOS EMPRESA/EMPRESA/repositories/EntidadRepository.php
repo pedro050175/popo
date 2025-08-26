@@ -42,8 +42,8 @@ class EntidadRepository {
         if ($campo_ord) {
             $this->conexion->consulta ("SELECT * FROM entidad ORDER BY $campo_ord LIMIT $desplazamiento, ".FILAS_PAGINA);
         } else {
-            $busca = $_GET['buscar_nombre'] ?? null;
-            if ($busca) {
+            $busca = $_GET['buscar_nombre'] ?? null;//si no se escribe en el campo formulario seria $_GET['buscar_nombre']=='' con lo que $busca=='' y luego en if ($busca) devuelve false porque cadena vacia en un if devuelve false
+            if ($busca) {//no se puede poner directamente if ($_GET['buscar_nombre']) porque solo evaluamos si es o no '', pero no evaluamos si existe, si no existiera daria warning
                 $this->conexion->consulta ("SELECT * FROM entidad WHERE Nombre LIKE '%$busca%'");
             } else {
                 $busca = $_GET['buscar_dnicif'] ?? null;

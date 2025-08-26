@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-md-6">
             <form action="<?= DIRECTORIO ?>entidades" method="get" class="d-flex">
-                <input type="search" name="buscar_nombre" class="form-control me-2" id="busca_nombre" placeholder="Buscar nombre">
                 <input type="search" name="buscar_dnicif" class="form-control me-2" id="buscar_dnicif" placeholder="Buscar DNI/CIF">
+                <input type="search" name="buscar_nombre" class="form-control me-2" id="busca_nombre" placeholder="Buscar nombre">
                 <input type="hidden" name="num_pagina"   class="form-control me-2" id="num_pagina" value="1"><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="boton_submit">Buscar</button>
             </form>

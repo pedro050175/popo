@@ -104,18 +104,21 @@
                 </tr>
             </thead>
             <tbody>
+                <?php $totalGastos = 0; ?>
                 <?php foreach($gastos as $gasto) :?>
                     <tr>
+                        <?php $totalGastos += $gasto->getImporte();?>
                         <td><?=$gasto->getTipo()?></td>
                         <td><?=number_format($gasto->getImporte(), 2, ',', '.');?>€</td>         
-                        <td><?=$gasto->getFecha()?></td>         
+                        <td><?=formatea_fecha($gasto->getFecha())?></td>         
                         <td><?=$gasto->getPaga_otro()? 'SI' : 'NO'?></td>         
                         <td><?=$gasto->getPagado()? 'SI' : 'NO'?></td>         
                         <td><?=$gasto->getComentarios()?></td>         
                     </tr>    
                 <?php endforeach ;?>   
             </tbody>
-    </table>            
+    </table>  
+    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>          
 </div> 
 
     

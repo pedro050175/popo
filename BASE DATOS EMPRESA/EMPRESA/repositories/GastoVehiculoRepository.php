@@ -14,7 +14,21 @@ class GastoVehiculoRepository {
     
     public function gastos_vehiculo(int $id): ?array {
         $parametros = [':id' => $id];
-        $sql = "SELECT * FROM gastosvehiculo WHERE id_vehiculo=:id";
+        if (!empty($_GET['ordenar'])){
+            $campoOrdenar = $_GET['ordenar'];
+            $sql = "SELECT * FROM gastosvehiculo WHERE id_vehiculo=:id ORDER BY $campoOrdenar";
+        } else if (!empty($_GET['buscar_tipo'])){//empty comprueba que no sea nulo, que exista y que no sea vacio '' es igual que isset pero ademas comprueba que no sea ''
+            $busca =  $_GET['buscar_tipo'];  //porque cuando no se escribe nada en el formulario en la URL viene busca= y eso es $_GET['busca']=''         
+            $sql = "SELECT * FROM gastosvehiculo WHERE id_vehiculo=:id AND tipo LIKE '%$busca%'";
+        } else if (!empty($_GET['fecha_inicio']) | !empty($_GET['fecha_fin'])){
+                $fechaInicio = $_GET['fecha_inicio'] != '' ? $_GET['fecha_inicio'] : '1900-01-01'; // si no escribe en la decha de inicio tomo la fecha 1900-01-01 como inicial
+                $fechaFin = $_GET['fecha_fin'] != '' ? $_GET['fecha_fin'] : date("Y-m-d");//si fecha fin es '' le pondo la de hoy. (Y es aaaa con y sera aa para mes y dia con solo poner m o d usara mm o dd
+
+                $sql = "SELECT * FROM gastosvehiculo WHERE id_vehiculo=:id AND Fecha BETWEEN '$fechaInicio' AND '$fechaFin'";
+            } else {                
+                $sql = "SELECT * FROM gastosvehiculo WHERE id_vehiculo=:id";
+                }
+
         $this->conexionPDO->consulta ($sql, $parametros);
         return $this->extraer_todos();    
     }

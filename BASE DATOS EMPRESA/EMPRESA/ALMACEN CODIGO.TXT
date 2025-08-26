@@ -1,4 +1,26 @@
 
 <?=$destacada?>
-          
+
+
+   <div>
+    <table>
+        <thead>
+            <tr>
+                <th>Hola</th>
+                <th>Mundo</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>Pedro</td>
+                    <td>Sandoval</td>
+                </tr>
+                <tr>
+                    <td>Pedro</td>
+                    <td>Noe</td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+       
 ?>

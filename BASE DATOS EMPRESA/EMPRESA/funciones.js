@@ -21,3 +21,9 @@ function validarFechas (formulario){
     }
     formulario.submit();
 }
+function mostrarFotos(){
+
+}
+function mostrarGastos{
+    
+}

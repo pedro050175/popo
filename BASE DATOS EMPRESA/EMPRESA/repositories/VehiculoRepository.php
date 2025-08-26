@@ -38,13 +38,13 @@ class VehiculoRepository {
             $num_pagina = intval($_GET['num_pagina']);
             $desplazamiento = ($num_pagina-1) * FILAS_PAGINA;
         }
-        $campo_ord= $_GET['ordenar'] ?? null;
+        $campo_ord = $_GET['ordenar'] ?? null;
         if ($campo_ord) {
             $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad ORDER BY $campo_ord LIMIT $desplazamiento, ".FILAS_PAGINA);
         } else {
             $busca = $_GET['buscar_marca'] ?? null;
             if ($busca) {
-                $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Marca_modelo LIKE \"%$busca%\"");//cuando hay un LIKA el argumento a buscar en mysql va entre dobles comillas LIKE "%cadena%", para poder poner " dentro detengo que escaparlas
+                $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Marca_modelo LIKE '%$busca%'");
             } else {
                 $busca = $_GET['buscar_matr_bast'] ?? null;
                 if ($busca) {
