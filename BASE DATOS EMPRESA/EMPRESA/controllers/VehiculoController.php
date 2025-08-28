@@ -5,6 +5,7 @@ use repositories\EntidadRepository;
 use repositories\VehiculoRepository;
 use repositories\FotoRepository;
 use repositories\GastoVehiculoRepository;
+use repositories\CuotaVehiculoRepository;
 
 use lib\Pages;
 //las llamadas a metodo reder es para cargar una nueva pagina y las llamadas a service es para acceder a datos de la base de datos
@@ -14,6 +15,7 @@ class VehiculoController {
     private VehiculoRepository $vehiculo_repository;
     private FotoRepository $foto_repository;
     private GastoVehiculoRepository $gasto_repository;
+    private CuotaVehiculoRepository $cuota_repository;
     private Pages $pages;
 
     function __construct(){
@@ -22,13 +24,14 @@ class VehiculoController {
         $this->vehiculo_repository = new VehiculoRepository();
         $this->foto_repository = new FotoRepository();
         $this->gasto_repository = new GastoVehiculoRepository();
+        $this->cuota_repository = new cuotaVehiculoRepository();
     }  
     public function detalles_vehiculo(int $id) {
         $gastos = $this->gasto_repository->gastos_vehiculo($id); 
         $fotos = $this->foto_repository->fotos_vehiculo($id);
-        //print_r($fotos);
+        $cuotas = $this->cuota_repository->cuotas_vehiculo($id);
         $vehiculo = $this->vehiculo_repository->detalles_vehiculo($id);
-        $this->pages->render('detalles_vehiculo', ['vehiculo' => $vehiculo, 'fotos' => $fotos, 'gastos' => $gastos]);
+        $this->pages->render('detalles_vehiculo', ['vehiculo' => $vehiculo, 'fotos' => $fotos, 'gastos' => $gastos, 'cuotas' => $cuotas]);
     }
     public function list(): void {
         $vehiculos = $this->vehiculo_repository->findAll($paginar=true);

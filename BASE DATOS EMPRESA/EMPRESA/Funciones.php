@@ -11,11 +11,10 @@ function Limpiar_parametros (array $datos): array {//Cambia los '' por NULL
     return $limpios;
 }
 function duplicar_tabla (array $modelo, array $data): array{   
-    $resultado = $modelo;
     foreach ($data as $indice => $valor){ //paso los datos de data a modelo, si falta algun campo en data, modelo lo tiene creado
-        $resultado[$indice] = $data[$indice];
+        $modelo[$indice] = $data[$indice];
     } 
-    return $resultado;
+    return $modelo;
 }
 function errorFile(string $error): string {
     switch ($error){

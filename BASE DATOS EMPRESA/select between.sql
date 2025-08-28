@@ -1,0 +1,1 @@
+SELECT * FROM gastosvehiculo WHERE id_vehiculo=1 AND Fecha BETWEEN '2025-06-01' AND '2025-08-29';

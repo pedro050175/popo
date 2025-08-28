@@ -144,15 +144,15 @@
 <div class="row">
     <div class="col-md-8"></div>
     <div class="col-md-4 botones">
-        <button class="boton_menu" onclick="mostrarFotos" >Fotos</button>
-        <button class="boton_menu" onclick="mostrarGastos">Gastos</button>        
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('fotos')">Fotos</button>
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos')">Gastos</button>        
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos')">Cuotas</button>        
     </div>
 </div>
 <?php if (isset($vehiculo)) :?>
 <!--FOTOS-->
 <div class=contenedor id="fotos">
 <!-- formulario para nueva fotos -->
-    
     <form action="<?= DIRECTORIO ?>nueva_foto" method="post" enctype="multipart/form-data">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nueva Foto</legend>
@@ -175,7 +175,6 @@
             <input size=100 class="cuadro_text" type="text" name="foto[descripcion]" id="descripcion" placeholder="Descripción"><br/>
         </fieldset>
     </form>
-    
     <!--listado fotos-->
     <p class="titulo_sec">Fotos</p>
     <div>
@@ -203,7 +202,7 @@
                                 <a href="<?= DIRECTORIO ?>editar_foto/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <!-- estoy en /mis_pruebas/pages/nuevo_vehiculo con ..subo un directorio y voy a /mis_pruebas/pages/ y añado /borrar_foto... y me quedo en /mis_pruebas/pages/borrar_foto_vehiculo-->
+                                <!-- estoy en /mis_pruebas/nuevo_vehiculo con ..subo un directorio y voy a /mis_pruebas/ y añado /borrar_foto... y me quedo en /mis_pruebas/borrar_foto_vehiculo-->
                                 <a href="../borrar_gasto_vehiculo/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta foto?');"> 
                                 <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
                                 <i class="bi bi-trash"></i>
@@ -218,8 +217,7 @@
 </div>
 <!--GASTOS-->
 <div class=contenedor id="gastos">
-    <!--Formulario nuevo gasto-->
-    
+    <!--Formulario nuevo gasto--> 
     <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nuevo Gasto</legend>
@@ -255,9 +253,7 @@
             <input type="hidden" name="gasto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
         </fieldset>
     </form>
-    
     <!-- Formulario para buscar gastos-->
-     
     <form action="<?= DIRECTORIO ?>nuevo_vehiculo/<?=$vehiculo->getId()?>" method="get" class="d-flex">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Buscar</legend>   
@@ -323,6 +319,147 @@
         <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
     </div> 
 </div>
+<div class=contenedor id="cuotas">
+
+
+    <!--Formulario nueva cuota--> 
+    <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post">
+        <fieldset class="mi-fieldset">
+            <legend class="mi-legend">Nueva Cuota</legend>
+            <div class="row">
+            <?php
+                $tipoCuotas = ['Renting', 'Financiado'];
+            ?>
+            <div class="col-md-3">  
+                <div class="form-floating mb-1">
+                    <select name="cuota[tipo]" class="form-select" id="tipo">
+                        <option disabled = 'selected'>--Seleccione combustible--</option> 
+                        <?php foreach ($tipoCuotas as $tipo): ?>
+                            <option><?= $opcion ?></option>
+                        <?php endforeach; ?>
+                    </select> 
+                    <label for="tipo">Tipo cuota</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="inicio" for="importe" >Fecha inicio:</label>&nbsp
+                <input class="cuadro_text" type="date" name="cuota[inicio]" id="inicio" placeholder="Fecha inicio">
+            </div>
+            <div class="col-md-4">
+                <label class="etiqueta" for="duracion" >Duracion:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[duracion]" id="duracion" placeholder="Meses">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="cuota" >Cuota:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[cuota]" id="cuota">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="totalPagar" >Total pagar:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[totalPagar]" id="totalPagar">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="pagoFinal" >Pago final:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[pagoFinal]" id="pagoFinal">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="entrada" >Entrada:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[entrada]" id="entrada">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="fianza" >Fianza:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[fianza]" id="fianza">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="km" >Kilometros:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[km]" id="km">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="kmAno" >Km año:</label>&nbsp
+                <input class="cuadro_text" type="number" name="cuota[kmAno]" id="kmAno">
+            </div>
+            <div class="col-md-2">
+                <label class="etiqueta" for="financiera" >Financiera:</label>&nbsp
+                <input class="cuadro_text" type="text" name="cuota[financiera]" id="financiera">
+            </div>
+
+            <div class="col-md-3">
+                <label for="select-titular-cuota" class="form-label">Titular</label>
+                <div class="form-floating mb-3">
+                    <select name="cuota[titular]" class="form-select" id="select-titular-cuota">
+                        <option disabled='selected'>--Selecc. opcion--</option>
+                        <?php foreach ($listapropietarios as $id => $propietario): ?>
+                            <option value="<?= $id?>" <?= $id == $propietarioActual ? 'selected' : '' ?>><?= $propietario ?></option>
+                            <?php endforeach; ?>
+                        </select> 
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="etiqueta" for="observaciones" >Observaciones:</label>&nbsp
+                <input size=60 class="cuadro_text" type="text" name="cuota[observaciones]" id="observaciones" placeholder="observaciones">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="boton_submit">Guardar Cuota</button>
+            </div>
+        </div>
+        <input type="hidden" name="cuota[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
+    </fieldset>
+</form>  
+    <!--listado Gastos-->
+    <p class="titulo_sec">Cuotas</p>
+    <div>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th class="etiqueta" scope="col">Tipo</th>
+                    <th class="etiqueta" scope="col">Inicio</th>
+                    <th class="etiqueta" scope="col">Duracion</th>
+                    <th class="etiqueta" scope="col">Cuota</th>
+                    <th class="etiqueta" scope="col">Total pagar</th>
+                    <th class="etiqueta" scope="col">Pago final</th>
+                    <th class="etiqueta" scope="col">Entrada</th>
+                    <th class="etiqueta" scope="col">Fianza</th>
+                    <th class="etiqueta" scope="col">Kilometros</th>
+                    <th class="etiqueta" scope="col">Km Año</th>
+                    <th class="etiqueta" scope="col">Financiera</th>
+                    <th class="etiqueta" scope="col">Titular</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($cuotas as $cuota) :?>
+                    <tr>
+                        <td><?=$cuota->gettipo()?></td>
+                        <td><?=formatea_fecha($cuota->getinicio())?></td>
+                        <td><?=$cuota->getduracion()?></td>
+                        <td><?=number_format($cuota->getcuota(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->gettotalPagar(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->getpagoFinal(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->getentrada(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->getfianza(), 2, ',', '.');?>€</td> 
+                        <td><?=$cuota->getkm()?></td>
+                        <td><?=$cuota->getkmAno()?></td>
+                        <td><?=$cuota->getfinanciera()?></td>
+                        <td><?=$cuota->getdatos_propietario()->getNombre()?></td>         
+                        <td><?=$cuota->getobservaciones()?></td>         
+                        <td><div class="btn-group" role="group">
+                            <a href="<?= DIRECTORIO ?>editar_cuota_vehiculo/<?=$cuota->getidCuota()?>?vehiculo=<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="../borrar_cuota_vehiculo/<?=$gasto->getidCuota()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta cuota?');"> 
+                                <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
+                                <i class="bi bi-trash"></i>
+                            </a>   
+                            </div>
+                        </td>
+                    </tr>    
+                <?php endforeach ;?>   
+            </tbody>
+        </table>            
+    </div> 
+</div>
+
+
 <?php endif;?>
 <script>
     $(document).ready(function() {
@@ -331,6 +468,8 @@
             allowClear: true,
             width: '100%'
         });
+    
+    mostrarMenuVehiculo('fotos');//al cargar muestro solo las fotos
     });
 </script>
 

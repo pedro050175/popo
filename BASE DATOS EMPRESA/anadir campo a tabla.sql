@@ -1,1 +1,1 @@
-alter table gastosvehiculo add column `vehiculo` int not null; 
+alter table cuotas add column `tipo` varchar(15) not null; 

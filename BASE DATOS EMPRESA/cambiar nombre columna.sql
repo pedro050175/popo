@@ -1,1 +1,1 @@
-alter table `compraventas` rename column `Comercial` to `id_comercial`; 
+alter table `cuotasvehiculo` rename column `finaciera` to `financiera`; 

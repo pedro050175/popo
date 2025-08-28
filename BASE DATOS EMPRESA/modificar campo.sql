@@ -1,1 +1,1 @@
-ALTER TABLE `gastosvehiculo` CHANGE `Tipo`  `tipo` varchar (35);
+ALTER TABLE `alquileres` CHANGE `Dias`  `Dias` TINYINT;

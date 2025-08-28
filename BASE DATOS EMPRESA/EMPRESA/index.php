@@ -34,6 +34,10 @@ Router::add('POST', '/nueva_foto', function () {return (new FotoController())->s
 Router::add('GET', '/borrar_gasto_vehiculo/:id', function($id_gasto){return (new GastoVehiculoController())->delete($id_gasto);});
 Router::add('GET', '/editar_gasto_vehiculo/:id', function($id_gasto) {return (new GastoVehiculoController())->edit($id_gasto);}); 
 Router::add('POST', '/nuevo_gasto_vehiculo', function () {return (new GastoVehiculoController())->save();});
+//Rutas de cuotas vehiculo
+//Router::add('POST', '/nueva_cuota_vehiculo', function () {return (new CuotaVehiculoController())->save();});
+
+
 
 Router::dispatch();
 

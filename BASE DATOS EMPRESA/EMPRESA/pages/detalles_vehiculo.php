@@ -120,7 +120,48 @@
     </table>  
     <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>          
 </div> 
-
+<!--Cuotas-->
+<p class="titulo_sec">Cuotas</p>
+    <div>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th class="etiqueta" scope="col">Tipo</th>
+                    <th class="etiqueta" scope="col">Inicio</th>
+                    <th class="etiqueta" scope="col">Duracion</th>
+                    <th class="etiqueta" scope="col">Cuota</th>
+                    <th class="etiqueta" scope="col">Total pagar</th>
+                    <th class="etiqueta" scope="col">Pago final</th>
+                    <th class="etiqueta" scope="col">Entrada</th>
+                    <th class="etiqueta" scope="col">Fianza</th>
+                    <th class="etiqueta" scope="col">Kilometros</th>
+                    <th class="etiqueta" scope="col">Km Año</th>
+                    <th class="etiqueta" scope="col">Financiera</th>
+                    <th class="etiqueta" scope="col">Titular</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($cuotas as $cuota) :?>
+                    <tr>
+                        <td><?=$cuota->gettipo()?></td>
+                        <td><?=formatea_fecha($cuota->getinicio())?></td>
+                        <td><?=$cuota->getduracion()?></td>
+                        <td><?=number_format($cuota->getcuota(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->gettotalPagar(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->getpagoFinal(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->getentrada(), 2, ',', '.');?>€</td>         
+                        <td><?=number_format($cuota->getfianza(), 2, ',', '.');?>€</td> 
+                        <td><?=$cuota->getkm()?></td>
+                        <td><?=$cuota->getkmAno()?></td>
+                        <td><?=$cuota->getfinanciera()?></td>
+                        <td><?=$cuota->getdatos_propietario()->getNombre()?></td>         
+                        <td><?=$cuota->getobservaciones()?></td>         
+                    </tr>    
+                <?php endforeach ;?>   
+            </tbody>
+        </table>            
+    </div> 
     
         
 

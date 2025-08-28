@@ -63,6 +63,7 @@ class GastoVehiculoRepository {
     }
 
     public function update (array $gasto): void{ 
+        //var_dump($gasto['id_vehiculo']);
         $parametros = [
             ':id_gasto' => $gasto['id_gasto'],
             ':tipo' => $gasto['tipo'],

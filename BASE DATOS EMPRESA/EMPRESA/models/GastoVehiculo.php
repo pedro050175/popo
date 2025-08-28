@@ -46,7 +46,7 @@ class GastoVehiculo {
         $this->id_vehiculo = $id_vehiculo;
     }
     public function getId_vehiculo(): ?int {
-        return $this->Paga_otro;
+        return $this->id_vehiculo;
     }
     public function setPagado(?int $pagado) {
         $this->pagado = $pagado;

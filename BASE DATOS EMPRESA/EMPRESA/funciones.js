@@ -1,4 +1,4 @@
-function validarFechas (formulario){
+function validarFechas (formulario){//para acceder a elmentos del formulario se usa this.form
     const fechaActual = new Date();
     fechaActual.setHours(0, 0, 0, 0);//elimina la hora y asi comprara solo fecha
 
@@ -21,9 +21,10 @@ function validarFechas (formulario){
     }
     formulario.submit();
 }
-function mostrarFotos(){
-
-}
-function mostrarGastos{
-    
+function mostrarMenuVehiculo(menu){//para acceder a elementos de la pagina se usa document
+    //oculto todos y luego solo activo el que se llame menu
+    divGastos = document.getElementById("gastos").hidden = true;    
+    divFotos = document.getElementById("fotos").hidden = true;
+    divFotos = document.getElementById("cuotas").hidden = true;
+    divFotos = document.getElementById(menu).hidden = false;
 }
