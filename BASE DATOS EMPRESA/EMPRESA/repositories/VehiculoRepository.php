@@ -48,7 +48,7 @@ class VehiculoRepository {
             } else {
                 $busca = $_GET['buscar_matr_bast'] ?? null;
                 if ($busca) {
-                    $this->conexion->consulta ("SELECT * FROM vehiculos WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
+                    $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
                 } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad LIMIT $desplazamiento, ".FILAS_PAGINA); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
@@ -82,7 +82,7 @@ class VehiculoRepository {
             ':Fecha_matricula' => $data['vehiculo']['Fecha_matricula'],
             ':Observaciones' => $data['vehiculo']['Observaciones'],
             ':Combustible' => $data['vehiculo']['Combustible'] ?? '', //si no existe le asigo vacio. Podria no existir si en select no se pusiera value="" en el texto del mensaje y se diera a crear sin elejir una opcion
-            ':Fecha_itv' => $data['vehiculo']['Fecha_itv'],           //con esto se eliminarian espacios vacios ':Combustible' => trim($data['vehiculo']['Combustible'] ?? '') y sino exote le asigna ''
+            ':Fecha_itv' => $data['vehiculo']['Fecha_itv'],           //con esto se eliminarian espacios vacios ':Combustible' => trim($data['vehiculo']['Combustible'] ?? '') y sino existe le asigna ''
             ':Estado' => $data['vehiculo']['Estado'] ?? '',
             ':Clase' => $data['vehiculo']['Clase'] ?? '',
             ':propietario' => $data['vehiculo']['propietario'] ?? '',

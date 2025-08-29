@@ -58,8 +58,8 @@ class GastoVehiculoRepository {
         ];
         $parametros = Limpiar_parametros($parametros);
         $sql = "INSERT INTO gastosvehiculo (tipo, Importe, Fecha, Paga_otro, Comentarios, id_vehiculo, pagado) VALUES 
-                                           (:tipo,:importe,:fecha,:paga_otro,:comentarios,:id_vehiculo,:pagado)"; 
-        $ok = $this->conexionPDO->consulta($sql, $parametros);
+                                           (:tipo, :importe, :fecha, :paga_otro, :comentarios, :id_vehiculo, :pagado)"; 
+        $this->conexionPDO->consulta($sql, $parametros);
     }
 
     public function update (array $gasto): void{ 

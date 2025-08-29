@@ -9,7 +9,7 @@
             </div>
             <div class="col text-end">  
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>vehiculos?num_pagina=1';">   
-                <button type="submit" class="boton_submit" onclick="validarFechas(this.form);return false"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
+                <button type="submit" class="boton_submit" onclick="return validarDatos(this.form)"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
             </div>
         </div>
 <div class="row">
@@ -33,8 +33,8 @@
     </div>
     <div class="col-md-2"> 
         <div class="form-floating mb-1">
-            <input type="number" name="data[vehiculo][Km]" class="form-control" id="Kilometros" placeholder="Kilometros" value="<?=(isset($vehiculo))?$vehiculo->getKm():''?>">
-            <label for="Kilometros">Kilometros</label>
+            <input type="number" name="data[vehiculo][Km]" class="form-control" id="kilometros" placeholder="Kilometros" value="<?=(isset($vehiculo))?$vehiculo->getKm():''?>">
+            <label for="kilometros">Kilometros</label>
         </div>
     </div>
 </div>
@@ -119,7 +119,6 @@
             $listapropietarios[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
         }
     ?>
-
     <div class="col-md-3">
         <label for="select-propietario" class="form-label">Propietario</label>
         <div class="form-floating mb-3">
@@ -140,16 +139,17 @@
     </div>           
 </div>
 </form>
+
+<?php if (isset($vehiculo)) :?>
 <!--Menu--> 
 <div class="row">
     <div class="col-md-8"></div>
     <div class="col-md-4 botones">
         <button class="boton_menu" onclick="mostrarMenuVehiculo('fotos')">Fotos</button>
         <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos')">Gastos</button>        
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos')">Cuotas</button>        
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('cuotas')">Cuotas</button>        
     </div>
 </div>
-<?php if (isset($vehiculo)) :?>
 <!--FOTOS-->
 <div class=contenedor id="fotos">
 <!-- formulario para nueva fotos -->
@@ -320,22 +320,20 @@
     </div> 
 </div>
 <div class=contenedor id="cuotas">
-
-
     <!--Formulario nueva cuota--> 
     <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nueva Cuota</legend>
             <div class="row">
             <?php
-                $tipoCuotas = ['Renting', 'Financiado'];
+                $tipoCuota = ['Renting', 'Financiado'];
             ?>
             <div class="col-md-3">  
                 <div class="form-floating mb-1">
-                    <select name="cuota[tipo]" class="form-select" id="tipo">
-                        <option disabled = 'selected'>--Seleccione combustible--</option> 
-                        <?php foreach ($tipoCuotas as $tipo): ?>
-                            <option><?= $opcion ?></option>
+                    <select name="cuota[tipo]" class="form-select" id="tipo" required>
+                        <option value="" disabled selected >--Seleccione tipo--</option> 
+                        <?php foreach ($tipoCuota as $opcion): ?>
+                            <option value="<?= $opcion ?>"><?= $opcion ?></option>
                         <?php endforeach; ?>
                     </select> 
                     <label for="tipo">Tipo cuota</label>
@@ -351,23 +349,23 @@
             </div>
             <div class="col-md-2">
                 <label class="etiqueta" for="cuota" >Cuota:</label>&nbsp
-                <input class="cuadro_text" type="number" name="cuota[cuota]" id="cuota">
+                <input class="cuadro_text" type="text" name="cuota[cuota]" id="cuota">
             </div>
             <div class="col-md-2">
                 <label class="etiqueta" for="totalPagar" >Total pagar:</label>&nbsp
-                <input class="cuadro_text" type="number" name="cuota[totalPagar]" id="totalPagar">
+                <input class="cuadro_text" type="text" name="cuota[totalPagar]" id="totalPagar">
             </div>
             <div class="col-md-2">
                 <label class="etiqueta" for="pagoFinal" >Pago final:</label>&nbsp
-                <input class="cuadro_text" type="number" name="cuota[pagoFinal]" id="pagoFinal">
+                <input class="cuadro_text" type="text" name="cuota[pagoFinal]" id="pagoFinal">
             </div>
             <div class="col-md-2">
                 <label class="etiqueta" for="entrada" >Entrada:</label>&nbsp
-                <input class="cuadro_text" type="number" name="cuota[entrada]" id="entrada">
+                <input class="cuadro_text" type="text" name="cuota[entrada]" id="entrada">
             </div>
             <div class="col-md-2">
                 <label class="etiqueta" for="fianza" >Fianza:</label>&nbsp
-                <input class="cuadro_text" type="number" name="cuota[fianza]" id="fianza">
+                <input class="cuadro_text" type="text" name="cuota[fianza]" id="fianza">
             </div>
             <div class="col-md-2">
                 <label class="etiqueta" for="km" >Kilometros:</label>&nbsp
@@ -381,32 +379,32 @@
                 <label class="etiqueta" for="financiera" >Financiera:</label>&nbsp
                 <input class="cuadro_text" type="text" name="cuota[financiera]" id="financiera">
             </div>
-
             <div class="col-md-3">
-                <label for="select-titular-cuota" class="form-label">Titular</label>
+                <label for="select-titular-cuota" class="etiqueta">Titular</label>
                 <div class="form-floating mb-3">
-                    <select name="cuota[titular]" class="form-select" id="select-titular-cuota">
-                        <option disabled='selected'>--Selecc. opcion--</option>
+                    <select name="cuota[titular]" class="form-select" id="select-titular-cuota" required>
+                        <option value="" disabled selected>--Selecc. opcion--</option><!--hay que poner value="" para que el required funcione, de lo contrario si deja enviar sin elegir nada -->
                         <?php foreach ($listapropietarios as $id => $propietario): ?>
-                            <option value="<?= $id?>" <?= $id == $propietarioActual ? 'selected' : '' ?>><?= $propietario ?></option>
+                            <option value="<?= $id?>"><?= $propietario ?></option>
                             <?php endforeach; ?>
                         </select> 
                 </div>
             </div>
-            
-            <div class="col-md-6">
+            <div class="col-md-10">
                 <label class="etiqueta" for="observaciones" >Observaciones:</label>&nbsp
-                <input size=60 class="cuadro_text" type="text" name="cuota[observaciones]" id="observaciones" placeholder="observaciones">
+                <input size=80 class="cuadro_text" type="text" name="cuota[observaciones]" id="observaciones" placeholder="observaciones">
             </div>
             <div class="col-md-2">
-                <button type="submit" class="boton_submit">Guardar Cuota</button>
+                <button type="submit" class="boton_submit" onclick="return validarCuotas(this.form)">Guardar Cuota</button>
             </div>
-        </div>
-        <input type="hidden" name="cuota[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
-    </fieldset>
-</form>  
-    <!--listado Gastos-->
+            </div>
+            <input type="hidden" name="cuota[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
+            <button type="button" onclick="validarCuotas(this.form)">Validar datos</button> <!--OJO al boton hay que ponerle typpe boton porque si no se poner po r defecto se comporta como un submit-->
+        </fieldset>
+    </form>  
+    <!--listado Cuotas-->
     <p class="titulo_sec">Cuotas</p>
+    
     <div>
         <table class="table table-hover table-striped">
             <thead>
@@ -446,14 +444,14 @@
                             <a href="<?= DIRECTORIO ?>editar_cuota_vehiculo/<?=$cuota->getidCuota()?>?vehiculo=<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="../borrar_cuota_vehiculo/<?=$gasto->getidCuota()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta cuota?');"> 
-                                <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
+                            <a href="../borrar_cuota_vehiculo/<?=$cuota->getidCuota()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta cuota?');"> 
                                 <i class="bi bi-trash"></i>
                             </a>   
                             </div>
                         </td>
                     </tr>    
-                <?php endforeach ;?>   
+                <?php endforeach ;?>  
+                 
             </tbody>
         </table>            
     </div> 
@@ -469,7 +467,12 @@
             width: '100%'
         });
     
-    mostrarMenuVehiculo('fotos');//al cargar muestro solo las fotos
+        $('#select-titular-cuota').select2({
+            placeholder: "Buscar titular",
+            allowClear: true,
+            width: '100%'
+        });
+    mostrarMenuVehiculo('cuotas');//al cargar muestra solo 1 
     });
 </script>
 

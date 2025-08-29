@@ -8,6 +8,7 @@ use controllers\EntidadController;
 use controllers\VehiculoController;
 use controllers\FotoController;
 use controllers\GastoVehiculoController;
+use controllers\CuotaVehiculoController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -35,8 +36,9 @@ Router::add('GET', '/borrar_gasto_vehiculo/:id', function($id_gasto){return (new
 Router::add('GET', '/editar_gasto_vehiculo/:id', function($id_gasto) {return (new GastoVehiculoController())->edit($id_gasto);}); 
 Router::add('POST', '/nuevo_gasto_vehiculo', function () {return (new GastoVehiculoController())->save();});
 //Rutas de cuotas vehiculo
-//Router::add('POST', '/nueva_cuota_vehiculo', function () {return (new CuotaVehiculoController())->save();});
-
+Router::add('GET', '/borrar_cuota_vehiculo/:id', function($id_cuota){return (new CuotaVehiculoController())->delete($id_cuota);});
+Router::add('GET', '/editar_cuota_vehiculo/:id', function($id_cuota) {return (new CuotaVehiculoController())->edit($id_cuota);});
+Router::add('POST', '/nueva_cuota_vehiculo', function () {return (new CuotaVehiculoController())->save();});
 
 
 Router::dispatch();

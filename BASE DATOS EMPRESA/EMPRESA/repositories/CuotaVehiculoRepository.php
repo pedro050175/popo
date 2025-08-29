@@ -29,4 +29,66 @@ class CuotaVehiculoRepository {
         }
         return $cuotas;
     }
+
+    public function create (array $cuota):void{
+
+        $parametros = [
+            ':inicio' => $cuota['inicio'],
+            ':duracion' => $cuota['duracion'],
+            ':id_vehiculo' => $cuota['id_vehiculo'],
+            ':tipo' => ($cuota['tipo'] ?? ''),
+            ':cuota' => $cuota['cuota'], 
+            ':totalPagar' => $cuota['totalPagar'], 
+            ':pagoFinal' => $cuota['pagoFinal'], 
+            ':entrada' => $cuota['entrada'], 
+            ':fianza' => $cuota['fianza'], 
+            ':km' => $cuota['km'], 
+            ':kmAno' => $cuota['kmAno'], 
+            ':financiera' => $cuota['financiera'],       
+            ':id_entidad' => $cuota['titular'] ?? '',     
+            ':observaciones' => $cuota['observaciones']      
+        ];
+        $parametros = Limpiar_parametros($parametros);
+        $sql = "INSERT INTO cuotasvehiculo (inicio, duracion, id_vehiculo, tipo, cuota, totalPagar, pagoFinal, entrada, fianza, km, kmAno, financiera, id_entidad, observaciones) VALUES 
+                                           (:inicio, :duracion, :id_vehiculo, :tipo, :cuota, :totalPagar, :pagoFinal, :entrada, :fianza, :km, :kmAno, :financiera, :id_entidad, :observaciones)"; 
+        $this->conexionPDO->consulta($sql, $parametros);
+    }
+
+    public function update (array $cuota): void{ 
+        //var_dump($cuota['id_vehiculo']);
+        $parametros = [
+            ':idCuota' => $cuota['idCuota'],
+            ':inicio' => $cuota['inicio'],
+            ':duracion' => $cuota['duracion'],
+            ':id_vehiculo' => $cuota['id_vehiculo'],
+            ':tipo' => (isset($cuota['tipo'])),
+            ':cuota' => $cuota['cuota'], 
+            ':totalPagar' => $cuota['totalPagar'], 
+            ':pagoFinal' => $cuota['pagoFinal'], 
+            ':entrada' => $cuota['entrada'], 
+            ':fianza' => $cuota['fianza'], 
+            ':km' => $cuota['km'], 
+            ':kmAno' => $cuota['kmAno'], 
+            ':financiera' => $cuota['financiera'],       
+            ':id_entidad' => $cuota['id_entidad'] ?? '',     
+            ':observaciones' => $cuota['observaciones']
+        ];
+        $parametros = Limpiar_parametros($parametros);
+        $sql = "UPDATE cuotasvehiculo SET (inicio = :inicio, duracion = :duracion, id_vehiculo = :id_vehiculo, tipo = :tipo, cuota  = :cuota, totalPagar = :totalPagar, pagoFinal = :pagoFinal, 
+                                        entrada = :entrada, fianza = :fianza, km = :km, kmAno = :kmAno, financiera = :financiera, id_entidad = :id_entidad, observaciones = :observaciones
+                                        WHERE idCuota = :idCuota)";
+        $this->conexionPDO->consulta($sql, $parametros);
+    }
+
+    public function read (int $id): ?cuotaVehiculo {
+        $parametros = [':id' => $id];
+        $sql = "SELECT * FROM cuotasvehiculo WHERE idCuota=:id";
+        $this->conexionPDO->consulta($sql, $parametros);
+        return $this->extraer_registro();
+    }
+    public function delete (int $id): void {
+        $parametros = [':id' =>$id];
+        $sql = "DELETE FROM cuotasvehiculo WHERE idCuota=:id"; 
+        $ok = $this->conexionPDO->consulta($sql, $parametros);
+    }
 }

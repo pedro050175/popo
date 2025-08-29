@@ -56,8 +56,9 @@ class VehiculoController {
         $entidades = $this->entidad_repository->findAll(false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $fotos = $this->foto_repository->fotos_vehiculo($id);
         $gastos = $this->gasto_repository->gastos_vehiculo($id);
-        //var_dump($gastos);
-        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos, 'gastos' => $gastos]);
+        $cuotas = $this->cuota_repository->cuotas_vehiculo($id);
+        //var_dump($cuotas);
+        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos, 'gastos' => $gastos, 'cuotas' => $cuotas]);
     }
     public function delete(int $id): void {
         $relacionados=$this->vehiculo_repository->relacionados($id);
