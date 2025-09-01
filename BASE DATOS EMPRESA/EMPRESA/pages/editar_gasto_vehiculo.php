@@ -10,7 +10,7 @@
                 </div>        
                 <div class="col-md-4">
                     <label class="etiqueta" for="importe" >Importe:</label>&nbsp
-                    <input class="cuadro_text" type="number" name="gasto[importe]" id="importe" placeholder="Importe" value=<?=$gasto->getImporte()?>>
+                    <input class="cuadro_text" type="texto" name="gasto[importe]" id="importe" placeholder="Importe" value=<?=$gasto->getImporte()?>>
                 </div>
                 <div class="col-md-4">
                     <label class="etiqueta" for="importe" >Fecha:</label>&nbsp
@@ -29,7 +29,8 @@
                     <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios" value=<?=$gasto->getComentarios()?>>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="boton_submit">Guardar Gasto</button>
+                    <button type="submit" class="boton_submit" onclick="return validar_entero_campo_texto(form.importe)">Guardar Gasto</button>
+                    <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_vehiculo/<?=$gasto->getId_vehiculo()?>';"><!--regreso al vehiculo que estaba con DIRECTORIO/nuevo_vehiculo/$foto->getid_vehiculo()-->
                 </div>
             </div>
             <input type="hidden" name="gasto[id_vehiculo]"  id="id_vehiculo" value="<?=$gasto->getId_vehiculo()?>">

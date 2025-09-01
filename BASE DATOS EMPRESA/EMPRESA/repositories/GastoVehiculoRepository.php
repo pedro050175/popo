@@ -88,6 +88,6 @@ class GastoVehiculoRepository {
     public function delete (int $id): void {
         $parametros = [':id' =>$id];
         $sql = "DELETE FROM gastosvehiculo WHERE id_gasto=:id"; 
-        $ok = $this->conexionPDO->consulta($sql, $parametros);
+        $this->conexionPDO->consulta($sql, $parametros);
     }
 }

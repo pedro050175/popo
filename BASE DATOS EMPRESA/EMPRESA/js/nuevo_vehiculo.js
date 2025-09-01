@@ -77,10 +77,11 @@ function validar_entero_campo_texto (campo) { //valida campos de formulariotipo 
     return true;
 }
 
-function mostrarMenuVehiculo(menu){//para acceder a elementos de la pagina se usa document
+function mostrarMenuVehiculo(menu, opciones){//para acceder a elementos de la pagina se usa document
     //oculto todos y luego solo activo el que se llame menu
-    divGastos = document.getElementById("gastos").hidden = true;    
-    divFotos = document.getElementById("fotos").hidden = true;
-    divFotos = document.getElementById("cuotas").hidden = true;
-    divFotos = document.getElementById(menu).hidden = false;
+    for (i=0; i<opciones.length; i++){
+        document.getElementById(opciones[i]).hidden = true;    
+    }
+    document.getElementById(menu).hidden = false; 
+    
 }

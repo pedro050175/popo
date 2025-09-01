@@ -55,13 +55,13 @@ class CuotaVehiculoRepository {
     }
 
     public function update (array $cuota): void{ 
-        //var_dump($cuota['id_vehiculo']);
+
         $parametros = [
             ':idCuota' => $cuota['idCuota'],
             ':inicio' => $cuota['inicio'],
             ':duracion' => $cuota['duracion'],
             ':id_vehiculo' => $cuota['id_vehiculo'],
-            ':tipo' => (isset($cuota['tipo'])),
+            ':tipo' => $cuota['tipo'] ?? '',
             ':cuota' => $cuota['cuota'], 
             ':totalPagar' => $cuota['totalPagar'], 
             ':pagoFinal' => $cuota['pagoFinal'], 
@@ -70,13 +70,13 @@ class CuotaVehiculoRepository {
             ':km' => $cuota['km'], 
             ':kmAno' => $cuota['kmAno'], 
             ':financiera' => $cuota['financiera'],       
-            ':id_entidad' => $cuota['id_entidad'] ?? '',     
+            ':id_entidad' => $cuota['titular'] ?? null,     
             ':observaciones' => $cuota['observaciones']
         ];
         $parametros = Limpiar_parametros($parametros);
-        $sql = "UPDATE cuotasvehiculo SET (inicio = :inicio, duracion = :duracion, id_vehiculo = :id_vehiculo, tipo = :tipo, cuota  = :cuota, totalPagar = :totalPagar, pagoFinal = :pagoFinal, 
+        $sql = "UPDATE cuotasvehiculo SET inicio = :inicio, duracion = :duracion, id_vehiculo = :id_vehiculo, tipo = :tipo, cuota  = :cuota, totalPagar = :totalPagar, pagoFinal = :pagoFinal, 
                                         entrada = :entrada, fianza = :fianza, km = :km, kmAno = :kmAno, financiera = :financiera, id_entidad = :id_entidad, observaciones = :observaciones
-                                        WHERE idCuota = :idCuota)";
+                                        WHERE idCuota = :idCuota";
         $this->conexionPDO->consulta($sql, $parametros);
     }
 
@@ -89,6 +89,6 @@ class CuotaVehiculoRepository {
     public function delete (int $id): void {
         $parametros = [':id' =>$id];
         $sql = "DELETE FROM cuotasvehiculo WHERE idCuota=:id"; 
-        $ok = $this->conexionPDO->consulta($sql, $parametros);
+        $this->conexionPDO->consulta($sql, $parametros);
     }
 }

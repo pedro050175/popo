@@ -10,6 +10,7 @@
             <div class="col text-end">  
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>vehiculos?num_pagina=1';">   
                 <button type="submit" class="boton_submit" onclick="return validarDatos(this.form)"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
+                <button type="reset" class="boton_submit" <?= (isset($vehiculo)) ? 'hidden' : ''?>>Borrar</button>
             </div>
         </div>
 <div class="row">
@@ -91,7 +92,7 @@
             <select name="data[vehiculo][Estado]" class="form-select" id="Estado" autocomplete="off">
                 <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                 <?php foreach ($estados as $opcion): ?>
-                    <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : '' ?>><?= $opcion ?></option>
+                    <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : ''?>><?= $opcion ?></option>
                 <?php endforeach; ?>
             </select> 
             <label for="Estado">Estado</label>
@@ -145,9 +146,10 @@
 <div class="row">
     <div class="col-md-8"></div>
     <div class="col-md-4 botones">
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('fotos')">Fotos</button>
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos')">Gastos</button>        
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('cuotas')">Cuotas</button>        
+        <script>var opciones_menu = new Array ("fotos", "gastos", "cuotas");</script><!--array con todos las opciones-->
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('fotos', opciones_menu)">Fotos</button>
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos', opciones_menu)">Gastos</button>        
+        <button class="boton_menu" onclick="mostrarMenuVehiculo('cuotas', opciones_menu)">Cuotas</button>        
     </div>
 </div>
 <!--FOTOS-->
@@ -226,11 +228,11 @@
                     <label for="tipo" class="etiqueta">Tipo:</label> 
                     <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" required placeholder="Tipo">
                 </div>        
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="etiqueta" for="importe" >Importe:</label>&nbsp
-                    <input class="cuadro_text" type="number" name="gasto[importe]" id="importe" placeholder="Importe">
+                    <input class="cuadro_text" type="text" name="gasto[importe]" id="importe" placeholder="Importe">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="etiqueta" for="fecha" >Fecha:</label>&nbsp
                     <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" placeholder="Fecha" required>
                 </div>
@@ -246,8 +248,9 @@
                     <label class="etiqueta" for="comentarios" >Comentarios:</label>&nbsp
                     <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios">
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="boton_submit">Guardar Gasto</button>
+                <div class="col-md-4">
+                    <button type="submit" class="boton_submit" onclick= "return validar_entero_campo_texto(form.importe)" >Guardar Gasto</button>
+                    <button type="reset" class="boton_submit">Borrar</button>
                 </div>
             </div>
             <input type="hidden" name="gasto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
@@ -390,16 +393,17 @@
                         </select> 
                 </div>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <label class="etiqueta" for="observaciones" >Observaciones:</label>&nbsp
                 <input size=80 class="cuadro_text" type="text" name="cuota[observaciones]" id="observaciones" placeholder="observaciones">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <button type="submit" class="boton_submit" onclick="return validarCuotas(this.form)">Guardar Cuota</button>
+                <button type="reset" class="boton_submit">Borrar</button>
             </div>
             </div>
             <input type="hidden" name="cuota[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
-            <button type="button" onclick="validarCuotas(this.form)">Validar datos</button> <!--OJO al boton hay que ponerle typpe boton porque si no se poner po r defecto se comporta como un submit-->
+            <!--<button type="button" onclick="validarCuotas(this.form)">Validar datos</button> OJO al boton hay que ponerle typpe boton porque si no se poner po r defecto se comporta como un submit-->
         </fieldset>
     </form>  
     <!--listado Cuotas-->
