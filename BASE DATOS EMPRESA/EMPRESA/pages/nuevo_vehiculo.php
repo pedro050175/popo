@@ -147,9 +147,9 @@
     <div class="col-md-8"></div>
     <div class="col-md-4 botones">
         <script>var opciones_menu = new Array ("fotos", "gastos", "cuotas");</script><!--array con todos las opciones-->
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('fotos', opciones_menu)">Fotos</button>
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('gastos', opciones_menu)">Gastos</button>        
-        <button class="boton_menu" onclick="mostrarMenuVehiculo('cuotas', opciones_menu)">Cuotas</button>        
+        <button type="button" class="boton_menu" onclick="mostrarMenuVehiculo('fotos', opciones_menu)">Fotos</button>
+        <button type="button" class="boton_menu" onclick="mostrarMenuVehiculo('gastos', opciones_menu)">Gastos</button>        
+        <button type="button" class="boton_menu" onclick="mostrarMenuVehiculo('cuotas', opciones_menu)">Cuotas</button>        
     </div>
 </div>
 <!--FOTOS-->
@@ -209,6 +209,9 @@
                                 <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
                                 <i class="bi bi-trash"></i>
                                 </a>   
+                                <a href="<?= DIRECTORIO ?>fotos_vehiculo/<?=$foto->nombre_foto_server()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-download"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>   
@@ -249,7 +252,7 @@
                     <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios">
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="boton_submit" onclick= "return validar_entero_campo_texto(form.importe)" >Guardar Gasto</button>
+                    <button type="submit" class="boton_submit" onclick= "return validar_entero_campo_text(form.importe)" >Guardar Gasto</button>
                     <button type="reset" class="boton_submit">Borrar</button>
                 </div>
             </div>
@@ -403,7 +406,7 @@
             </div>
             </div>
             <input type="hidden" name="cuota[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
-            <!--<button type="button" onclick="validarCuotas(this.form)">Validar datos</button> OJO al boton hay que ponerle typpe boton porque si no se poner po r defecto se comporta como un submit-->
+            <!--<button type="button" onclick="validarCuotas(this.form)">Validar datos</button> OJO al boton hay que ponerle typpe boton porque si no se poner por defecto se comporta como un submit-->
         </fieldset>
     </form>  
     <!--listado Cuotas-->
@@ -476,7 +479,7 @@
             allowClear: true,
             width: '100%'
         });
-    mostrarMenuVehiculo('cuotas');//al cargar muestra solo 1 
+    mostrarMenuVehiculo('fotos', opciones_menu);//al cargar muestra solo 1 
     });
 </script>
 
