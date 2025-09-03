@@ -16,27 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `impuesto`
+-- Table structure for table `entregas`
 --
 
-DROP TABLE IF EXISTS `impuesto`;
+DROP TABLE IF EXISTS `entregas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `impuesto` (
-  `id_impuesto` int NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(12) NOT NULL,
-  PRIMARY KEY (`id_impuesto`),
-  UNIQUE KEY `Nombre_UNIQUE` (`Nombre`)
+CREATE TABLE `entregas` (
+  `idEntrega` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `importe` decimal(10,0) NOT NULL,
+  `bancoEnvia` varchar(20) DEFAULT NULL,
+  `bancoRecibe` varchar(20) DEFAULT NULL,
+  `observaciones` varchar(300) DEFAULT NULL,
+  `movimiento` int NOT NULL,
+  PRIMARY KEY (`idEntrega`),
+  KEY `movimiento` (`movimiento`),
+  CONSTRAINT `entregas_ibfk_1` FOREIGN KEY (`movimiento`) REFERENCES `movimientos` (`idMovimiento`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `impuesto`
+-- Dumping data for table `entregas`
 --
 
-LOCK TABLES `impuesto` WRITE;
-/*!40000 ALTER TABLE `impuesto` DISABLE KEYS */;
-/*!40000 ALTER TABLE `impuesto` ENABLE KEYS */;
+LOCK TABLES `entregas` WRITE;
+/*!40000 ALTER TABLE `entregas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `entregas` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-24 13:01:49
+-- Dump completed on 2025-09-03 14:04:41

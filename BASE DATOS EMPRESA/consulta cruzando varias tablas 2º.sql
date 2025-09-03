@@ -1,0 +1,1 @@
+SELECT m.*, A.Nombre as NombreEnvia, B.Nombre as NombreRecibe, V.Marca_Modelo FROM movimientos M LEFT JOIN entidad A ON envia=A.id_entidad LEFT JOIN entidad B ON recibe=B.id_entidad LEFT JOIN vehiculos V ON vehiculo=V.id_vehiculo;

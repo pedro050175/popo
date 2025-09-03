@@ -16,31 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `pagoscomven`
+-- Table structure for table `devoluciones`
 --
 
-DROP TABLE IF EXISTS `pagoscomven`;
+DROP TABLE IF EXISTS `devoluciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `pagoscomven` (
-  `id_pagos` int NOT NULL AUTO_INCREMENT,
-  `Fecha` date NOT NULL,
-  `id_compraventa` int NOT NULL,
-  `Banco` varchar(20) DEFAULT NULL,
-  `Cometarios` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_pagos`),
-  KEY `fk_compraventa` (`id_compraventa`),
-  CONSTRAINT `fk_compraventa` FOREIGN KEY (`id_compraventa`) REFERENCES `compraventas` (`id_compraventa`) ON DELETE RESTRICT ON UPDATE CASCADE
+CREATE TABLE `devoluciones` (
+  `idDevolucion` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `importe` decimal(10,0) NOT NULL,
+  `bancoEnvia` varchar(20) DEFAULT NULL,
+  `bancoRecibe` varchar(20) DEFAULT NULL,
+  `observaciones` varchar(300) DEFAULT NULL,
+  `movimiento` int NOT NULL,
+  PRIMARY KEY (`idDevolucion`),
+  KEY `movimiento` (`movimiento`),
+  CONSTRAINT `devoluciones_ibfk_1` FOREIGN KEY (`movimiento`) REFERENCES `movimientos` (`idMovimiento`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pagoscomven`
+-- Dumping data for table `devoluciones`
 --
 
-LOCK TABLES `pagoscomven` WRITE;
-/*!40000 ALTER TABLE `pagoscomven` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pagoscomven` ENABLE KEYS */;
+LOCK TABLES `devoluciones` WRITE;
+/*!40000 ALTER TABLE `devoluciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `devoluciones` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

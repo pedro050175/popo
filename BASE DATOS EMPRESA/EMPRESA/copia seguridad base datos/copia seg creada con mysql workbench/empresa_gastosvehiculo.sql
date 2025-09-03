@@ -23,19 +23,18 @@ DROP TABLE IF EXISTS `gastosvehiculo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `gastosvehiculo` (
-  `id_gastos` int NOT NULL AUTO_INCREMENT,
-  `Tipo` int NOT NULL,
+  `id_gasto` int NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(35) DEFAULT NULL,
   `Importe` decimal(10,2) DEFAULT NULL,
   `Fecha` date NOT NULL,
-  `Paga_otro` tinyint(1) DEFAULT NULL,
+  `Paga_otro` tinyint unsigned DEFAULT NULL,
   `Comentarios` varchar(255) DEFAULT NULL,
   `id_vehiculo` int NOT NULL,
-  PRIMARY KEY (`id_gastos`),
+  `pagado` tinyint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id_gasto`),
   KEY `fk_vehiculo` (`id_vehiculo`),
-  KEY `fk_tipo` (`Tipo`),
-  CONSTRAINT `fk_tipo` FOREIGN KEY (`Tipo`) REFERENCES `tipogasto` (`id_gasto`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vehiculo` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,6 +43,7 @@ CREATE TABLE `gastosvehiculo` (
 
 LOCK TABLES `gastosvehiculo` WRITE;
 /*!40000 ALTER TABLE `gastosvehiculo` DISABLE KEYS */;
+INSERT INTO `gastosvehiculo` VALUES (2,'seguro',434343.00,'2025-01-06',1,'1',1,0),(3,'revision',496.35,'2024-05-04',1,'ordinaria',1,1),(4,'vinilo',850.38,'2023-10-10',NULL,NULL,2,NULL),(5,'cuota',1258.45,'2025-08-01',NULL,NULL,2,1),(6,'averia',100.00,'2025-06-02',1,NULL,1,1),(19,'pintura',125.00,'2025-08-26',0,NULL,1,0),(20,'motor',145.00,'2025-08-05',1,NULL,1,1),(22,'llanta',125.22,'2025-09-08',1,NULL,1,0);
 /*!40000 ALTER TABLE `gastosvehiculo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-24 13:01:50
+-- Dump completed on 2025-09-03 14:04:41

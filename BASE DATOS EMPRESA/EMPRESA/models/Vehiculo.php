@@ -103,7 +103,6 @@ class Vehiculo {
                             $modelo['Fecha_itv'], $modelo['Estado'], $modelo['Clase'], $modelo['propietario'], $modelo['Prox_itv'], $propietario); 
          
     }
-
 }
 
 

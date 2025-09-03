@@ -1,0 +1,1 @@
+SELECT movimientos.*, A.Nombre, B.Nombre FROM movimientos, entidad as A, entidad as B WHERE envia=A.id_entidad AND recibe=B.id_entidad;

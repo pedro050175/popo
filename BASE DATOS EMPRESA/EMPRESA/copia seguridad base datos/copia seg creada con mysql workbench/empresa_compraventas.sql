@@ -27,12 +27,12 @@ CREATE TABLE `compraventas` (
   `Fecha_compra` date DEFAULT NULL,
   `Comprador` int DEFAULT NULL,
   `Vendedor` int DEFAULT NULL,
-  `Vehiculo` int NOT NULL,
+  `id_vehiculo` int NOT NULL,
   `Reserva` tinyint(1) DEFAULT NULL,
-  `Comercial` int DEFAULT NULL,
+  `id_comercial` int DEFAULT NULL,
   `Precio_real` decimal(10,2) DEFAULT NULL,
   `Precio_declarado` decimal(10,2) DEFAULT NULL,
-  `id_impuesto` int DEFAULT NULL,
+  `impuesto` varchar(20) DEFAULT NULL,
   `Anulada` tinyint(1) DEFAULT NULL,
   `Observaciones` varchar(255) DEFAULT NULL,
   `Fecha_venta` date DEFAULT NULL,
@@ -43,13 +43,11 @@ CREATE TABLE `compraventas` (
   PRIMARY KEY (`id_compraventa`),
   KEY `fk_comprador` (`Comprador`),
   KEY `fk_vendedor` (`Vendedor`),
-  KEY `fk_vehi` (`Vehiculo`),
-  KEY `fk_comercial` (`Comercial`),
-  KEY `fk_impuesto` (`id_impuesto`),
-  CONSTRAINT `fk_comercial` FOREIGN KEY (`Comercial`) REFERENCES `Comercial` (`id_comercial`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  KEY `fk_vehi` (`id_vehiculo`),
+  KEY `fk_comercial` (`id_comercial`),
+  CONSTRAINT `fk_comercial` FOREIGN KEY (`id_comercial`) REFERENCES `Comercial` (`id_comercial`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_comprador` FOREIGN KEY (`Comprador`) REFERENCES `entidad` (`id_entidad`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_impuesto` FOREIGN KEY (`id_impuesto`) REFERENCES `impuesto` (`id_impuesto`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_vehi` FOREIGN KEY (`Vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_vehi` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_vendedor` FOREIGN KEY (`Vendedor`) REFERENCES `entidad` (`id_entidad`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -73,4 +71,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-24 13:01:50
+-- Dump completed on 2025-09-03 14:04:40

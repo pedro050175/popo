@@ -51,4 +51,19 @@ class BaseDatosPDO {
     public function id_ultimo_insertado(): string {
         return $this->conexion->lastInsertId();
     }
+    public function contarFilas (string $sql, array $params = []): int {
+        try {
+            $stmt = $this->conexion->prepare($sql);
+            $ok = $stmt->execute($params);
+            if ($ok){
+                $this->resultado = $stmt;
+                $fila = $this->resultado->fetch_array();
+                return intval($fila[0]);
+            }
+            return 0;
+        } catch (PDOException $e) {
+            var_dump($e->getMessage());
+            return 0;
+        }       
+    }
 }

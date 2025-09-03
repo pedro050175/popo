@@ -16,31 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `pagoscomven`
+-- Table structure for table `fotos`
 --
 
-DROP TABLE IF EXISTS `pagoscomven`;
+DROP TABLE IF EXISTS `fotos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `pagoscomven` (
-  `id_pagos` int NOT NULL AUTO_INCREMENT,
-  `Fecha` date NOT NULL,
-  `id_compraventa` int NOT NULL,
-  `Banco` varchar(20) DEFAULT NULL,
-  `Cometarios` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_pagos`),
-  KEY `fk_compraventa` (`id_compraventa`),
-  CONSTRAINT `fk_compraventa` FOREIGN KEY (`id_compraventa`) REFERENCES `compraventas` (`id_compraventa`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `fotos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `url` varchar(500) NOT NULL,
+  `destacada` tinyint unsigned DEFAULT NULL,
+  `id_vehiculo` int NOT NULL,
+  `descripcion` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_vehiculo` (`id_vehiculo`),
+  CONSTRAINT `fotos_ibfk_1` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pagoscomven`
+-- Dumping data for table `fotos`
 --
 
-LOCK TABLES `pagoscomven` WRITE;
-/*!40000 ALTER TABLE `pagoscomven` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pagoscomven` ENABLE KEYS */;
+LOCK TABLES `fotos` WRITE;
+/*!40000 ALTER TABLE `fotos` DISABLE KEYS */;
+INSERT INTO `fotos` VALUES (49,'3.jpg',0,2,NULL),(53,'1.jpg',1,2,NULL),(62,'1.jpeg',1,1,'HOLA'),(63,'1.jpg',0,1,NULL),(65,'Lamborghini-Urus-2-1068x601.jpg',NULL,3,NULL),(66,'tienda-1455042.jpg',NULL,3,NULL),(67,'radikalword_nave-1477142.jpg',NULL,3,NULL),(71,'radikalword_nave-1477142.jpg',0,2,NULL);
+/*!40000 ALTER TABLE `fotos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-03 14:04:40
+-- Dump completed on 2025-09-03 14:04:41

@@ -32,7 +32,7 @@ CREATE TABLE `alquileres` (
   `Kilometros` smallint unsigned DEFAULT NULL,
   `Km_inicio` smallint unsigned DEFAULT NULL,
   `Km_fin` smallint unsigned DEFAULT NULL,
-  `Dias` smallint unsigned DEFAULT NULL,
+  `Dias` tinyint unsigned DEFAULT NULL,
   `Precio` decimal(10,2) DEFAULT NULL,
   `Precio_km` decimal(10,2) DEFAULT NULL,
   `id_comercial` int DEFAULT NULL,
@@ -73,4 +73,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-24 13:01:50
+-- Dump completed on 2025-09-03 14:04:40
