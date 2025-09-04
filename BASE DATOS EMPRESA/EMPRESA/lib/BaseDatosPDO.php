@@ -27,7 +27,6 @@ class BaseDatosPDO {
             die("Error de conexión: " . $e->getMessage());
         }
     }
-
     public function consulta(string $sql, array $params = []): bool {
         try {
             $stmt = $this->conexion->prepare($sql);
@@ -39,31 +38,13 @@ class BaseDatosPDO {
             return false;
         }
     }
-
     public function extraer_registro(): mixed {
         return $this->resultado->fetch(PDO::FETCH_ASSOC) ?: false;
     }
-
     public function extraer_todos(): array|bool {
         return $this->resultado ? $this->resultado->fetchAll(PDO::FETCH_ASSOC) : false;
     }
-
     public function id_ultimo_insertado(): string {
         return $this->conexion->lastInsertId();
-    }
-    public function contarFilas (string $sql, array $params = []): int {
-        try {
-            $stmt = $this->conexion->prepare($sql);
-            $ok = $stmt->execute($params);
-            if ($ok){
-                $this->resultado = $stmt;
-                $fila = $this->resultado->fetch_array();
-                return intval($fila[0]);
-            }
-            return 0;
-        } catch (PDOException $e) {
-            var_dump($e->getMessage());
-            return 0;
-        }       
     }
 }

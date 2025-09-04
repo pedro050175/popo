@@ -40,12 +40,18 @@ class Movimiento {
         return $this->observaciones;
     } 
     public static function fromArray(array $data): Movimiento {
-        $modelo_propietario = duplicar_tabla (CAMPOS_ENTIDAD, $data);
-        $modelo = duplicar_tabla(CAMPOS_VEHICULO, $data);
+        $modelo_envia = duplicar_tabla (CAMPOS_ENTIDAD_ENVIA, $data);//para leer datos de la entidad que envia
+        $modelo_recibe = duplicar_tabla(CAMPOS_ENTIDAD_RECIBE, $data);//para leer datos de la entidad que recibe
+        $modelo_propietario = duplicar_tabla(CAMPOS_ENTIDAD_PROPIETARIO, $data);//para leer datos de la entidad que es propietaria del vehiculo
+        $modelo_vehiculo = duplicar_tabla(CAMPOS_VEHICULO, $data);//para leer datos del vehiculo 
+        $modelo = duplicar_tabla(CAMPOS_MOVIMIENTO, $data);
         //var_dump($data);
-        $propietario = new Entidad ($modelo_propietario['id_entidad'], $modelo_propietario['CIF_DNI'], $modelo_propietario['Nombre'], $modelo_propietario['Observaciones'], $modelo_propietario['Direccion'], $modelo_propietario['Telefono'], $modelo_propietario['Email']);
-        return new Vehiculo ($modelo['id_vehiculo'], $modelo['Matricula'], $modelo['Bastidor'], $modelo['Marca_modelo'], $modelo['Km'], $modelo['Fecha_matricula'], $modelo['Observaciones'], $modelo['Combustible'], 
-                            $modelo['Fecha_itv'], $modelo['Estado'], $modelo['Clase'], $modelo['propietario'], $modelo['Prox_itv'], $propietario); 
-         
+        $propietario = new Entidad($modelo_propietario['id_entidad'], $modelo_propietario['CIF_DNI'], $modelo_propietario['nombrePropietario'], $modelo_propietario['Observaciones'], $modelo_propietario['Direccion'], $modelo_propietario['Telefono'], $modelo_propietario['Email']);
+        $envia = new Entidad ($modelo_envia['id_entidad'], $modelo_envia['CIF_DNI'], $modelo_envia['nombreEnvia'], $modelo_envia['Observaciones'], $modelo_envia['Direccion'], $modelo_envia['Telefono'], $modelo_envia['Email']);
+        $recibe = new Entidad ($modelo_recibe['id_entidad'], $modelo_recibe['CIF_DNI'], $modelo_recibe['nombreRecibe'], $modelo_recibe['Observaciones'], $modelo_recibe['Direccion'], $modelo_recibe['Telefono'], $modelo_recibe['Email']);
+        $vehiculo = new Vehiculo($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], 
+                            $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'], $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario'], $modelo_vehiculo['Prox_itv'], $propietario);
+        return new Movimiento ($modelo['idMovimiento'], $modelo['envia'], $modelo['recibe'], $modelo['fecha'], $modelo['concepto'], $modelo['vehiculo'], $modelo['observaciones'], 
+                                $envia, $recibe, $vehiculo); 
     }
 }

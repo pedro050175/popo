@@ -45,6 +45,9 @@
                 <li class="nav-item">
                     <a class="nav-link<?= str_contains($currentPath, 'entidad') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>entidades?num_pagina=1" aria-current="page">Entidades</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link<?= str_contains($currentPath, 'movimiento') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>movimientos?num_pagina=1" aria-current="page">Movimientos</a>
+                </li>
             </ul>
         </div>
     </div>
