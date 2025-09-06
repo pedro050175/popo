@@ -8,10 +8,7 @@
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>
-        <div class="col-md-2"> </div><!--para despalzar el boton Nuevo vehiculo a la derecha-->
-        <div class="col-md-2">
-        <button type="button" class="boton_submit">Comprobar itv</button> 
-        </div>
+        <div class="col-md-4"> </div><!--para despalzar el boton Nuevo vehiculo a la derecha-->
         <div class="col-md-2">
             <input type="button" class="boton_link" value = "Nuevo Vehículo" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_vehiculo';"> 
         </div>
@@ -49,7 +46,7 @@
                     <td><?=$vehiculo->getKm()?></td>
                     <td><?=formatea_fecha($vehiculo->getFecha_matricula())?></td>
                     <td><?=formatea_fecha($vehiculo->getFecha_itv())?></td>
-                    <td><?=formatea_fecha($vehiculo->getProx_itv())?></td>
+                    <td class= <?=$vehiculo->getProx_itv()<date("Y-m-d") ? "td_alerta" : ''?>><?=formatea_fecha($vehiculo->getProx_itv())?></td>
                     <td><?=$vehiculo->getdatos_propietario()->getNombre()?></td>
                     <td><?=$vehiculo->getObservaciones()?></td>
                     <td>

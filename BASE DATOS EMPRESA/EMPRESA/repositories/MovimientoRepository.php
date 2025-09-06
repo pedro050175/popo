@@ -34,44 +34,87 @@ class MovimientoRepository{
             $numPagina = intval($_GET['num_pagina']);
             $desplazamiento = ($numPagina-1) * FILAS_PAGINA;
         }
-        $campo_ord = $_GET['ordenar'] ?? null;
-        if ($campo_ord) {
-            $this->conexionPDO->consulta ("SELECT m.*, A.Nombre as nombreEnvia, B.Nombre as nombreRecibe, V.Marca_Modelo FROM movimientos M LEFT JOIN entidad A ON envia=A.id_entidad 
-                                            LEFT JOIN entidad B ON recibe=B.id_entidad LEFT JOIN vehiculos V ON vehiculo=V.id_vehiculo ORDER BY $campo_ord LIMIT $desplazamiento, ".FILAS_PAGINA);
-        } else {
-            $busca = $_GET['envia'] ?? null;
-            $busca2 = $_GET['recibe'] ?? null;
+        $envia = $_GET['buscar_envia'] ?? null;
+        $recibe = $_GET['buscar_recibe'] ?? null;
             
-            if (($busca) or ($busca2)) {
-                $this->conexionPDO->consulta ("SELECT m.*, A.Nombre as nombreEnvia, B.Nombre as nombreRecibe, V.Marca_Modelo FROM movimientos M LEFT JOIN entidad A ON envia=A.id_entidad 
-                                            LEFT JOIN entidad B ON recibe=B.id_entidad LEFT JOIN vehiculos V ON vehiculo=V.id_vehiculo WHERE envia LIKE '%$busca%' and recibe LIKE '%$busca2%'");
-            }else {
-                $this->conexionPDO->consulta ("SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario FROM movimientos M 
-                            LEFT JOIN entidad A ON M.envia = A.id_entidad
-                            LEFT JOIN entidad B ON M.recibe = B.id_entidad
-                            LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
-                            LEFT JOIN entidad C ON V.propietario = C.id_entidad LIMIT $desplazamiento, ".FILAS_PAGINA); 
-  /*SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_Modelo, C.Nombre AS nombrePropietario FROM movimientos M 
-                            LEFT JOIN entidad A ON M.envia = A.id_entidad
-                            LEFT JOIN entidad B ON M.recibe = B.id_entidad
-                            LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
-                            LEFT JOIN entidad C ON V.propietario = C.id_entidad; con esto se puede leer tamb el nombre del propietario del coche
-*/
-            }
-        }    
+        if (($envia) or ($recibe)) {
+            $this->conexionPDO->consulta ("SELECT m.*, A.Nombre as nombreEnvia, B.Nombre as nombreRecibe, V.Marca_Modelo FROM movimientos M LEFT JOIN entidad A ON envia=A.id_entidad 
+                                        LEFT JOIN entidad B ON recibe=B.id_entidad LEFT JOIN vehiculos V ON vehiculo=V.id_vehiculo LEFT JOIN entidad C ON V.propietario = C.id_entidad
+                                        WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%'");
+        }else {
+            $this->conexionPDO->consulta ("SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario FROM movimientos M 
+                    LEFT JOIN entidad A ON M.envia = A.id_entidad
+                    LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                    LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
+                    LEFT JOIN entidad C ON V.propietario = C.id_entidad ORDER BY m.fecha LIMIT $desplazamiento, ".FILAS_PAGINA);            
+            }    
         return $this->extraer_todos();    
     }
     public function extraer_registro(): ?Movimiento {
-        return ($vehiculo = $this->conexionPDO->extraer_registro()) ? Movimiento::fromArray($vehiculo):null;
+        return ($movimiento = $this->conexionPDO->extraer_registro()) ? Movimiento::fromArray($movimiento):null;
     }
     public function extraer_todos(): ?array {
-        $vehiculos = [];
-        $vehiculoData = $this->conexionPDO->extraer_todos();
+        $movimientos = [];
+        $movimientoData = $this->conexionPDO->extraer_todos();
         //var_dump($vehiculoData);
-        foreach ($vehiculoData as $data){
-            $vehiculos[] = Movimiento::fromArray($data);
+        foreach ($movimientoData as $data){
+            $movimientos[] = Movimiento::fromArray($data);
         }
-        return $vehiculos;
+        return $movimientos;
+    }
+    public function save (array $movimiento):void {
+        if (isset($movimiento['movimiento']['idMovimiento'])) {
+            $this->update($movimiento);
+        } else { $this->create($movimiento);}
+    }
+    public function create (array $data):void{
+        
+        $parametros = [
+            ':envia'=> $data['movimiento']['envia'],
+            ':recibe' => $data['movimiento']['recibe'],
+            ':fecha' => $data['movimiento']['fecha'],
+            ':concepto' => $data['movimiento']['concepto'],
+            ':vehiculo' => $data['movimiento']['vehiculo'],
+            ':observaciones' => $data['movimiento']['observaciones']
+        ];
+        
+        $parametros = Limpiar_parametros($parametros);
+        $sql = "INSERT INTO movimientos (envia, recibe, fecha, concepto, vehiculo, observaciones) VALUES 
+                                         (:envia,:recibe,:fecha,:concepto,:vehiculo,:observaciones)"; 
+        //var_dump($parametros);
+        $this->conexionPDO->consulta($sql, $parametros);
     }
 
+    public function update (array $data): void{ 
+        $parametros = [
+            ':idMovimiento'=> $data['movimiento']['idMovimiento'],
+            ':envia'=> $data['movimiento']['envia'],
+            ':recibe' => $data['movimiento']['recibe'],
+            ':fecha' => $data['movimiento']['fecha'],
+            ':concepto' => $data['movimiento']['concepto'],
+            ':vehiculo' => $data['movimiento']['vehiculo'],
+            ':observaciones' => $data['movimiento']['observaciones']        
+        ];
+        $parametros = Limpiar_parametros($parametros);
+        $sql = "UPDATE movimientos SET envia = :envia, recibe = :recibe, fecha = :fecha, concepto = :concepto, vehiculo = :vehiculo, observaciones = :observaciones
+                                     WHERE idMovimiento = :idMovimiento";
+       
+        $this->conexionPDO->consulta($sql, $parametros);
+    }
+
+    public function read (int $id): ?Movimiento {
+        $this->conexionPDO->consulta("SELECT * FROM movimientos WHERE (idMovimiento=$id)");
+        return $this->extraer_registro();
+    }
+    public function detalles_movimiento (int $id): ?Movimiento{
+        $this->conexionPDO->consulta("SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario FROM movimientos M 
+                    LEFT JOIN entidad A ON M.envia = A.id_entidad
+                    LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                    LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
+                    LEFT JOIN entidad C ON V.propietario = C.id_entidad WHERE idMovimiento=$id");
+        return $this->extraer_registro();
+    }
+    public function delete (int $id): void {
+       $this->conexionPDO->consulta("DELETE FROM movimientos WHERE (idMovimiento=$id)");
+    }
 }

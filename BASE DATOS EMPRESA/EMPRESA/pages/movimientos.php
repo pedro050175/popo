@@ -23,9 +23,7 @@
             <thead>
                 <tr>
                 <th class="etiqueta" scope="col">#</th>
-                <th class="etiqueta" scope="col">
-                    <a href="<?= DIRECTORIO ?>movimientos?ordenar=fecha&num_pagina=1">Fecha</a>
-                </th>
+                <th class="etiqueta" scope="col">Fecha</th>
                 <th class="etiqueta" scope="col">Envia</th>
                 <th class="etiqueta" scope="col">Recibe</th>
                 <th class="etiqueta" scope="col">Concepto</th>
@@ -50,10 +48,10 @@
                             <a href="<?= DIRECTORIO ?>nuevo_movimiento/<?=$movimiento->getidMovimiento()?>" role="button" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="<?= DIRECTORIO ?>borrar_movimiento/<?=$movimiento->getidMovimiento()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este vehículo?');"> 
+                            <a href="<?= DIRECTORIO ?>borrar_movimiento/<?=$movimiento->getidMovimiento()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este movimiento?');"> 
                               <i class="bi bi-trash"></i>
                             </a>
-                            <a href="<?= DIRECTORIO ?>detalles_moviento/<?=$movimiento->getidMovimiento()?>" class= "btn btn-sm btn-outline-primary"> 
+                            <a href="<?= DIRECTORIO ?>detalles_movimiento/<?=$movimiento->getidMovimiento()?>" class= "btn btn-sm btn-outline-primary"> 
                               <i class="bi bi-eye"></i>
                             </a>    
                         </div>

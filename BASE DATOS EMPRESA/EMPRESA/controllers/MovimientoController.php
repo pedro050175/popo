@@ -3,16 +3,21 @@
 namespace controllers;
 
 use repositories\MovimientoRepository;
+use repositories\EntidadRepository;
+use repositories\VehiculoRepository;
 use lib\Pages;
-
 
 class MovimientoController{
 
     private MovimientoRepository $movimientoRepository;
+    private EntidadRepository $entidad_repository;
+    private VehiculoRepository $vehiculo_repository;
     private Pages $pages;
 
     function __construct(){
         $this->movimientoRepository = new MovimientoRepository();
+        $this->entidad_repository = new EntidadRepository();
+        $this->vehiculo_repository = new VehiculoRepository();
         $this->pages = new Pages();
     }
 
@@ -23,9 +28,33 @@ class MovimientoController{
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
         $this->pages->render('movimientos', ['movimientos' => $movimientos, 'error' => $error, 'numPaginas' => $numPaginas]);
     }
-
-
-
-
+    public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
+        $entidades = $this->entidad_repository->findAll($paginar=false); //carga los propietarios para la lista desplegable propietario
+        $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//carga los vehiculos para la lista desplegable vehiculo
+        $this->pages->render('nuevo_movimiento', ['entidades' => $entidades, 'vehiculos' => $vehiculos]);
+    }
+    public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
+        $movimiento=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
+        //print_r($vehiculo);
+        $this->movimientoRepository->save($movimiento);
+        header('Location: '.DIRECTORIO.'movimientos?num_pagina=1');   
+        exit;
+    }
+    public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
+        $entidades = $this->entidad_repository->findAll($paginar=false); //carga los propietarios para la lista desplegable propietario
+        $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
+        $movimiento = $this->movimientoRepository->read($id);
+        //var_dump($cuotas);
+        $this->pages->render('nuevo_movimiento', ['movimiento' => $movimiento, 'vehiculos' => $vehiculos, 'entidades' => $entidades]);
+    }
+    public function detalles_movimiento(int $id) {
+        $movimiento = $this->movimientoRepository->detalles_movimiento($id);
+        $this->pages->render('detalles_movimiento', ['movimiento' => $movimiento]);
+    }
+    public function delete(int $id): void {
+        $this->movimientoRepository->delete($id);
+        header('Location: '.DIRECTORIO.'movimientos?num_pagina=1');
+        exit; 
+    }
 
 }

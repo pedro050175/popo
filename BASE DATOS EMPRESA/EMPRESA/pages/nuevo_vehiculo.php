@@ -463,8 +463,6 @@
         </table>            
     </div> 
 </div>
-
-
 <?php endif;?>
 <script>
     $(document).ready(function() {

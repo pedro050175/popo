@@ -42,8 +42,11 @@ Router::add('GET', '/editar_cuota_vehiculo/:id', function($id_cuota) {return (ne
 Router::add('POST', '/nueva_cuota_vehiculo', function () {return (new CuotaVehiculoController())->save();});
 //movimientos dinero
 Router::add('GET', '/movimientos', function () {return (new MovimientoController())->list();});
-
-
+Router::add('GET', '/nuevo_movimiento', function() {return (new MovimientoController())->add();});
+Router::add('POST', '/nuevo_movimiento', function () {return (new MovimientoController())->save();});
+Router::add('GET', '/nuevo_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->edit($idMovimiento);}); 
+Router::add('GET', '/detalles_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->detalles_movimiento($idMovimiento);});
+Router::add('GET', '/borrar_movimiento/:id', function($idMovimiento){return (new MovimientoController())->delete($idMovimiento);});
 
 Router::dispatch();
 
