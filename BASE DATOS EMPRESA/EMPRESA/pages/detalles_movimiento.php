@@ -42,3 +42,28 @@
         <a href="<?= DIRECTORIO ?>nuevo_movimiento/<?=$movimiento->getidMovimiento()?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
     </div>
 </div>
+<!--Entregas-->
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Importe</th>
+                <th>Banco Envia</th>
+                <th>Banco Recibe</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($entregas as $entrega) :?>
+                <tr>
+                    <td><?= formatea_fecha($entrega->getfecha())?></td>
+                    <td><?= number_format($entrega->getimporte(), 2, ',', '.');?>€</td>
+                    <td><?= $entrega->getbancoEnvia()?></td>
+                    <td><?= $entrega->getbancoRecibe()?></td>
+                    <td><?= $entrega->getobservaciones()?></td>
+                </tr>
+                <?php endforeach ;?>
+        </tbody>
+    </table>
+</div>

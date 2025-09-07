@@ -5,6 +5,9 @@ namespace controllers;
 use repositories\MovimientoRepository;
 use repositories\EntidadRepository;
 use repositories\VehiculoRepository;
+use repositories\EntregaRepository;
+use repositories\DevolucionRepository;
+
 use lib\Pages;
 
 class MovimientoController{
@@ -12,18 +15,24 @@ class MovimientoController{
     private MovimientoRepository $movimientoRepository;
     private EntidadRepository $entidad_repository;
     private VehiculoRepository $vehiculo_repository;
+    private EntregaRepository $entregaRepository;
+    private DevolucionRepository $devolucionRepository;
+
     private Pages $pages;
 
     function __construct(){
         $this->movimientoRepository = new MovimientoRepository();
         $this->entidad_repository = new EntidadRepository();
         $this->vehiculo_repository = new VehiculoRepository();
+        $this->entregaRepository = new EntregaRepository();
+        $this->devolucionRepository = new DevolucionRepository();
         $this->pages = new Pages();
     }
 
     public function list(): void {
         $movimientos = $this->movimientoRepository->findAll();
         $numPaginas = $this->movimientoRepository->getnumpaginas();
+
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);
         $this->pages->render('movimientos', ['movimientos' => $movimientos, 'error' => $error, 'numPaginas' => $numPaginas]);
@@ -48,8 +57,10 @@ class MovimientoController{
         $this->pages->render('nuevo_movimiento', ['movimiento' => $movimiento, 'vehiculos' => $vehiculos, 'entidades' => $entidades]);
     }
     public function detalles_movimiento(int $id) {
+        $entregas = $this->entregaRepository->entregasMovimiento($id);
+        $devoluciones = $this->devolucionRepository->devolucionesMovimiento($id);
         $movimiento = $this->movimientoRepository->detalles_movimiento($id);
-        $this->pages->render('detalles_movimiento', ['movimiento' => $movimiento]);
+        $this->pages->render('detalles_movimiento', ['movimiento' => $movimiento,  'entregas' => $entregas, 'devoluciones' => $devoluciones]);
     }
     public function delete(int $id): void {
         $this->movimientoRepository->delete($id);

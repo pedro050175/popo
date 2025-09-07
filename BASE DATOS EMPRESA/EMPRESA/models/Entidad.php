@@ -53,8 +53,7 @@ class Entidad {
     /* he tenido que crear una tabla $modelo con todos los campos de la tabla entidad vacios, porque la tabla $data podria venir con menos campos si se hace un SELECT que no lleve el * 
     en el repositorio, para para ver solo algunos campos */
     public static function fromArray(array $data): Entidad {
-        $modelo = duplicar_tabla (CAMPOS_ENTIDAD, $data); //CAMPOS_ENTIDAD tiene esto ('id' => 0, 'CIF_DNI' => '', 'Nombre' => '', 'Observaciones' => '', 'Direccion' => '', 'Telefono' =>'', 'Email' => ''); todos los campos
-        return new Entidad ($modelo['id_entidad'], $modelo['CIF_DNI'], $modelo['Nombre'], $modelo['Observaciones'], $modelo['Direccion'], $modelo['Telefono'], $modelo['Email']); 
-        //return new Entidad ($data['id_entidad'], $data['CIF_DNI'], $data['Nombre'], $data['Observaciones'], $data['Direccion'], $data['Telefono'], $data['Email'],); 
+        $modelo = duplicar_tabla (CAMPOS_ENTIDAD, $data); 
+        return new Entidad ($modelo['id_entidad'], $modelo['CIF_DNI'], $modelo['Nombre'], $modelo['Observaciones'], $modelo['Direccion'], $modelo['Telefono'], $modelo['Email']);
     }
 }
