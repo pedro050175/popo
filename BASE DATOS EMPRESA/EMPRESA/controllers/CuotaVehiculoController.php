@@ -18,6 +18,7 @@ class CuotaVehiculoController{
     }  
 
     public function save(): void { //se usa para guardar una nuevo o uno editado, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
+        setcookie('menuVehiculo', 'cuotas', time()+3600, "/");//para que despues de guardar los cambios vuelva al menu cuotas
         $cuota=$_POST['cuota']; //coge los datos del metodo POST, los graba y salta al listado entidades
         if (isset($cuota['idCuota'])) {
             $this->cuota_repository->update($cuota);
@@ -32,11 +33,12 @@ class CuotaVehiculoController{
     public function edit(int $id): void {
         $entidades = $this->entidad_repository->findAll(false);
         $cuota = $this->cuota_repository->read($id);
-        $this->pages->render('editar_cuota_vehiculo', ['cuota' => $cuota, 'entidades' => $entidades]);
+        $this->pages->render('editar_cuota_vehiculo', ['cuota' => $cuota, 'entidades' => $entidades] );
     }
-     public function delete(int $id): void {
+    public function delete(int $id): void {
         $this->cuota_repository->delete($id);
         $id_vehiculo = $_GET['vehiculo'];
+        setcookie('menuVehiculo', 'cuotas', time()+3600, "/");//para que despues de guardar los cambios vuelva al menu cuotas
         header('Location: '.DIRECTORIO.'nuevo_vehiculo/'.$id_vehiculo);//cargo el mismo vehiculo que estaba editando    
         exit; 
     }

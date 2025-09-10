@@ -58,7 +58,7 @@
     display: flex;/*para que se queden pegados, porque el navegador por defecto los separa aunque tenga margne 0*/
 }
 .boton_menu{    
-    color: rgb(223, 94, 3);
+    color: rgb(0, 14, 136);
     background-color: rgb(255, 255, 255);
     border-width: 2px;
     border-top: none;/*le quito la parte superior de borde*/
@@ -105,4 +105,30 @@
     text-shadow: 1px 2px 5px  grey;
     font-weight: bold;/*negrita*/
     text-align: center;
+}
+.mi_tabla{
+    table-layout: fixed;/*ancho fijo, necesario para respetar los anchos definidos de cada columna*/
+    width: 600px; /* ancho total de la tabla */
+    border-collapse: collapse;/*celdas juntas*/
+}
+.mi_tabla th{
+    border: 2px solid rgb(235, 98, 7);  
+    padding: 5px;             
+    text-align: center;          
+}  
+.mi_tabla td {
+    /*width: 150px; se define en HTML y asi le puedo poner un ancho diferrente a cada columna */
+    overflow: hidden; /* opcional: corta el contenido que sobrepasa */
+    text-overflow: ellipsis; /* opcional: agrega "..." si el texto es largo */
+    /*white-space: nowrap; evita saltos de línea */
+    border: 1px solid  rgb(235, 98, 7);  
+    padding: 5px;             
+    text-align: left;  
+}
+.mi_tabla caption {
+    caption-side: top;   /* fuerza el caption arriba */
+    font-weight: bold;   /* opcional: más destacado */
+    text-align: left;    /* opcional: alineación */
+    padding: 5px;
+    color:chocolate;
 }

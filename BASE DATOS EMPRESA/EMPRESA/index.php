@@ -10,6 +10,8 @@ use controllers\FotoController;
 use controllers\GastoVehiculoController;
 use controllers\CuotaVehiculoController;
 use controllers\MovimientoController;
+use controllers\EntregaController;
+use controllers\DevolucionController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -47,6 +49,16 @@ Router::add('POST', '/nuevo_movimiento', function () {return (new MovimientoCont
 Router::add('GET', '/nuevo_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->edit($idMovimiento);}); 
 Router::add('GET', '/detalles_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->detalles_movimiento($idMovimiento);});
 Router::add('GET', '/borrar_movimiento/:id', function($idMovimiento){return (new MovimientoController())->delete($idMovimiento);});
+//entregas movimientos
+Router::add('POST', '/nueva_entrega', function () {return (new EntregaController())->save();});
+Router::add('GET', '/editar_entrega/:id', function($idEntrega) {return (new EntregaController())->edit($idEntrega);});
+Router::add('GET', '/borrar_entrega/:id', function($idEntrega){return (new EntregaController())->delete($idEntrega);});
+
+//devoluciones movimientos
+Router::add('POST', '/nueva_devolucion', function () {return (new DevolucionController())->save();});
+Router::add('GET', '/editar_devolucion/:id', function($idDevolucion) {return (new DevolucionController())->edit($idDevolucion);});
+Router::add('GET', '/borrar_devolucion/:id', function($idDevolucion){return (new DevolucionController())->delete($idDevolucion);});
+
 
 Router::dispatch();
 

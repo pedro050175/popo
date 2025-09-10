@@ -19,14 +19,14 @@
 <div class="row">
     <div class="col-md-6">       
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Nombre]" class="form-control" id="Nombre" placeholder="Nombre" value="<?=(isset($entidad))?$entidad->getNombre():''?>"> 
+            <input type="text" name="data[entidad][Nombre]" class="form-control" id="Nombre" placeholder="Nombre" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getNombre()):''?>"> 
             <label for="Nombre">Nombre</label><!--la propiedad for en los label asocia la etiqueta con el cuadro usando el nombre del id del cuadro de esta forma
             al pinchar en la etiqueta el cursor se coloca en el input. Tmb se podria hacer poniendo el input entre las etiquetas label, pero boostrap pone la etiqueta fuera del input-->
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="CIF_DNI" placeholder="CIF_DNI" value="<?=(isset($entidad))?$entidad->getCIF_DNI():''?>" required>
+            <input type="text" name="data[entidad][CIF_DNI]" class="form-control" id="CIF_DNI" placeholder="CIF_DNI" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getCIF_DNI()):''?>" required>
             <label for="CIF_DNI">CIF_DNI</label>
         </div>
     </div>
@@ -34,13 +34,13 @@
 <div class="row">
     <div class="col-md-6"> 
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Direccion]" class="form-control" id="Direccion" placeholder="Direccion" value="<?=(isset($entidad))?$entidad->getDireccion():''?>">
+            <input type="text" name="data[entidad][Direccion]" class="form-control" id="Direccion" placeholder="Direccion" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getDireccion()):''?>">
             <label for="Direccion">Direccion</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="tel" name="data[entidad][Telefono]" pattern="[0-9+ ]{9,15}" class="form-control" id="Telefono" placeholder="Telefono" value="<?=(isset($entidad))?$entidad->getTelefono():''?>">
+            <input type="tel" name="data[entidad][Telefono]" pattern="[0-9+ ]{9,15}" class="form-control" id="Telefono" placeholder="Telefono" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getTelefono()):''?>">
             <!--pattern es una expresion regular para valirdar se puede aplcar a campos type email, search, text-->
             <label for="Telefono">Telefono</label>
         </div>
@@ -49,13 +49,13 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="email" name="data[entidad][Email]" class="form-control" multiple id="Email" placeholder="Email" value="<?=(isset($entidad))?$entidad->getEmail():''?>">
+            <input type="email" name="data[entidad][Email]" class="form-control" multiple id="Email" placeholder="Email" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getEmail()):''?>">
             <label for="Email">Email</label>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-floating mb-3">
-            <input type="text" name="data[entidad][Observaciones]" class="form-control" id="Observaciones" placeholder="Observaciones" value="<?=(isset($entidad))?$entidad->getObservaciones():''?>">
+            <input type="text" name="data[entidad][Observaciones]" class="form-control" id="Observaciones" placeholder="Observaciones" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getObservaciones()):''?>">
             <label for="Observaciones">Observaciones</label>
         </div>
     </div>

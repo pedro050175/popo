@@ -82,7 +82,6 @@ function validar_entero_campo_number (campo) { //valida campos de formulariotipo
     }
     return true;
 }
-
 function mostrarMenuVehiculo(menu, opciones){//para acceder a elementos de la pagina se usa document
     //oculto todos y luego solo activo el que se llame menu
     for (let opcion of opciones){

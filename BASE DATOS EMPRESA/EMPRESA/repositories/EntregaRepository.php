@@ -30,4 +30,46 @@ class EntregaRepository {
         }
         return $entregas;
     }
+    public function create (array $entrega):void{
+
+        $parametros = [
+            ':fecha' => $entrega['fecha'],
+            ':importe' => $entrega['importe'],
+            ':bancoEnvia' => $entrega['bancoEnvia'],
+            ':bancoRecibe' => $entrega['bancoRecibe'],
+            ':observaciones' => $entrega['observaciones'], 
+            ':movimiento' => $entrega['movimiento'], 
+        ];
+        $parametros = Limpiar_parametros($parametros);
+        $sql = "INSERT INTO entregas (fecha, importe, bancoEnvia, bancoRecibe, observaciones, movimiento) VALUES 
+                                    (:fecha, :importe, :bancoEnvia, :bancoRecibe, :observaciones, :movimiento)"; 
+        $this->conexionPDO->consulta($sql, $parametros);
+    }
+    public function update (array $entrega): void{ 
+
+        $parametros = [
+            ':idEntrega' => $entrega['idEntrega'],
+            ':fecha' => $entrega['fecha'],
+            ':importe' => $entrega['importe'],
+            ':bancoEnvia' => $entrega['bancoEnvia'],
+            ':bancoRecibe' => $entrega['bancoRecibe'],
+            ':observaciones' => $entrega['observaciones'], 
+            ':movimiento' => $entrega['movimiento'], 
+        ];
+        $parametros = Limpiar_parametros($parametros);
+        $sql = "UPDATE entregas SET fecha = :fecha, importe = :importe, bancoEnvia = :bancoEnvia, bancoRecibe = :bancoRecibe, observaciones  = :observaciones, movimiento = :movimiento
+                                        WHERE idEntrega = :idEntrega";
+        $this->conexionPDO->consulta($sql, $parametros);
+    }
+    public function read (int $id): ?Entrega {
+        $parametros = [':id' => $id];
+        $sql = "SELECT * FROM entregas WHERE idEntrega=:id";
+        $this->conexionPDO->consulta($sql, $parametros);
+        return $this->extraer_registro();
+    }
+    public function delete (int $id): void {
+        $parametros = [':id' =>$id];
+        $sql = "DELETE FROM entregas WHERE idEntrega=:id"; 
+        $this->conexionPDO->consulta($sql, $parametros);
+    }
 }

@@ -44,7 +44,6 @@ class MovimientoController{
     }
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $movimiento=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
-        //print_r($vehiculo);
         $this->movimientoRepository->save($movimiento);
         header('Location: '.DIRECTORIO.'movimientos?num_pagina=1');   
         exit;
@@ -53,14 +52,15 @@ class MovimientoController{
         $entidades = $this->entidad_repository->findAll($paginar=false); //carga los propietarios para la lista desplegable propietario
         $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $movimiento = $this->movimientoRepository->read($id);
-        //var_dump($cuotas);
-        $this->pages->render('nuevo_movimiento', ['movimiento' => $movimiento, 'vehiculos' => $vehiculos, 'entidades' => $entidades]);
+        $entregas = $this->entregaRepository->entregasMovimiento($id);
+        $devoluciones = $this->devolucionRepository->devolucionesMovimiento($id);
+        $this->pages->render('nuevo_movimiento', ['movimiento' => $movimiento, 'vehiculos' => $vehiculos, 'entidades' => $entidades, 'entregas' => $entregas, 'devoluciones' => $devoluciones]);
     }
     public function detalles_movimiento(int $id) {
         $entregas = $this->entregaRepository->entregasMovimiento($id);
         $devoluciones = $this->devolucionRepository->devolucionesMovimiento($id);
         $movimiento = $this->movimientoRepository->detalles_movimiento($id);
-        $this->pages->render('detalles_movimiento', ['movimiento' => $movimiento,  'entregas' => $entregas, 'devoluciones' => $devoluciones]);
+        $this->pages->render('detalles_movimiento', ['movimiento' => $movimiento, 'entregas' => $entregas, 'devoluciones' => $devoluciones]);
     }
     public function delete(int $id): void {
         $this->movimientoRepository->delete($id);

@@ -6,15 +6,15 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="tipo" class="etiqueta">Tipo:</label> 
-                    <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" value=<?=$gasto->getTipo()?> required>
+                    <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" value="<?=quitaEspecialChar($gasto->getTipo())?>" required>
                 </div>        
                 <div class="col-md-4">
                     <label class="etiqueta" for="importe" >Importe:</label>&nbsp
-                    <input class="cuadro_text" type="texto" name="gasto[importe]" id="importe" placeholder="Importe" value=<?=$gasto->getImporte()?>>
+                    <input class="cuadro_text" type="texto" name="gasto[importe]" id="importe" placeholder="Importe" value="<?=$gasto->getImporte()?>" required>
                 </div>
                 <div class="col-md-4">
                     <label class="etiqueta" for="importe" >Fecha:</label>&nbsp
-                    <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" value=<?=$gasto->getFecha()?> required>
+                    <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" value="<?=$gasto->getFecha()?>" required>
                 </div>
                 <div class="col-md-2">
                     <label class="etiqueta" for="paga_otro" >Paga otro:</label>&nbsp
@@ -25,11 +25,11 @@
                     <input class="cuadro_text" type="checkbox" name="gasto[pagado]" id="pagado" <?=($gasto->getPagado()==1) ? 'checked' : ''?>>
                 </div>
                 <div class="col-md-6">
-                    <label class="etiqueta" for="comentarios" >Comentarios:</label>&nbsp
-                    <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios" value=<?=$gasto->getComentarios()?>>
+                    <label class="etiqueta" for="comentarios" >Comentarios:</label>
+                    <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios" value="<?=quitaEspecialChar($gasto->getComentarios())?>">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="boton_submit" onclick="return validar_entero_campo_texto(form.importe)">Guardar Gasto</button>
+                    <button type="submit" class="boton_submit" onclick="return validar_entero_campo_text(form.importe)">Guardar Gasto</button>
                     <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_vehiculo/<?=$gasto->getId_vehiculo()?>';"><!--regreso al vehiculo que estaba con DIRECTORIO/nuevo_vehiculo/$foto->getid_vehiculo()-->
                 </div>
             </div>

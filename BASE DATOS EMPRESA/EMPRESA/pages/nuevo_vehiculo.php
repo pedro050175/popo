@@ -2,7 +2,7 @@
     <?php if (isset($vehiculo)) :?>
     <input type="hidden" name="data[vehiculo][id_vehiculo]" id='id_vehiculo' value="<?=$vehiculo->getId()?>">
     <?php endif;?>      
-<div class="container mt-1">
+<div class="container mt-1"><!--esto desplaza a la derecha un poco todo lo que haya dentro, tablas, etiquetas etc-->
         <div class="row">
             <div class="col">
                 <h5 class="titulo_prin"><?= (isset($vehiculo)) ? 'Modificar' : 'Nuevo'?> Vehiculo</h5>
@@ -16,19 +16,19 @@
 <div class="row">
     <div class="col-md-4">    
         <div class="form-floating mb-1">
-            <input type="text" name="data[vehiculo][Marca_modelo]" class="form-control" id="Marca_modelo" placeholder="Marca_modelo" value="<?=(isset($vehiculo))?$vehiculo->getMarca_modelo():''?>" required> 
+            <input type="text" name="data[vehiculo][Marca_modelo]" class="form-control" id="Marca_modelo" placeholder="Marca_modelo" value="<?=(isset($vehiculo))?quitaEspecialChar($vehiculo->getMarca_modelo()):''?>" required> 
             <label for="Marca_modelo">Marca y modelo</label>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-floating mb-1">
-            <input type="text" name="data[vehiculo][Matricula]" class="form-control" id="Matricula" placeholder="Matricula" value="<?=(isset($vehiculo))?$vehiculo->getMatricula():''?>">
+            <input type="text" name="data[vehiculo][Matricula]" class="form-control" id="Matricula" placeholder="Matricula" value="<?=(isset($vehiculo))?quitaEspecialChar($vehiculo->getMatricula()):''?>">
             <label for="Matricula">Matrícula</label>
         </div>
     </div>
     <div class="col-md-3">   
         <div class="form-floating mb-1">
-            <input type="text" name="data[vehiculo][Bastidor]" class="form-control" id="Bastidor" placeholder="Bastidor" value="<?=(isset($vehiculo))?$vehiculo->getBastidor():''?>">
+            <input type="text" name="data[vehiculo][Bastidor]" class="form-control" id="Bastidor" placeholder="Bastidor" value="<?=(isset($vehiculo))?quitaEspecialChar($vehiculo->getBastidor()):''?>">
             <label for="Bastidor">Bastidor</label>
         </div>
     </div>
@@ -134,7 +134,7 @@
 </div>   
     <div class="col-md-4">
         <div class="form-floating mb-1">
-            <input type="text" name="data[vehiculo][Observaciones]" class="form-control" id="Observaciones" placeholder="Observaciones" value="<?=(isset($vehiculo))?$vehiculo->getObservaciones():''?>">
+            <input type="text" name="data[vehiculo][Observaciones]" class="form-control" id="Observaciones" placeholder="Observaciones" value="<?=(isset($vehiculo))?quitaEspecialChar($vehiculo->getObservaciones()):''?>">
             <label for="Observaciones">Observaciones</label>
         </div>
     </div>           
@@ -147,13 +147,14 @@
     <div class="col-md-8"></div>
     <div class="col-md-4 botones">
         <script>var opciones_menu = new Array ("fotos", "gastos", "cuotas");</script><!--array con todos las opciones-->
-        <button type="button" class="boton_menu" onclick="mostrarMenuVehiculo('fotos', opciones_menu)">Fotos</button>
-        <button type="button" class="boton_menu" onclick="mostrarMenuVehiculo('gastos', opciones_menu)">Gastos</button>        
-        <button type="button" class="boton_menu" onclick="mostrarMenuVehiculo('cuotas', opciones_menu)">Cuotas</button>        
+        <button type="button" class="boton_menu" id="boton_fotos" style = "color: red"  onclick="mostrarMenuVehiculo('fotos', opciones_menu)">Fotos</button>
+        <button type="button" class="boton_menu" id="boton_gastos" onclick="mostrarMenuVehiculo('gastos', opciones_menu)">Gastos</button>        
+        <button type="button" class="boton_menu" id="boton_cuotas" onclick="mostrarMenuVehiculo('cuotas', opciones_menu)">Cuotas</button>  
+        <?php $menuMostrar = $_COOKIE["menuVehiculo"] ?? 'fotos'?> <!--la 1º vez muestra menu fotos. esto se controla directamente sobre el atributo hidden de del div correspondiente a cada seccion-->     
     </div>
 </div>
 <!--FOTOS-->
-<div class=contenedor id="fotos">
+<div class=contenedor id="fotos" <?= $menuMostrar!="fotos" ? "hidden" : '' ?>>
 <!-- formulario para nueva fotos -->
     <form action="<?= DIRECTORIO ?>nueva_foto" method="post" enctype="multipart/form-data">
         <fieldset class="mi-fieldset">
@@ -205,7 +206,7 @@
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <!-- estoy en /mis_pruebas/nuevo_vehiculo con ..subo un directorio y voy a /mis_pruebas/ y añado /borrar_foto... y me quedo en /mis_pruebas/borrar_foto_vehiculo-->
-                                <a href="../borrar_gasto_vehiculo/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta foto?');"> 
+                                <a href="../borrar_foto_vehiculo/<?=$foto->getid()?>?vehiculo=<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta foto?');"> 
                                 <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
                                 <i class="bi bi-trash"></i>
                                 </a>   
@@ -221,7 +222,7 @@
     </div>
 </div>
 <!--GASTOS-->
-<div class=contenedor id="gastos">
+<div class=contenedor id="gastos" <?= $menuMostrar!="gastos" ? "hidden" : '' ?>>
     <!--Formulario nuevo gasto--> 
     <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post">
         <fieldset class="mi-fieldset">
@@ -229,11 +230,11 @@
             <div class="row">
                 <div class="col-md-4">
                     <label for="tipo" class="etiqueta">Tipo:</label> 
-                    <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" required placeholder="Tipo">
+                    <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" placeholder="Tipo" required>
                 </div>        
                 <div class="col-md-3">
                     <label class="etiqueta" for="importe" >Importe:</label>&nbsp
-                    <input class="cuadro_text" type="text" name="gasto[importe]" id="importe" placeholder="Importe">
+                    <input class="cuadro_text" type="text" name="gasto[importe]" id="importe" placeholder="Importe" required>
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="fecha" >Fecha:</label>&nbsp
@@ -316,8 +317,8 @@
                                 <!--?vehiculo=<?=$vehiculo->getId()?> esto es para pasar en la URL la el numero de vehiculo que estamos editando y al borrar la foto poder cargar el mismo vehiculo -->  
                                 <i class="bi bi-trash"></i>
                             </a>   
-                        </div>
-                    </td>
+                            </div>
+                        </td>
                 </tr>    
                 <?php endforeach ;?>   
             </tbody>
@@ -325,7 +326,7 @@
         <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
     </div> 
 </div>
-<div class=contenedor id="cuotas">
+<div class=contenedor id="cuotas" <?= $menuMostrar!="cuotas" ? "hidden" : '' ?>>
     <!--Formulario nueva cuota--> 
     <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post">
         <fieldset class="mi-fieldset">
@@ -477,7 +478,7 @@
             allowClear: true,
             width: '100%'
         });
-    mostrarMenuVehiculo('fotos', opciones_menu);//al cargar muestra solo 1 
+    //mostrarMenuVehiculo('fotos', opciones_menu);
     });
 </script>
 

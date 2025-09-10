@@ -11,7 +11,7 @@ class CuotaVehiculoRepository {
     public function __construct() {
         $this->conexionPDO = new BaseDatosPDO();
     }
-    public function cuotas_vehiculo(int $id): ?array {
+    public function cuotas_vehiculo(int $id): ?array {/*para mostrar listado necesito leer el nombre de la entidad por eso lo incluyo en el select consa que notengo que hacer para editar*/
         $parametros = [':id' => $id];
         $sql = "SELECT C.*, Nombre FROM cuotasvehiculo as C LEFT JOIN entidad as E ON C.id_entidad=E.id_entidad WHERE C.id_vehiculo=:id";
         $this->conexionPDO->consulta ($sql, $parametros);
@@ -80,7 +80,7 @@ class CuotaVehiculoRepository {
         $this->conexionPDO->consulta($sql, $parametros);
     }
 
-    public function read (int $id): ?cuotaVehiculo {
+    public function read (int $id): ?CuotaVehiculo {
         $parametros = [':id' => $id];
         $sql = "SELECT * FROM cuotasvehiculo WHERE idCuota=:id";
         $this->conexionPDO->consulta($sql, $parametros);

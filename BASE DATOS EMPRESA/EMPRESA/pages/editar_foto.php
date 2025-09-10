@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-6">
                 <label class="etiqueta" for="descripcion">Descripcion: </label>
-                <input  type="text" size="75" name="foto[descripcion]" id="descripcion" value="<?=$foto->getdescripcion()?>">
+                <input  type="text" size="75" name="foto[descripcion]" id="descripcion" value="<?=quitaEspecialChar($foto->getdescripcion())?>">
             </div>
         </div>
         <div class="col-md-6">

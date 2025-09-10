@@ -16,6 +16,7 @@ class FotoController {
     }  
     
     public function save(): void { 
+        setcookie('menuVehiculo', 'fotos', time()+3600, "/");//para que despues de guardar los cambios vuelva al menu fotos
         $foto=$_POST['foto']; 
         if (!isset($_FILES['imagen'])) {
             $this->foto_repository->update($foto);
@@ -41,6 +42,7 @@ class FotoController {
     public function delete(int $id): void {
         $this->foto_repository->delete($id);
         $id_vehiculo = $_GET['vehiculo'];
+        setcookie('menuVehiculo', 'fotos', time()+3600, "/");//el delete no pasa por header ya que no hace render asi que creo la cookie aqui
         header('Location: '.DIRECTORIO.'nuevo_vehiculo/'.$id_vehiculo);//cargo el mismo vehiculo que estaba editando    
         exit; 
     }

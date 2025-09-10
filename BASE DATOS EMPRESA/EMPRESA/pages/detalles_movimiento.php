@@ -37,33 +37,75 @@
         </div>                 
     </div>
 </div>
+<div class="btn-group">
+    <a href="<?= DIRECTORIO ?>nuevo_movimiento/<?=$movimiento->getidMovimiento()?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
 </div>
-    <div class="btn-group">
-        <a href="<?= DIRECTORIO ?>nuevo_movimiento/<?=$movimiento->getidMovimiento()?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-    </div>
-</div>
+
 <!--Entregas-->
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Importe</th>
-                <th>Banco Envia</th>
-                <th>Banco Recibe</th>
-                <th>Observaciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($entregas as $entrega) :?>
+<div class="container mt-1"><!--esto desplaza a la derecha un poco todo lo que haya dentro, tablas, etiquetas etc-->
+    <div id = "envios">
+        <table class = "mi_tabla" >
+            <caption>Entregas</caption>
+            <colgroup>
+                <col style="width: 100px;">
+                <col style="width: 120px;">
+                <col style="width: 120px;">
+                <col style="width: 120px;">
+                <col style="width: 140px;">
+            </colgroup>
+            <thead>
                 <tr>
-                    <td><?= formatea_fecha($entrega->getfecha())?></td>
-                    <td><?= number_format($entrega->getimporte(), 2, ',', '.');?>€</td>
-                    <td><?= $entrega->getbancoEnvia()?></td>
-                    <td><?= $entrega->getbancoRecibe()?></td>
-                    <td><?= $entrega->getobservaciones()?></td>
+                    <th>Fecha</th>
+                    <th>Importe</th>
+                    <th>Banco Envia</th>
+                    <th>Banco Recibe</th>
+                    <th>Observaciones</th>
                 </tr>
+            </thead>
+            <tbody>
+                <?php $totalEntrega = 0; ?>
+                <?php foreach ($entregas as $entrega) :?>
+                    <tr>
+                        <td><?= formatea_fecha($entrega->getfecha())?></td>
+                        <td><?= number_format($entrega->getimporte(), 2, ',', '.');?>€</td>
+                        <td><?= $entrega->getbancoEnvia()?></td>
+                        <td><?= $entrega->getbancoRecibe()?></td>
+                        <td><?= $entrega->getobservaciones()?></td>
+                        <?php $totalEntrega += $entrega->getimporte();?>
+                    </tr>
                 <?php endforeach ;?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalEntrega, 2, ',', '.')?>€</p>
+    </div>
+<!--Devoluciones-->
+    <div id = "devoluciones">
+        <table class = "mi_tabla" >
+            <caption>Envios</caption>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Importe</th>
+                    <th>Banco Envia</th>
+                    <th>Banco Recibe</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $totalDevolucion = 0; ?>
+                <?php foreach ($devoluciones as $devolucion) :?>
+                    <tr>
+                        <td><?= formatea_fecha($devolucion->getfecha())?></td>
+                        <td><?= number_format($devolucion->getimporte(), 2, ',', '.');?>€</td>
+                        <td><?= $devolucion->getbancoEnvia()?></td>
+                        <td><?= $devolucion->getbancoRecibe()?></td>
+                        <td><?= $devolucion->getobservaciones()?></td>
+                        <?php $totalDevolucion += $devolucion->getimporte();?>
+                    </tr>
+                <?php endforeach ;?>
+            </tbody>
+        </table>
+        <p class='etiqueta_desplazada'> Suma: <?=number_format($totalDevolucion, 2, ',', '.')?>€</p>
+        <p class='etiqueta'><strong>Diferencia: <?=number_format(($totalEntrega-$totalDevolucion), 2, ',', '.')?>€</strong></p>
+    </div>
 </div>

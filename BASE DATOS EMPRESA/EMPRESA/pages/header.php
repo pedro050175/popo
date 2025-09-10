@@ -1,10 +1,15 @@
-<!-- <?php if (!isset($_COOKIE['numero_pagina'])){
-    setcookie("numero_pagina", "1");
-}else {
-    setcookie("numero_pagina", strval((intval($_COOKIE['numero_pagina'])+1))); //solo se le puede cambiar el valor reescribiendola $_COOKIE solo tiene el valor de la cookie que se lo envia el navegador del cliente al servidor de PHP y la guarada en $_COOKIE
-//se puede borrar con setcookie("numero_pagina"). cualquier operacion con setcookie tiene que ser antes de cargar HTML, una vez cargado HTML solo se puede consultar a $_COOKIE
-}
-?> -->
+<?php
+/*este codigo es para cuando se edita una foto, gasto o cuota despues al volvoer a la pag nuevo_vehiuclo que cargue el menu que se acaba de usar, lo pordria hacer en el metodo edit de cada controlloer como he hecho en los metodos save y delete, pero el metodo edit si carga pagina y puedo usarlo aqui*/
+    $currentPath = $_SERVER['REQUEST_URI'];
+    if (str_contains($currentPath, 'foto')) { 
+        setcookie('menuVehiculo', 'fotos', time()+3600, "/");//muy importante poner la / para que este disponible en todas las paginas de la aplicacion y localhost para que tmb este disponible en todo el dominio
+        }else if (str_contains($currentPath, 'cuota')) {
+            setcookie('menuVehiculo', 'cuotas', time()+3600, "/");
+            }else if (str_contains($currentPath, 'gasto')) {
+                setcookie('menuVehiculo', 'gastos', time()+3600, "/");
+
+            }  
+?>
 <!DOCTYPE html>
 <html>
 <head>

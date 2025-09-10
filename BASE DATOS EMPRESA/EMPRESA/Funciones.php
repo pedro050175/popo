@@ -11,8 +11,10 @@ function Limpiar_parametros (array $datos): array {//Cambia los '' por NULL
     return $limpios;
 }
 function duplicar_tabla (array $modelo, array $data): array{   
-    foreach ($data as $indice => $valor){ //paso los datos de data a modelo, si falta algun campo en data, modelo lo tiene creado
+    foreach ($modelo as $indice => $valor){ //paso los datos de data a modelo, si falta algun campo en data, modelo lo tiene creado
+        if (isset($data[$indice])){ 
         $modelo[$indice] = $data[$indice];
+        }    
     } 
     return $modelo;
 }
@@ -26,5 +28,8 @@ function errorFile(string $error): string {
         case UPLOAD_ERR_EXTENSION: $mesanje = "Transferencia detenida por la extension"; break;
     }
     return $mensaje;
+}
+function quitaEspecialChar(?string $cadena): string{//en los campos de formulario text, si el valor a cargar en el cuadro lleva comillas u otros simbolos especiales, el navegador hace que no se muestre el texto entre comillas
+    return (htmlspecialchars($cadena ?? '', ENT_QUOTES, 'UTF-8'));
 }
 ?>

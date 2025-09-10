@@ -59,7 +59,7 @@ class CuotaVehiculo {
     public static function fromArray(array $data): CuotaVehiculo {
         $modelo_propietario = duplicar_tabla (CAMPOS_ENTIDAD, $data);
         $modelo = duplicar_tabla(CAMPOS_CUOTA_VEHICULO, $data);
-        //var_dump($data);
+
         $propietario = new Entidad ($modelo_propietario['id_entidad'], $modelo_propietario['CIF_DNI'], $modelo_propietario['Nombre'], $modelo_propietario['Observaciones'], 
                                     $modelo_propietario['Direccion'], $modelo_propietario['Telefono'], $modelo_propietario['Email']);
         return new CuotaVehiculo ($modelo['idCuota'], $modelo['inicio'], $modelo['duracion'], $modelo['id_vehiculo'], $modelo['tipo'], $modelo['cuota'], $modelo['totalPagar'], $modelo['pagoFinal'], 
