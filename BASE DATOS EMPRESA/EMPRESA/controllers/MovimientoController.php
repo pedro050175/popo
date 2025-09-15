@@ -67,5 +67,29 @@ class MovimientoController{
         header('Location: '.DIRECTORIO.'movimientos?num_pagina=1');
         exit; 
     }
-
+    public function analisis (){
+        
+        if (isset($_GET['envia'])){
+            $movimientos1 = $this->movimientoRepository->findAll();
+            $movimientos2 = $this->movimientoRepository->findAll(true);
+            $ids = $this->leer_ids($movimientos1, $movimientos2);
+            if (isset($ids)) {
+                foreach ($ids as $id){//entregas[[entre_mov_id1]=Obj1,Obj2.., [entre_mov_id2]=Obj1,Obj2.., [entre_mov_id3] = ..., ...] el indice de cada tabla de entregas es el id de un movimiento
+                    $entregas [$id]= $this->entregaRepository->entregasMovimiento($id);
+                    $devoluciones [$id]= $this->devolucionRepository->devolucionesMovimiento($id);
+                }
+                    var_dump($entregas);
+                $this->pages->render('analisis_movimientos', ['movimientos1' => $movimientos1, 'movimientos2' => $movimientos2, 'entregas' => $entregas, 'devoluciones' => $devoluciones]);
+            }else $this->pages->render('analisis_movimientos');
+        }
+    }
+    private function leer_ids (?array $movimientos1, ?array $movimientos2): ?array {
+        foreach ($movimientos1 as $movimiento){
+                $ids []= $movimiento->getidMovimiento();
+        }
+        foreach ($movimientos2 as $movimiento){
+                $ids []= $movimiento->getidMovimiento();
+        }
+        return ($ids ?? null);
+    }
 }

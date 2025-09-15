@@ -12,7 +12,6 @@ class MovimientoRepository{
     function __construct(){
         $this->conexionPDO = new BaseDatosPDO();
     }
-
     public function setnumpaginas(int $paginas){
         $this->numPaginas = $paginas;
     }
@@ -27,26 +26,67 @@ class MovimientoRepository{
         
         return $numeroPaginas;
     }
-    public function findAll(): ?array {
+    public function findAll($invertir=false): ?array {
         $desplazamiento = 0;
         $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM movimientos");
         if (($_GET['num_pagina']) <= $this->numPaginas) {
             $numPagina = intval($_GET['num_pagina']);
             $desplazamiento = ($numPagina-1) * FILAS_PAGINA;
         }
-        $envia = $_GET['buscar_envia'] ?? null;
-        $recibe = $_GET['buscar_recibe'] ?? null;
-            
+        if ($invertir) {
+            $recibe = $_GET['envia'] ?? null;
+            $envia = $_GET['recibe'] ?? null;
+        } else {
+            $envia = $_GET['envia'] ?? null;
+            $recibe = $_GET['recibe'] ?? null;
+            }
         if (($envia) or ($recibe)) {
-            $this->conexionPDO->consulta ("SELECT m.*, A.Nombre as nombreEnvia, B.Nombre as nombreRecibe, V.Marca_Modelo FROM movimientos M LEFT JOIN entidad A ON envia=A.id_entidad 
-                                        LEFT JOIN entidad B ON recibe=B.id_entidad LEFT JOIN vehiculos V ON vehiculo=V.id_vehiculo LEFT JOIN entidad C ON V.propietario = C.id_entidad
-                                        WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%'");
+            $this->conexionPDO->consulta ("SELECT   M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+                                                    COALESCE(E.totalImporte, 0) AS totalEntregas,
+                                                    COALESCE(D.totalImporte, 0) AS totalDevoluciones,
+                                                    COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
+                                            FROM movimientos M
+                                                LEFT JOIN entidad A ON M.envia = A.id_entidad
+                                                LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                                                LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
+                                                LEFT JOIN entidad C ON V.propietario = C.id_entidad
+
+                                                LEFT JOIN (
+                                                    SELECT movimiento, SUM(importe) AS totalImporte
+                                                    FROM entregas
+                                                    GROUP BY movimiento
+                                                ) E ON M.idMovimiento = E.movimiento
+
+                                                LEFT JOIN (
+                                                    SELECT movimiento, SUM(importe) AS totalImporte
+                                                    FROM devoluciones
+                                                    GROUP BY movimiento
+                                                ) D ON M.idMovimiento = D.movimiento
+                                            WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%'
+                                            ORDER BY A.nombre");//OR A.Nombre LIKE '%$recibe%' and B.Nombre LIKE '%$envia%'
         }else {
-            $this->conexionPDO->consulta ("SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario FROM movimientos M 
-                    LEFT JOIN entidad A ON M.envia = A.id_entidad
-                    LEFT JOIN entidad B ON M.recibe = B.id_entidad
-                    LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
-                    LEFT JOIN entidad C ON V.propietario = C.id_entidad ORDER BY m.fecha LIMIT $desplazamiento, ".FILAS_PAGINA);            
+            $this->conexionPDO->consulta ("SELECT   M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+                                                    COALESCE(E.totalImporte, 0) AS totalEntregas,
+                                                    COALESCE(D.totalImporte, 0) AS totalDevoluciones,
+                                                    COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
+                                            FROM movimientos M
+                                                LEFT JOIN entidad A ON M.envia = A.id_entidad
+                                                LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                                                LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
+                                                LEFT JOIN entidad C ON V.propietario = C.id_entidad
+
+                                                LEFT JOIN (
+                                                    SELECT movimiento, SUM(importe) AS totalImporte
+                                                    FROM entregas
+                                                    GROUP BY movimiento
+                                                ) E ON M.idMovimiento = E.movimiento
+
+                                                LEFT JOIN (
+                                                    SELECT movimiento, SUM(importe) AS totalImporte
+                                                    FROM devoluciones
+                                                    GROUP BY movimiento
+                                                ) D ON M.idMovimiento = D.movimiento                
+                                            ORDER BY m.fecha LIMIT $desplazamiento, ".FILAS_PAGINA);            
             }    
         return $this->extraer_todos();    
     }
@@ -74,7 +114,7 @@ class MovimientoRepository{
             ':recibe' => $data['movimiento']['recibe'],
             ':fecha' => $data['movimiento']['fecha'],
             ':concepto' => $data['movimiento']['concepto'],
-            ':vehiculo' => $data['movimiento']['vehiculo'],
+            ':vehiculo' => $data['movimiento']['vehiculo'] ?? '',
             ':observaciones' => $data['movimiento']['observaciones']
         ];
         
@@ -92,7 +132,7 @@ class MovimientoRepository{
             ':recibe' => $data['movimiento']['recibe'],
             ':fecha' => $data['movimiento']['fecha'],
             ':concepto' => $data['movimiento']['concepto'],
-            ':vehiculo' => $data['movimiento']['vehiculo'],
+            ':vehiculo' => $data['movimiento']['vehiculo'] ?? '',
             ':observaciones' => $data['movimiento']['observaciones']        
         ];
         $parametros = Limpiar_parametros($parametros);

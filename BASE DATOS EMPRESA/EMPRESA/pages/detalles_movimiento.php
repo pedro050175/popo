@@ -31,8 +31,11 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="border p-2 rounded"><strong>Observaciones: </strong><?=$movimiento->getobservaciones()?></div>
+            </div>
+            <div class="col-md-4">
+                <div class="border p-2 rounded"><strong>Propietario: </strong><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></div>
             </div>
         </div>                 
     </div>
@@ -43,7 +46,7 @@
 
 <!--Entregas-->
 <div class="container mt-1"><!--esto desplaza a la derecha un poco todo lo que haya dentro, tablas, etiquetas etc-->
-    <div id = "envios">
+    <div id = "entregas">
         <table class = "mi_tabla" >
             <caption>Entregas</caption>
             <colgroup>
@@ -81,7 +84,7 @@
 <!--Devoluciones-->
     <div id = "devoluciones">
         <table class = "mi_tabla" >
-            <caption>Envios</caption>
+            <caption>Devoluciones</caption>
             <thead>
                 <tr>
                     <th>Fecha</th>

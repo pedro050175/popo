@@ -65,7 +65,7 @@
                     </option>
                 <?php endforeach; ?>
             </select> 
-                <label for="Combustible">Combustible</label>
+            <label for="Combustible">Combustible</label>
         </div>
     </div>
     <div class="col-md-3">
@@ -145,18 +145,18 @@
 <!--Menu--> 
 <div class="row">
     <div class="col-md-8"></div>
-    <div class="col-md-4 botones">
-        <script>var opciones_menu = new Array ("fotos", "gastos", "cuotas");</script><!--array con todos las opciones-->
-        <button type="button" class="boton_menu" id="boton_fotos" style = "color: red"  onclick="mostrarMenuVehiculo('fotos', opciones_menu)">Fotos</button>
-        <button type="button" class="boton_menu" id="boton_gastos" onclick="mostrarMenuVehiculo('gastos', opciones_menu)">Gastos</button>        
-        <button type="button" class="boton_menu" id="boton_cuotas" onclick="mostrarMenuVehiculo('cuotas', opciones_menu)">Cuotas</button>  
+    <div class="col-md-4 botones">                          
+        <button type="button" class="boton_menu" id="boton_fotos"  onclick="mostrarMenuVehiculo('fotos')">Fotos</button>
+        <button type="button" class="boton_menu" id="boton_gastos" onclick="mostrarMenuVehiculo('gastos')">Gastos</button>        
+        <button type="button" class="boton_menu" id="boton_cuotas" onclick="mostrarMenuVehiculo('cuotas')">Cuotas</button>  
         <?php $menuMostrar = $_COOKIE["menuVehiculo"] ?? 'fotos'?> <!--la 1º vez muestra menu fotos. esto se controla directamente sobre el atributo hidden de del div correspondiente a cada seccion-->     
-    </div>
+    </div> 
 </div>
 <!--FOTOS-->
 <div class=contenedor id="fotos" <?= $menuMostrar!="fotos" ? "hidden" : '' ?>>
+    <button type="button" class="boton_link" id="boton_form_fotos" onclick="mostrar_formulario('form_fotos')"><+></button>
 <!-- formulario para nueva fotos -->
-    <form action="<?= DIRECTORIO ?>nueva_foto" method="post" enctype="multipart/form-data">
+    <form action="<?= DIRECTORIO ?>nueva_foto" method="post" enctype="multipart/form-data" id = "form_fotos" hidden>
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nueva Foto</legend>
             <input type="hidden" name="MAX_FILE_SIZE" value="2000000">
@@ -223,8 +223,9 @@
 </div>
 <!--GASTOS-->
 <div class=contenedor id="gastos" <?= $menuMostrar!="gastos" ? "hidden" : '' ?>>
+    <button type="button" class="boton_link" id="boton_form_fotos" onclick="mostrar_formulario('form_gastos')"><+></button>
     <!--Formulario nuevo gasto--> 
-    <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post">
+    <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post" id = "form_gastos" hidden>
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nuevo Gasto</legend>
             <div class="row">
@@ -328,7 +329,8 @@
 </div>
 <div class=contenedor id="cuotas" <?= $menuMostrar!="cuotas" ? "hidden" : '' ?>>
     <!--Formulario nueva cuota--> 
-    <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post">
+    <button type="button" class="boton_link" id="boton_form_fotos" onclick="mostrar_formulario('form_cuotas')"><+></button>
+    <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post" id = "form_cuotas" hidden>
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nueva Cuota</legend>
             <div class="row">
@@ -478,7 +480,7 @@
             allowClear: true,
             width: '100%'
         });
-    //mostrarMenuVehiculo('fotos', opciones_menu);
+    color_boton_menu();//para poner en azul el boton del MENU que se haya activado al consultar la cookie 
     });
 </script>
 

@@ -68,6 +68,7 @@
         </div> 
         <?php
             $vehiculoActual = isset($movimiento) ? $movimiento->getvehiculo() : '';//estoy editando un movimiento
+            $vehiculoActual = $vehiculoActual!=0 ? $vehiculoActual : '';//getvehiculo devuelve un numero, si no existe el vehiculo devuelve un 0 (CAMPOS_MOVIMIENTO lo pone a cero)
             foreach ($vehiculos as $vehiculo){
                 $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo();//con la variable $entidades creo un array asociativo ['id']=Nombre
             }
@@ -78,7 +79,7 @@
                 <select name="data[movimiento][vehiculo]" class="form-select" id="select-vehiculo">
                     <option disabled <?= $vehiculoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                     <?php foreach ($listaVehiculos as $id => $vehiculo): ?>
-                        <option value="<?= $id?>" <?= $id == $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
+                        <option value="<?= $id?>" <?= $id === $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
                     <?php endforeach; ?>
                 </select> 
             </div>
@@ -87,7 +88,8 @@
 </div>
 </form>
 <!--Entrega formulario-->
-<form action="<?= DIRECTORIO ?>nueva_entrega" method="post">
+<button type="button" class="boton_link" id="boton_form_entrega" onclick="mostrar_formulario('form_entrega')"><+></button>
+<form action="<?= DIRECTORIO ?>nueva_entrega" method="post" id="form_entrega" hidden>
     <fieldset class="mi-fieldset">
         <legend class="mi-legend">Nueva entrega</legend>
         <div class="row">       
@@ -173,7 +175,8 @@
     </div>
 </div>
 <!--Devolucion formulario-->
-<form action="<?= DIRECTORIO ?>nueva_devolucion" method="post">
+<button type="button" class="boton_link" id="boton_form_devolucion" onclick="mostrar_formulario('form_devolucion')"><+></button>
+<form action="<?= DIRECTORIO ?>nueva_devolucion" method="post" id="form_devolucion" hidden>
     <fieldset class="mi-fieldset">
         <legend class="mi-legend">Nueva devolucion</legend>
         <div class="row">       
@@ -213,7 +216,7 @@
 <div class="container mt-1">
     <div id = "devoluciones">
         <table class = "mi_tabla" >
-            <caption>Envios</caption>
+            <caption>Devoluciones</caption>
             <colgroup>
                 <col style="width: 100px;">
                 <col style="width: 120px;">

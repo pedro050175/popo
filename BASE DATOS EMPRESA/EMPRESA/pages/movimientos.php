@@ -2,13 +2,15 @@
     <div class="row">
         <div class="col-md-6">
             <form action="<?= DIRECTORIO ?>movimientos" method="get" class="d-flex">
-                <input type="search" name="buscar_envia" class="form-control me-1" id="floatingInput" placeholder="Buscar envia">
-                <input type="search" name="buscar_recibe" class="form-control me-1" id="floatingInput" placeholder="Buscar recibe">
+                <input type="search" name="envia" class="form-control me-1" id="floatingInput" placeholder="Buscar envia">
+                <input type="search" name="recibe" class="form-control me-1" id="floatingInput" placeholder="Buscar recibe">
                 <input type="hidden" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1"><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>
-        <div class="col-md-4"> </div><!--para despalzar el boton Nuevo vehiculo a la derecha-->
+        <div class="col-md-4"> 
+             <input type="button" class="boton_link" value = "Analizar" onclick="window.location.href='<?= DIRECTORIO ?>analisis_movimientos';">
+        </div><!--para despalzar el boton Nuevo vehiculo a la derecha-->
         <div class="col-md-2">
             <input type="button" class="boton_link" value = "Nuevo movimiento" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_movimiento';"> 
         </div>
@@ -27,19 +29,23 @@
                 <th class="etiqueta" scope="col">Envia</th>
                 <th class="etiqueta" scope="col">Recibe</th>
                 <th class="etiqueta" scope="col">Concepto</th>
+                <th class="etiqueta" scope="col">Debe</th>
                 <th class="etiqueta" scope="col">Vehiculo</th>
                 <th class="etiqueta" scope="col">Propietario</th>
                 <th class="etiqueta" scope="col">Observaciones</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($movimientos as $movimiento):?>
+                <?php $total = 0; ?>
+                <?php foreach($movimientos as $movimiento) :?>
                 <tr>
+                    <?php $total += $movimiento->getdiferencia(); ?>
                     <th scope="row"><?=$movimiento->getidMovimiento()?></th>
                     <td><?=formatea_fecha($movimiento->getfecha())?></td>
                     <td><?=$movimiento->getenviaInfo()->getNombre()?></td>
                     <td><?=$movimiento->getrecibeInfo()->getNombre()?></td>
                     <td><?=$movimiento->getconcepto()?></td>
+                    <td><?=number_format($movimiento->getdiferencia(), 2, ',', '.')?>€</td>
                     <td><?=$movimiento->getvehiculoInfo()->getMarca_modelo()?></td>
                     <td><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></td>
                     <td><?=$movimiento->getobservaciones()?></td>
@@ -60,6 +66,12 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <div class="row mb-3">       
+            <div class="col-md-5"></div>
+            <div class="col-md-2">
+                <p class = "etiqueta">Suma: <?=number_format($total, 2, ',', '.')?>€</p>
+            </div>
+        </div>
         <div class="row mb-3">       
             <div class="col-md-2"> <em class="etiqueta">Movimientos: <?=count($movimientos)?></em></div>
             <!--todo esto que sigue es para la paginacion-->

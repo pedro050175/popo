@@ -11,7 +11,6 @@
     border-radius: 8px;
 }
 .etiqueta{
-    
     color:rgb(223, 94, 3); 
 }
 .etiqueta_desplazada{
@@ -58,7 +57,7 @@
     display: flex;/*para que se queden pegados, porque el navegador por defecto los separa aunque tenga margne 0*/
 }
 .boton_menu{    
-    color: rgb(0, 14, 136);
+    color:  rgb(223, 94, 3);
     background-color: rgb(255, 255, 255);
     border-width: 2px;
     border-top: none;/*le quito la parte superior de borde*/
@@ -83,7 +82,6 @@
     width: 95%;
 }
 .mi-legend {
-                    /* quita todos los estilos aplicados boostrap me esta interfiriendo*/
     display: block;
     float: none;               /* evita que se flote raro */
     width: auto;               /* se ajusta al texto */

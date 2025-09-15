@@ -16,7 +16,7 @@ class GastoVehiculoController {
     }  
     
     public function save(): void { //se usa para guardar una nuevo o uno editado, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
-        setcookie('menuVehiculo', 'gastos', time()+3600, "/");//para que despues de guardar los cambios vuelva al menu gastos
+        setcookie('menuVehiculo', 'gastos', time()+600, "/");//para que despues de guardar los cambios vuelva al menu gastos
         $gasto=$_POST['gasto']; //coge los datos del metodo POST, los graba y salta al listado entidades
         if (isset($gasto['id_gasto'])) {
             $this->gasto_repository->update($gasto);
@@ -35,7 +35,7 @@ class GastoVehiculoController {
     public function delete(int $id): void {
         $this->gasto_repository->delete($id);
         $id_vehiculo = $_GET['vehiculo'];
-        setcookie('menuVehiculo', 'gastos', time()+3600, "/");//el delete no pasa por header ya que no hace render asi que creo la cookie aqui
+        setcookie('menuVehiculo', 'gastos', time()+600, "/");//el delete no pasa por header ya que no hace render asi que creo la cookie aqui
         header('Location: '.DIRECTORIO.'nuevo_vehiculo/'.$id_vehiculo);//cargo el mismo vehiculo que estaba editando    
         exit; 
     }

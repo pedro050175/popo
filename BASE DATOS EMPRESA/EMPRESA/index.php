@@ -49,6 +49,9 @@ Router::add('POST', '/nuevo_movimiento', function () {return (new MovimientoCont
 Router::add('GET', '/nuevo_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->edit($idMovimiento);}); 
 Router::add('GET', '/detalles_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->detalles_movimiento($idMovimiento);});
 Router::add('GET', '/borrar_movimiento/:id', function($idMovimiento){return (new MovimientoController())->delete($idMovimiento);});
+Router::add('GET', '/analisis_movimientos',function(){return (new MovimientoController())->analisis();});
+//Router::add('POST', '/analisis_movimientos',function(){return (new MovimientoController())->analisis();});
+
 //entregas movimientos
 Router::add('POST', '/nueva_entrega', function () {return (new EntregaController())->save();});
 Router::add('GET', '/editar_entrega/:id', function($idEntrega) {return (new EntregaController())->edit($idEntrega);});
@@ -58,7 +61,6 @@ Router::add('GET', '/borrar_entrega/:id', function($idEntrega){return (new Entre
 Router::add('POST', '/nueva_devolucion', function () {return (new DevolucionController())->save();});
 Router::add('GET', '/editar_devolucion/:id', function($idDevolucion) {return (new DevolucionController())->edit($idDevolucion);});
 Router::add('GET', '/borrar_devolucion/:id', function($idDevolucion){return (new DevolucionController())->delete($idDevolucion);});
-
 
 Router::dispatch();
 

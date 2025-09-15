@@ -1,12 +1,12 @@
 <?php
-/*este codigo es para cuando se edita una foto, gasto o cuota despues al volvoer a la pag nuevo_vehiuclo que cargue el menu que se acaba de usar, lo pordria hacer en el metodo edit de cada controlloer como he hecho en los metodos save y delete, pero el metodo edit si carga pagina y puedo usarlo aqui*/
+/*este codigo es para cuando se edita una foto, gasto o cuota despues al volvoer a la pag nuevo_vehiculo que cargue el menu que se acaba de usar, lo pordria hacer en el metodo edit de cada controller como he hecho en los metodos save y delete, pero el metodo edit si carga pagina y puedo usarlo aqui*/
     $currentPath = $_SERVER['REQUEST_URI'];
     if (str_contains($currentPath, 'foto')) { 
-        setcookie('menuVehiculo', 'fotos', time()+3600, "/");//muy importante poner la / para que este disponible en todas las paginas de la aplicacion y localhost para que tmb este disponible en todo el dominio
+        setcookie('menuVehiculo', 'fotos', time()+600, "/");//muy importante poner la / para que este disponible en todas las paginas de la aplicacion y localhost para que tmb este disponible en todo el dominio
         }else if (str_contains($currentPath, 'cuota')) {
-            setcookie('menuVehiculo', 'cuotas', time()+3600, "/");
+            setcookie('menuVehiculo', 'cuotas', time()+600, "/");
             }else if (str_contains($currentPath, 'gasto')) {
-                setcookie('menuVehiculo', 'gastos', time()+3600, "/");
+                setcookie('menuVehiculo', 'gastos', time()+600, "/");
 
             }  
 ?>
