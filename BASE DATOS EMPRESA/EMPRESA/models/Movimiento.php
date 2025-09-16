@@ -62,6 +62,6 @@ class Movimiento {
         $vehiculo = new Vehiculo($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], 
                             $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'], $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario'], $modelo_vehiculo['Prox_itv'], $propietario);
         return new Movimiento ($modelo['idMovimiento'], $modelo['envia'], $modelo['recibe'], $modelo['fecha'], $modelo['concepto'], $modelo['vehiculo'], $modelo['observaciones'], 
-                               $modelo['totalEntrega'], $modelo['totalDevolucion'], $modelo['diferencia'], $envia, $recibe, $vehiculo); 
+                               $modelo['totalEntregas'], $modelo['totalDevoluciones'], $modelo['diferencia'], $envia, $recibe, $vehiculo); 
     }
 }

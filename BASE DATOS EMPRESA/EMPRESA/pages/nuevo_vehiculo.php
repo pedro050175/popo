@@ -116,6 +116,7 @@
     </div>
     <?php
         $propietarioActual = isset($vehiculo) ? $vehiculo->getpropietario() : '';//estoy editando un vehiculo
+        $propietarioActual = $propietarioActual!=0 ? $propietarioActual : '';
         foreach ($entidades as $entidad){
             $listapropietarios[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
         }

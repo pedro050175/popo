@@ -21,6 +21,15 @@
     color: rgb(223, 94, 3);
     font-size: 12px;
 }
+.green{
+    color: green; 
+    font-size: 14px;
+}
+.blue{
+    color: blue; 
+    font-size: 18px;
+    font-weight: bold;
+}
 .boton_submit {
     color: rgb(255, 255, 255);
     background-color: rgb(223, 94, 3);
@@ -109,10 +118,15 @@
     width: 600px; /* ancho total de la tabla */
     border-collapse: collapse;/*celdas juntas*/
 }
+.w400{
+    width: 400px !important; /* hay que poner !important para que sobre escriba el tamaño que impone la clase mi_tabla, ya que la tabla es de clase mi_tabla w400 */
+    float: left;
+}
 .mi_tabla th{
     border: 2px solid rgb(235, 98, 7);  
     padding: 5px;             
-    text-align: center;          
+    text-align: center;  
+    font-size: 14px;        
 }  
 .mi_tabla td {
     /*width: 150px; se define en HTML y asi le puedo poner un ancho diferrente a cada columna */
@@ -121,7 +135,11 @@
     /*white-space: nowrap; evita saltos de línea */
     border: 1px solid  rgb(235, 98, 7);  
     padding: 5px;             
-    text-align: left;  
+    text-align: left;
+    font-size: 16px;  
+}
+.w400 td {
+    font-size: 12px !important;/* hay que poner !important para que sobre escriba el tamaño que impone la clase mi_tabla, ya que la tabla es de clase mi_tabla w400 */
 }
 .mi_tabla caption {
     caption-side: top;   /* fuerza el caption arriba */
@@ -129,4 +147,9 @@
     text-align: left;    /* opcional: alineación */
     padding: 5px;
     color:chocolate;
+}
+.contenedor-tablas{
+    display: flex;
+    gap: 20px;          /* espacio entre tablas */
+    margin: 10px 0 20px; /* margen superior/inferior */
 }

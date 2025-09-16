@@ -23,7 +23,7 @@ define ('CAMPOS_FOTO', ["id" => 0, "url" => '', "destacada" => 0, "id_vehiculo" 
 define ('CAMPOS_GASTO_VEHICULO', ["id_gasto" => 0, "tipo" =>'', "Importe" => 0, "Fecha" =>'', "Paga_otro" => 0, "Comentarios" => '', "id_vehiculo" => 0, "pagado" => 0]);
 define ('CAMPOS_CUOTA_VEHICULO', ["idCuota" => 0, "inicio" => '', "duracion" => 0, "id_vehiculo" => 0, "tipo" => '', "cuota" => 0, "totalPagar" => 0, "pagoFinal" => 0, "entrada" => 0, "fianza" => 0,
 "km" => 0, "kmAno" => 0, "financiera" => '', "id_entidad" => 0,  "observaciones" => '']);
-define ('CAMPOS_MOVIMIENTO', ["idMovimiento" => 0, "envia" => 0, "recibe" => 0, "fecha" => '', "concepto" => '', "vehiculo" => 0, "observaciones" => '' , "totalEntrega" => 0, "totalDevolucion" => 0, "diferencia" => 0]);
+define ('CAMPOS_MOVIMIENTO', ["idMovimiento" => 0, "envia" => 0, "recibe" => 0, "fecha" => '', "concepto" => '', "vehiculo" => 0, "observaciones" => '' , "totalEntregas" => 0, "totalDevoluciones" => 0, "diferencia" => 0]);
 define ('CAMPOS_ENTREGA', ["idEntrega" => 0, "fecha" => '', "importe" => 0, "bancoEnvia" => '', "bancoRecibe" => '', "observaciones" => '', "movimiento" => 0]);
 define ('CAMPOS_DEVOLUCION', ["idDevolucion" => 0, "fecha" => '', "importe" => 0, "bancoEnvia" => '', "bancoRecibe" => '', "observaciones" => '', "movimiento" => 0]);
 

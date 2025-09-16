@@ -1,3 +1,8 @@
+<?php if (!empty($error)): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= htmlspecialchars($error) ?>
+        </div>
+    <?php endif; ?>
 <div>
     <form action="<?= DIRECTORIO?>analisis_movimientos" method = "GET">
         <fieldset class="mi-fieldset">
@@ -19,77 +24,214 @@
         </fieldset>
     </form>
 </div>
-<div>
+
+<!--movimientos 1-->
 <?php $total2 = 0; $total = 0?>
-<?php if (!empty($movimientos1)) :?> 
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th class="etiqueta" scope="col">#</th>
-                <th class="etiqueta" scope="col">Fecha</th>
-                <th class="etiqueta" scope="col">Envia</th>
-                <th class="etiqueta" scope="col">Recibe</th>
-                <th class="etiqueta" scope="col">Concepto</th>
-                <th class="etiqueta" scope="col">Debe</th>
-                <th class="etiqueta" scope="col">Vehiculo</th>
-                <th class="etiqueta" scope="col">Propietario</th>
-                <th class="etiqueta" scope="col">Observaciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($movimientos1 as $movimiento):?> 
-                <?php $total += $movimiento->getdiferencia(); ?>
+<?php if (!empty($movimientos1)) :?>
+    <p class = "etiqueta_desplazada">Movimientos de <?= $movimientos1[0]->getenviaInfo()->getNombre()?> a <?= $movimientos1[0]->getrecibeInfo()->getNombre()?></p> 
+    <?php foreach ($movimientos1 as $movimiento):?> <!--imprimo movimientos-->
+        <?php
+            $total += $movimiento->getdiferencia(); 
+            $movimientoActual = $movimiento->getidMovimiento();
+        ?>
+        <table class="table table-hover table-striped">
+            <thead>
                 <tr>
-                    <th scope="row"><?=$movimiento->getidMovimiento()?></th>
-                    <td><?=formatea_fecha($movimiento->getfecha())?></td>
-                    <td><?=$movimiento->getenviaInfo()->getNombre()?></td>
-                    <td><?=$movimiento->getrecibeInfo()->getNombre()?></td>
-                    <td><?=$movimiento->getconcepto()?></td>
-                    <td><?=number_format($movimiento->getdiferencia(), 2, ',', '.')?>€</td>
-                    <td><?=$movimiento->getvehiculoInfo()->getMarca_modelo()?></td>
-                    <td><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></td>
-                    <td><?=$movimiento->getobservaciones()?></td>        
+                    <th class="etiqueta" scope="col">#</th>
+                    <th class="etiqueta" scope="col">Fecha</th>
+                    <th class="etiqueta" scope="col">Concepto</th>
+                    <th class="etiqueta" scope="col">Debe</th>
+                    <th class="etiqueta" scope="col">Entrega</th>
+                    <th class="etiqueta" scope="col">Devuelve</th>
+                    <th class="etiqueta" scope="col">Vehiculo</th>
+                    <th class="etiqueta" scope="col">Propietario</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
                 </tr>
-            <?php endforeach;?>
-        </tbody>
-    </table>
-    <p class = "etiqueta_desplazada">Total debe <?= $movimiento->getrecibeInfo()->getNombre()?> a <?=$movimiento->getenviaInfo()->getNombre()?> <?= number_format($total, 2, ',', '.')?> €</p>
+            </thead>
+            <tbody>
+                    <tr>
+                        <th scope="row"><?=$movimientoActual?></th>
+                        <td><?=formatea_fecha($movimiento->getfecha())?></td>
+                        <td><?=$movimiento->getconcepto()?></td>
+                        <td><?=number_format($movimiento->getdiferencia(), 2, ',', '.')?>€</td>
+                        <td><?=number_format($movimiento->gettotalEntrega(), 2, ',', '.')?>€</td>
+                        <td><?=number_format($movimiento->gettotalDevolucion(), 2, ',', '.')?>€</td>
+                        <td><?=$movimiento->getvehiculoInfo()->getMarca_modelo()?></td>
+                        <td><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></td>
+                        <td><?=$movimiento->getobservaciones()?></td> 
+                        <td><button type = "button" class = "boton_link" id = "<?=$movimientoActual?>" onclick="mostrar_formulario('entregas'+<?=$movimientoActual?>)"><+></button></td>     
+                    </tr>
+            </tbody>
+        </table>
+        <!--Entregas de un movimiento-->
+            <div class = "contenedor-tablas" id = "tabla<?=$movimientoActual?>">
+                <table class = "mi_tabla w400" >
+                    <caption>Entregas</caption>
+                    <colgroup>
+                        <col style="width: 80px;">
+                        <col style="width: 80px;">
+                        <col style="width: 120px;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Importe</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($entregas[$movimientoActual] as $entrega) :?>
+                            <tr>
+                                <td><?= formatea_fecha($entrega->getfecha())?></td>
+                                <td><?= number_format($entrega->getimporte(), 2, ',', '.');?>€</td>
+                                <td><?= $entrega->getobservaciones()?></td>
+                            </tr>
+                        <?php endforeach ;?>
+                        <tr>
+                            <td>Total</td>
+                            <td><?=number_format($movimiento->gettotalEntrega(), 2, ',', '.')?>€</td>
+                        </tr>
+                    </tbody>
+                </table>
+            <!--Devoluciones de un movimiento-->
+                <table class = "mi_tabla w400" >
+                    <caption>Devoluciones</caption>
+                    <colgroup>
+                        <col style="width: 100px;">
+                        <col style="width: 100px;">
+                        <col style="width: 120px;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Importe</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($devoluciones[$movimientoActual] as $devolucion) :?>
+                            <tr>
+                                <td><?= formatea_fecha($devolucion->getfecha())?></td>
+                                <td><?= number_format($devolucion->getimporte(), 2, ',', '.');?>€</td>
+                                <td><?= $devolucion->getobservaciones()?></td>
+                            </tr>
+                        <?php endforeach ;?>
+                        <tr>
+                            <td>Total</td>
+                            <td><?=number_format($movimiento->gettotalDevolucion(), 2, ',', '.')?>€</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+    <?php endforeach;?>
+    <p class = "etiqueta_desplazada green">Total debe <?= $movimiento->getrecibeInfo()->getNombre()?> a <?=$movimiento->getenviaInfo()->getNombre()?> <?= number_format($total, 2, ',', '.')?> €</p>
+    <p>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
 <? endif ;?>
+<!--movimientos 2-->
 <?php if (!empty($movimientos2)) :?> 
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th class="etiqueta" scope="col">#</th>
-                <th class="etiqueta" scope="col">Fecha</th>
-                <th class="etiqueta" scope="col">Envia</th>
-                <th class="etiqueta" scope="col">Recibe</th>
-                <th class="etiqueta" scope="col">Concepto</th>
-                <th class="etiqueta" scope="col">Debe</th>
-                <th class="etiqueta" scope="col">Vehiculo</th>
-                <th class="etiqueta" scope="col">Propietario</th>
-                <th class="etiqueta" scope="col">Observaciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($movimientos2 as $movimiento):?> 
-                <?php $total2 += $movimiento->getdiferencia(); ?>
+    <p class = "etiqueta_desplazada">Movimientos de <?= $movimientos2[0]->getenviaInfo()->getNombre()?> a <?= $movimientos2[0]->getrecibeInfo()->getNombre()?></p> 
+    <?php foreach ($movimientos2 as $movimiento):?> 
+        <?php 
+            $total2 += $movimiento->getdiferencia(); 
+            $movimientoActual = $movimiento->getidMovimiento();
+        ?>
+        <table class="table table-hover table-striped">
+            <thead>
                 <tr>
-                    <th scope="row"><?=$movimiento->getidMovimiento()?></th>
+                    <th class="etiqueta" scope="col">#</th>
+                    <th class="etiqueta" scope="col">Fecha</th>
+                    <th class="etiqueta" scope="col">Concepto</th>
+                    <th class="etiqueta" scope="col">Debe</th>
+                    <th class="etiqueta" scope="col">Entrega</th>
+                    <th class="etiqueta" scope="col">Devuelve</th>
+                    <th class="etiqueta" scope="col">Vehiculo</th>
+                    <th class="etiqueta" scope="col">Propietario</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody> 
+                <tr>
+                    <th scope="row"><?=$movimientoActual?></th>
                     <td><?=formatea_fecha($movimiento->getfecha())?></td>
-                    <td><?=$movimiento->getenviaInfo()->getNombre()?></td>
-                    <td><?=$movimiento->getrecibeInfo()->getNombre()?></td>
                     <td><?=$movimiento->getconcepto()?></td>
                     <td><?=number_format($movimiento->getdiferencia(), 2, ',', '.')?>€</td>
+                    <td><?=number_format($movimiento->gettotalEntrega(), 2, ',', '.')?>€</td>
+                    <td><?=number_format($movimiento->gettotalDevolucion(), 2, ',', '.')?>€</td>
                     <td><?=$movimiento->getvehiculoInfo()->getMarca_modelo()?></td>
                     <td><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></td>
-                    <td><?=$movimiento->getobservaciones()?></td>        
+                    <td><?=$movimiento->getobservaciones()?></td>  
+                    <td><button type = "button" class = "boton_link" id = "<?=$movimientoActual?>" onclick="mostrar_formulario('entregas'+<?=$movimientoActual?>)"><+></button></td>      
                 </tr>
-            <?php endforeach;?>
-        </tbody>
-    </table>
-    <p class = "etiqueta_desplazada">Total debe <?= $movimiento->getrecibeInfo()->getNombre()?> a <?=$movimiento->getenviaInfo()->getNombre()?> <?= number_format($total2, 2, ',', '.')?> €</p>
+            </tbody>
+        </table>
+        <!--Entregas de un movimiento-->
+        <div class = "contenedor-tablas" id = "tabla<?=$movimientoActual?>">
+            <table class = "mi_tabla w400" >
+                <caption>Entregas</caption>
+                <colgroup>
+                    <col style="width: 80px;">
+                    <col style="width: 80px;">
+                    <col style="width: 120px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Importe</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($entregas[$movimientoActual] as $entrega) :?>
+                        <tr>
+                            <td><?= formatea_fecha($entrega->getfecha())?></td>
+                            <td><?= number_format($entrega->getimporte(), 2, ',', '.');?>€</td>
+                            <td><?= $entrega->getobservaciones()?></td>
+                        </tr>
+                    <?php endforeach ;?>
+                    <tr>
+                        <td>Total</td>
+                        <td><?=number_format($movimiento->gettotalEntrega(), 2, ',', '.')?>€</td>
+                    </tr>
+                </tbody>
+            </table>
+        <!--Devoluciones de un movimiento-->
+            <table class = "mi_tabla w400" >
+                <caption>Devoluciones</caption>
+                <colgroup>
+                    <col style="width: 100px;">
+                    <col style="width: 100px;">
+                    <col style="width: 120px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Importe</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($devoluciones[$movimientoActual] as $devolucion) :?>
+                        <tr>
+                            <td><?= formatea_fecha($devolucion->getfecha())?></td>
+                            <td><?= number_format($devolucion->getimporte(), 2, ',', '.');?>€</td>
+                            <td><?= $devolucion->getobservaciones()?></td>
+                        </tr>
+                    <?php endforeach ;?>
+                    <tr>
+                        <td>Total</td>
+                        <td><?=number_format($movimiento->gettotalDevolucion(), 2, ',', '.')?>€</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <?php endforeach;?>   
+    <p class = "etiqueta_desplazada green">Total debe <?= $movimiento->getrecibeInfo()->getNombre()?> a <?=$movimiento->getenviaInfo()->getNombre()?> <?= number_format($total2, 2, ',', '.')?> €</p>
 <? endif ;?>
-<?php if ($total != 0 and $total2 != 0) :?>
-    <p class = "etiqueta_desplazada">Resumen deuda entre <?= $movimiento->getrecibeInfo()->getNombre()?> y <?=$movimiento->getenviaInfo()->getNombre()?> <?= number_format($total2-$total, 2, ',', '.')?> €</p>
+<?php if (!empty($movimientos2) or !empty($movimientos1)) :?>
+    <?php if ($total2 > $total ) :?>
+        <p class = "etiqueta_desplazada blue" >Resumen: <?= $movimiento->getrecibeInfo()->getNombre()?> debe a <?=$movimiento->getenviaInfo()->getNombre()?> <?= number_format($total2-$total, 2, ',', '.')?> €</p>
+    <?php endif ;?>
+    <?php if ($total2 <= $total ) :?>
+        <p class = "etiqueta_desplazada blue" >Resumen: <?= $movimiento->getenviaInfo()->getNombre()?> debe a <?=$movimiento->getrecibeInfo()->getNombre()?> <?= number_format($total-$total2, 2, ',', '.')?> €</p>
+    <?php endif ;?>
 <?php endif ;?>
-</div>
