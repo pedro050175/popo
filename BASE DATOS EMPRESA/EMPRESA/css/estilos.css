@@ -21,12 +21,12 @@
     color: rgb(223, 94, 3);
     font-size: 12px;
 }
-.green{
+.green{/*etiqueta en verde*/
     color: green; 
     font-size: 14px;
 }
-.blue{
-    color: blue; 
+.blue{ /*etiqueta en morado*/
+    color: rgb(190, 14, 190); 
     font-size: 18px;
     font-weight: bold;
 }
@@ -59,8 +59,28 @@
     text-decoration: none; /*para quitarle el subrayado del enlace*/
     size-adjust: 100px;
 }
+.small{
+    display: inline-flex;          /* centra el contenido */
+    align-items: center;
+    justify-content: center;
+    width: 25px;                   /* tamaño fijo */
+    height: 25px;
+    border-radius: 50%;            /* lo hace circular */
+    border: 1px solid #eb6207;
+    background-color: #fff;
+    color: #eb6207;
+    font-size: 14px;
+    line-height: 1;                /* evita que se agrande */
+    padding: 0;                    /* sin relleno */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 .boton_link:hover{
     color:rgb(145, 144, 144); /*para quitarle el colr azul al ponerse encima*/
+}
+.small:hover {
+    background-color: #eb6207;
+    color: #fff;
 }
 .botones {
     display: flex;/*para que se queden pegados, porque el navegador por defecto los separa aunque tenga margne 0*/
@@ -113,43 +133,78 @@
     font-weight: bold;/*negrita*/
     text-align: center;
 }
-.mi_tabla{
-    table-layout: fixed;/*ancho fijo, necesario para respetar los anchos definidos de cada columna*/
-    width: 600px; /* ancho total de la tabla */
-    border-collapse: collapse;/*celdas juntas*/
+/* Ajustes generales de subtablas */
+.mi_tabla {
+    background: #fff;
+    border: 1px solid #eb6207;/*si no le pongo borde en la parte inferior en la zona de las esquinas no sale linea*/
+    border-radius: 0 0 8px 8px;    /* redondeo solo abajo iz y abajo derech*/
+    border-collapse: separate; /* importante: permite ver el redondeo */
+    border-spacing: 0;     /* evita que se separen las celdas */
+    overflow: hidden;      /* fuerza que las esquinas internas se recorten */
 }
-.w400{
-    width: 400px !important; /* hay que poner !important para que sobre escriba el tamaño que impone la clase mi_tabla, ya que la tabla es de clase mi_tabla w400 */
-    float: left;
+/* Caption más vistoso */
+.mi_tabla caption {
+    caption-side: top;             /* siempre arriba */
+    font-weight: bold;
+    color: #fff;                   /* texto blanco */
+    padding: 4px;
+    text-align: center;
+    background-color: #fa883c;     /* fondo naranja */
+    border-radius: 8px 8px 0 0;    /* redondeado solo arriba izq y arriba derecha*/
 }
-.mi_tabla th{
-    border: 2px solid rgb(235, 98, 7);  
-    padding: 5px;             
+.mi_tabla th{/*para la 1º fila */
+    border: 1px solid rgb(235, 98, 7);  
+    padding: 1px;             
     text-align: center;  
-    font-size: 14px;        
+    font-size: 14px;  
+    background-color: #f8f4e6;        
 }  
-.mi_tabla td {
+.mi_tabla td {/*resto de filas*/
     /*width: 150px; se define en HTML y asi le puedo poner un ancho diferrente a cada columna */
     overflow: hidden; /* opcional: corta el contenido que sobrepasa */
     text-overflow: ellipsis; /* opcional: agrega "..." si el texto es largo */
     /*white-space: nowrap; evita saltos de línea */
     border: 1px solid  rgb(235, 98, 7);  
-    padding: 5px;             
+    padding: 1px;             
     text-align: left;
-    font-size: 16px;  
+    font-size: 14px;  
+}
+/* Ultima Fila total dentro de entregas/devoluciones */
+.mi_tabla tr:last-child {/*esto es como :hover es una especie de evento*/
+    background-color: #bff3ec; /* fondo suave */
+    font-weight: bold;
 }
 .w400 td {
     font-size: 12px !important;/* hay que poner !important para que sobre escriba el tamaño que impone la clase mi_tabla, ya que la tabla es de clase mi_tabla w400 */
 }
-.mi_tabla caption {
-    caption-side: top;   /* fuerza el caption arriba */
-    font-weight: bold;   /* opcional: más destacado */
-    text-align: left;    /* opcional: alineación */
-    padding: 5px;
-    color:chocolate;
+/* Contenedor de cada movimiento analisis*/
+.bloque-movimiento {
+    border: 2px solid #eb6207;   /* borde naranja */
+    border-radius: 12px;         /* esquinas redondeadas */
+    padding: 15px;               /* espacio interior */
+    margin-bottom: 5px;         /* separación entre bloques */
+    background-color: #fffaf5;   /* fondo suave */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08); /* sombra ligera */
 }
-.contenedor-tablas{
+/* Tabla principal de cada movimiento en analisis*/
+.bloque-movimiento > .table {/*table que hay justo depsues de bloque-movimiento*/
+    margin-bottom: 15px; /* espacio debajo de la tabla principal */
+}
+/* Subtablas (Entregas y Devoluciones) en analisis*/
+.contenedor-tablas {
     display: flex;
     gap: 20px;          /* espacio entre tablas */
-    margin: 10px 0 20px; /* margen superior/inferior */
+    flex-wrap: wrap;    /* permite que bajen en pantallas pequeñas */
+}
+.fina td,  /*lo uso para tablas de bootstrap que son muy anchas tabla movimientos de analisis*/
+.fina th {
+    padding: 0.25rem 0.5rem; /* menos altura */
+    font-size: 14px;         /* opcional */
+    line-height: 1;        /* compacta más */
+}
+.medio td,  /*lo uso para tablas de bootstrap que son muy anchas, listado de entidades, vehiculos y movimientos*/
+.medio th {
+    padding: 0.25rem 0.5rem; /* menos altura */
+    font-size: 15px;         /* opcional */
+    line-height: 1.5;        /* compacta más */
 }

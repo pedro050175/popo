@@ -155,7 +155,7 @@
 </div>
 <!--FOTOS-->
 <div class=contenedor id="fotos" <?= $menuMostrar!="fotos" ? "hidden" : '' ?>>
-    <button type="button" class="boton_link" id="boton_form_fotos" onclick="mostrar_formulario('form_fotos')"><+></button>
+    <button type="button" class="boton_link small" id="boton_form_fotos" onclick="mostrar('form_fotos')">+</button>
 <!-- formulario para nueva fotos -->
     <form action="<?= DIRECTORIO ?>nueva_foto" method="post" enctype="multipart/form-data" id = "form_fotos" hidden>
         <fieldset class="mi-fieldset">
@@ -224,7 +224,7 @@
 </div>
 <!--GASTOS-->
 <div class=contenedor id="gastos" <?= $menuMostrar!="gastos" ? "hidden" : '' ?>>
-    <button type="button" class="boton_link" id="boton_form_fotos" onclick="mostrar_formulario('form_gastos')"><+></button>
+    <button type="button" class="boton_link small" id="boton_form_fotos" onclick="mostrar('form_gastos')">+</button>
     <!--Formulario nuevo gasto--> 
     <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post" id = "form_gastos" hidden>
         <fieldset class="mi-fieldset">
@@ -330,7 +330,7 @@
 </div>
 <div class=contenedor id="cuotas" <?= $menuMostrar!="cuotas" ? "hidden" : '' ?>>
     <!--Formulario nueva cuota--> 
-    <button type="button" class="boton_link" id="boton_form_fotos" onclick="mostrar_formulario('form_cuotas')"><+></button>
+    <button type="button" class="boton_link small" id="boton_form_fotos" onclick="mostrar('form_cuotas')">+</button>
     <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post" id = "form_cuotas" hidden>
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Nueva Cuota</legend>

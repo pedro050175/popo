@@ -88,7 +88,7 @@
 </div>
 </form>
 <!--Entrega formulario-->
-<button type="button" class="boton_link" id="boton_form_entrega" onclick="mostrar_formulario('form_entrega')"><+></button>
+<button type="button" class="boton_link small" id="boton_form_entrega" onclick="mostrar('form_entrega')">+</button>
 <form action="<?= DIRECTORIO ?>nueva_entrega" method="post" id="form_entrega" hidden>
     <fieldset class="mi-fieldset">
         <legend class="mi-legend">Nueva entrega</legend>
@@ -169,13 +169,17 @@
                         </td>
                     </tr>
                 <?php endforeach ;?>
+                <tr>
+                    <td>Suma:</td>
+                    <td><?=number_format($totalEntrega, 2, ',', '.')?>€</td>
+                </tr>
             </tbody>
         </table>
-    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalEntrega, 2, ',', '.')?>€</p>
+    
     </div>
 </div>
 <!--Devolucion formulario-->
-<button type="button" class="boton_link" id="boton_form_devolucion" onclick="mostrar_formulario('form_devolucion')"><+></button>
+<button type="button" class="boton_link small" id="boton_form_devolucion" onclick="mostrar('form_devolucion')">+</button>
 <form action="<?= DIRECTORIO ?>nueva_devolucion" method="post" id="form_devolucion" hidden>
     <fieldset class="mi-fieldset">
         <legend class="mi-legend">Nueva devolucion</legend>
@@ -255,10 +259,13 @@
                         </td>
                     </tr>
                 <?php endforeach ;?>
+                <tr>
+                    <td>Suma:</td>
+                    <td><?=number_format($totalDevolucion, 2, ',', '.')?>€</td>
+                </tr>
             </tbody>
         </table>
-        <p class='etiqueta_desplazada'> Suma: <?=number_format($totalDevolucion, 2, ',', '.')?>€</p>
-        <p class='etiqueta'><strong>Diferencia: <?=number_format(($totalEntrega-$totalDevolucion), 2, ',', '.')?>€</strong></p>
+        <p class='etiqueta'><strong>Diferencia entregas - devoluciones: <?=number_format(($totalEntrega-$totalDevolucion), 2, ',', '.')?>€</strong></p>
     </div>
 </div>
 

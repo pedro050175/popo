@@ -130,19 +130,21 @@ class VehiculoRepository {
     public function delete (int $id): void {
        $this->conexion->consulta("DELETE FROM vehiculos WHERE (id_vehiculo=$id)");
     }
-    public function relacionados(int $id): bool {
-        $encontrados=0; //he definido una constante de tipo array asociativo que contiene ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla']  
-        foreach (TABLA_VEHICULO as $tabla => $campo){
-           
-            $consulta = "SELECT COUNT(*) as total FROM $tabla WHERE $campo = $id";
-            //echo "<pre>$consulta</pre>";
-            $this->conexion->consulta($consulta);
-            $resultado = $this->conexion->extraer_registro();
-            $encontrados += $resultado['total']; 
+    public function relacionados(int $id): string {
+       $relacionada = ""; //he definido una constante de tipo array asociativo que contiene   
+        foreach (TABLA_VEHICULO as $tabla => $campos){
+            foreach ($campos as $campo){
+                $consulta = "SELECT COUNT(*) as total FROM $tabla WHERE $campo = $id";
+                $this->conexion->consulta($consulta);
+                $resultado = $this->conexion->extraer_registro();
+                if ($resultado['total'] > 0) {
+                    $relacionada .= "Tabla: $tabla Campo: $campo Registros: ". $resultado['total']; 
+                }
+            } 
         }
-        // return $resultado && $resultado['total'] > 0; //$resultado (existe) AND $resultado['total']>0
-        return $encontrados > 0;
-    }  
+        return $relacionada;
+    }    
+  
     /* public function create (array $data):void{ PARA USAR CON LA CLASE BaseDatos de mysql
         //en un campo date, o int o uno que sea unique como matricula o bastidor de mysql no se puede guaradar un '' hay que guardar null. en los campos unique da error de que ya existe y en los date o int dice que el tipo no es correcto
         foreach ($data[vehiculo] as $campo => $valor) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo

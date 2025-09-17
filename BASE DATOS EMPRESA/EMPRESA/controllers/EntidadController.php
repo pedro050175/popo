@@ -48,9 +48,9 @@ class EntidadController {
     public function delete(int $id): void {
         $relacionados=$this->entidad_repository->relacionados($id);
         
-        if ($relacionados) {
-            $mensaje = urlencode('No se puede borrar la entidad porque tiene registros relacionados en otras tablas.');
-            header('Location: '.DIRECTORIO.'entidades?num_pagina=1&error=$mensaje');
+        if ($relacionados != "") {
+            $mensaje = urlencode('No se puede borrar la entidad porque tiene registros relacionados con: ' . $relacionados);
+            header('Location: '.DIRECTORIO."entidades?num_pagina=1&error=$mensaje");
             exit;
             /* $entidades = $this->service->findAll(); Estas dos lineas hacen lo mismo que lo anterior y sin cargar una nueva pagina con header
             $this->pages->render('entidades', ['entidades' => $entidades,'error' => 'No se puede borrar hay asociados.']); */

@@ -63,9 +63,9 @@ class VehiculoController {
     public function delete(int $id): void {
         $relacionados=$this->vehiculo_repository->relacionados($id);
         
-        if ($relacionados) {
+        if ($relacionados != "") {
             // echo "esta relacionado";
-            $mensaje = urlencode('No se puede borrar el vehiculo porque tiene registros relacionados en otras tablas.');
+            $mensaje = urlencode('No se puede borrar el vehiculo porque tiene registros relacionados con: ' . $relacionados);
             header("Location: '.DIRECTORIO.'vehiculos?num_pagina=1&error=$mensaje");
             exit;
             /* $entidades = $this->service->findAll(); Estas dos lineas hacen lo mismo que lo anterior y sin cargar una nueva pagina con header

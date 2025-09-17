@@ -4,12 +4,12 @@ define ('USUARIO', 'root');
 define ('PASS', 'root');
 define ('BASE_DATOS', 'empresa');
 define ('DIRECTORIO', "/mis_pruebas/"); //carpeta donde esta index.php.  
-define ('FILAS_PAGINA', 5);
+define ('FILAS_PAGINA', 10);
 define ('FOTOS_VEHICULOS_SERVIDOR', "http://localhost:8000/mis_pruebas/fotos_vehiculo/");//cuando subo una foto al servidor no la puedo copiar en este ordenador, la tengo que copiar en el directorio fotos del servidor y luego al mapearse aparecen en este ordenador
-// tablas que esta relacionas con entidad ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla'] 
-define ('TABLAS', ["alquileres" => 'Cliente', "compraventas" => 'Comprador', "compraventas" => 'Vendedor', "vehiculos" => 'propietario']); 
+// tablas que esta relacionas con entidad ['nombre_tabla' => ["campo_tabla_relacionado_con_id_entidad"]]. es una tabla asiciativa que cada elemento es otra tabla con los campos relacionados 
+define ('TABLAS', ["alquileres" => ["Cliente"], "compraventas" => ["Comprador", "Vendedor"], "vehiculos" => ["propietario"]]); 
 //CUIDADO con poner indices iguales que se machacan
-define ('TABLA_VEHICULO', ["gastosvehiculo" => 'id_vehiculo', "alquileres" => 'id_vehiculo', "compraventas" => 'id_vehiculo']);
+define ('TABLA_VEHICULO', ["gastosvehiculo" => ["id_vehiculo"], "alquileres" => ["id_vehiculo"], "compraventas" => ["id_vehiculo"]]);
 define ('CAMPOS_ENTIDAD', ["id_entidad" => 0, "CIF_DNI" => '', "Nombre" => '', "Observaciones" => '', "Direccion" => '', "Telefono" =>'', "Email" => '']);//todos los campos de la tabla entidad
 //esta tabla es porque cuando se leen datos de la tabla movimientos, como tiene dos campos relacionados con id_entidad, al leerlos tengo que crear alias con lo que cambian los nombres de la tabla asociativa que recoge los datos 
 define ('CAMPOS_ENTIDAD_ENVIA', ["id_entidad" => 0, "CIF_DNI" => '', "nombreEnvia" => '', "Observaciones" => '', "Direccion" => '', "Telefono" =>'', "Email" => '']);//todos los campos de la tabla entidad

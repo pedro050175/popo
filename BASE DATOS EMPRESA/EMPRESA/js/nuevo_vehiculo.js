@@ -109,11 +109,11 @@ function color_boton_menu(){//viendo como esta el MENU puedo saber que boton pon
             }    
     }
 }
-function mostrar_formulario(form){
-    if (document.getElementById(form).hidden == true) {
-        document.getElementById(form).hidden=false;
+function mostrar(id){
+    if (document.getElementById(id).hidden == true) {
+        document.getElementById(id).hidden=false;
     }else {
-        document.getElementById(form).hidden=true;
+        document.getElementById(id).hidden=true;
         }
 }
 function creacionCookie(nombre, valor, expiracion, ruta, dominio, seguridad){

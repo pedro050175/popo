@@ -99,16 +99,19 @@ class EntidadRepository {
     public function delete (int $id): void {
        $this->conexion->consulta("DELETE FROM entidad WHERE (id_entidad=$id)");
     }
-    public function relacionados(int $id): bool {
-        $encontrados=0; //he definido una constante de tipo array asociativo que contiene ["campo_tabla_relacionado_con_id_entidad"=>'nombre_tabla']  
-        foreach (TABLAS as $tabla => $campo){
-            $consulta = "SELECT COUNT(*) as total FROM $tabla WHERE $campo = $id";
-            $this->conexion->consulta($consulta);
-            $resultado = $this->conexion->extraer_registro();
-            $encontrados += $resultado['total']; 
+    public function relacionados(int $id): string {
+        $relacionada = ""; //he definido una constante de tipo array asociativo que contiene   
+        foreach (TABLAS as $tabla => $campos){
+            foreach ($campos as $campo){
+                $consulta = "SELECT COUNT(*) as total FROM $tabla WHERE $campo = $id";
+                $this->conexion->consulta($consulta);
+                $resultado = $this->conexion->extraer_registro();
+                if ($resultado['total'] > 0) {
+                    $relacionada .= "Tabla: $tabla Campo: $campo Registros: ". $resultado['total']; 
+                }
+            } 
         }
-        // return $resultado && $resultado['total'] > 0; //$resultado (existe) AND $resultado['total']>0
-        return $encontrados > 0;
+        return $relacionada;
     }    
 }
 ?>

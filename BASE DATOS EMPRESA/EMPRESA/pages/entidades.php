@@ -19,7 +19,7 @@
         </div>
     <?php endif; ?>
     <div class="row">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped medio">
             <thead>
                 <tr>
                 <th class="etiqueta" scope="col">#</th>
