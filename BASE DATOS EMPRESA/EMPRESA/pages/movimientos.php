@@ -1,18 +1,22 @@
 <div class="container mt-4">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-7">
             <form action="<?= DIRECTORIO ?>movimientos" method="get" class="d-flex">
                 <input type="search" name="envia" class="form-control me-1" id="floatingInput" placeholder="Buscar envia">
                 <input type="search" name="recibe" class="form-control me-1" id="floatingInput" placeholder="Buscar recibe">
+                <input type="search" name="vehiculo_id" class="form-control me-1" id="floatingInput" placeholder="vehiculo/id/concepto">
                 <input type="hidden" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1"><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>
-        <div class="col-md-4"> 
+        <div class="col-md-1"> 
              <input type="button" class="boton_link" value = "Analizar" onclick="window.location.href='<?= DIRECTORIO ?>analisis_movimientos';">
-        </div><!--para despalzar el boton Nuevo vehiculo a la derecha-->
-        <div class="col-md-2">
-            <input type="button" class="boton_link" value = "Nuevo movimiento" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_movimiento';"> 
+        </div>
+        <div class="col-md-2"> 
+             <input type="button" class="boton_link" value = "Resumen" onclick="window.location.href='<?= DIRECTORIO ?>deuda_empresas';">
+        </div>
+        <div class="col-md-1">
+            <input type="button" class="boton_link" value = "Nuevo" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_movimiento';"> 
         </div>
     </div>
     <?php if (!empty($error)): ?>
@@ -33,6 +37,7 @@
                 <th class="etiqueta" scope="col">Vehiculo</th>
                 <th class="etiqueta" scope="col">Propietario</th>
                 <th class="etiqueta" scope="col">Observaciones</th>
+                <th class="etiqueta" scope="col">Finalizado</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +54,7 @@
                     <td><?=$movimiento->getvehiculoInfo()->getMarca_modelo()?></td>
                     <td><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></td>
                     <td><?=$movimiento->getobservaciones()?></td>
+                    <td><?=$movimiento->getterminado() ? 'SI' : 'NO'?></td>
                     <td>
                         <div class="btn-group" role="group">
                             <a href="<?= DIRECTORIO ?>nuevo_movimiento/<?=$movimiento->getidMovimiento()?>" role="button" class="btn btn-sm btn-outline-secondary">

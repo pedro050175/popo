@@ -16,33 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `comercial`
+-- Table structure for table `fotos`
 --
 
-DROP TABLE IF EXISTS `comercial`;
+DROP TABLE IF EXISTS `fotos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comercial` (
-  `id_comercial` int NOT NULL AUTO_INCREMENT,
-  `Documento_Id` varchar(14) NOT NULL,
-  `Nombre_comercial` varchar(60) NOT NULL,
-  `Observaciones` varchar(255) DEFAULT NULL,
-  `Direccion` varchar(255) DEFAULT NULL,
-  `Telefono` varchar(13) DEFAULT NULL,
-  `Email` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_comercial`),
-  UNIQUE KEY `Documento_Id_UNIQUE` (`Documento_Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `fotos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `url` varchar(500) NOT NULL,
+  `destacada` tinyint unsigned DEFAULT NULL,
+  `id_vehiculo` int NOT NULL,
+  `descripcion` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_vehiculo` (`id_vehiculo`),
+  CONSTRAINT `fotos_ibfk_1` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `comercial`
+-- Dumping data for table `fotos`
 --
 
-LOCK TABLES `comercial` WRITE;
-/*!40000 ALTER TABLE `comercial` DISABLE KEYS */;
-INSERT INTO `comercial` VALUES (1,'52817093p','Martin',NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `comercial` ENABLE KEYS */;
+LOCK TABLES `fotos` WRITE;
+/*!40000 ALTER TABLE `fotos` DISABLE KEYS */;
+INSERT INTO `fotos` VALUES (53,'1.jpg',1,2,NULL),(62,'1.jpeg',1,1,'HOLA'),(63,'1.jpg',1,1,NULL),(65,'Lamborghini-Urus-2-1068x601.jpg',NULL,3,NULL),(66,'tienda-1455042.jpg',NULL,3,NULL);
+/*!40000 ALTER TABLE `fotos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-03 14:04:41
+-- Dump completed on 2025-09-18 19:14:24

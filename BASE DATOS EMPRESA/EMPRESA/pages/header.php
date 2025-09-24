@@ -1,5 +1,6 @@
 <?php
-/*este codigo es para cuando se edita una foto, gasto o cuota despues al volvoer a la pag nuevo_vehiculo que cargue el menu que se acaba de usar, lo pordria hacer en el metodo edit de cada controller como he hecho en los metodos save y delete, pero el metodo edit si carga pagina y puedo usarlo aqui*/
+/*este codigo es para cuando se edita una foto, gasto o cuota despues al volver a la pag nuevo_vehiculo que cargue el menu que se acaba de usar, lo pordria hacer en el metodo edit de cada 
+controller como he hecho en los metodos save y delete, pero el metodo edit, a diferencia de los otros nombrados, si carga pagina y puedo usarlo aqui, y asi uso diferentes modos*/
     $currentPath = $_SERVER['REQUEST_URI'];
     if (str_contains($currentPath, 'foto')) { 
         setcookie('menuVehiculo', 'fotos', time()+600, "/");//muy importante poner la / para que este disponible en todas las paginas de la aplicacion y localhost para que tmb este disponible en todo el dominio
@@ -24,11 +25,13 @@
     <!--filemtime(__DIR__ . '/css/estilos.css') lo uso para añadir la fecha en segundos de la ultima modificacion al nombre del css y asi cada vez que se modifique el css obliga al navegador a recargarlo y no usar el de cache antiguo, si no hago eso tngo que pulsar CTRL-F5 para forzar a cargar-->
     <!-- CSS de Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+    <link rel="icon" type="image/x-icon" href="favicon.ico"><!--para el icono de la pagina, si no se lo pngo da un error en consola de java-->
     <!-- JS de jQuery (requerido por Select2) y Select2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="<?=DIRECTORIO?>/js/nuevo_vehiculo.js" type="text/javascript"></script>
+    <script src="<?=DIRECTORIO?>/js/movimientos.js" type="text/javascript"></script>
+    <script src="<?=DIRECTORIO?>/js/alquileres.js" type="text/javascript"></script>
     
 </head>
 <body>
@@ -38,7 +41,7 @@
     ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand">#</a>
+        <a class="navbar-brand">MENU</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -52,6 +55,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link<?= str_contains($currentPath, 'movimiento') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>movimientos?num_pagina=1" aria-current="page">Movimientos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link<?= str_contains($currentPath, 'alquiler') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>alquileres?num_pagina=1" aria-current="page">Alquileres</a>
                 </li>
             </ul>
         </div>

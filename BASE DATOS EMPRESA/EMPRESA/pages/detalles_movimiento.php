@@ -37,6 +37,9 @@
             <div class="col-md-4">
                 <div class="border p-2 rounded"><strong>Propietario: </strong><?=$movimiento->getvehiculoInfo()->getdatos_propietario()->getNombre()?></div>
             </div>
+            <div class="col-md-2">
+                <div class="border p-2 rounded"><strong>Finalizado: </strong><?=$movimiento->getterminado() ? 'SI' : 'NO'?></div>
+            </div>
         </div>                 
     </div>
 </div>

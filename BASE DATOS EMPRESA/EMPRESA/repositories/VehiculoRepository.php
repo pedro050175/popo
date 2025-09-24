@@ -29,7 +29,7 @@ class VehiculoRepository {
     }
     public function findAll(?bool $paginar=true): ?array {
         if (!$paginar){//$paginar=false no pagina, se usa para campo de lista desplegable en formularios relacionados donde deben cargarse todos los vehiculos
-            $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo FROM vehiculos ORDER BY Marca_modelo");
+            $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo, Matricula, Bastidor FROM vehiculos ORDER BY Marca_modelo");
             return $this->extraer_todos();
         }
         $desplazamiento = 0;

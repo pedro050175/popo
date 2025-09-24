@@ -7,7 +7,7 @@ require_once "Funciones.php";
 class Movimiento {
 
     function __construct (private ?int $idMovimiento, private ?int $envia, private ?int $recibe, private ?string $fecha, private ?string $concepto, private ?int $vehiculo, 
-                          private ?string $observaciones, private ?float $totalEntrega, private ?float $totalDevolucion, private ?float $diferencia,
+                          private ?string $observaciones, private ?float $totalEntrega, private ?float $totalDevolucion, private ?float $diferencia, private ?int $terminado,
                           private ?Entidad $enviaInfo=null, private ?Entidad $recibeInfo=null, private ?Vehiculo $vehiculoInfo=null){}
  
     public function getenviaInfo(): ?Entidad {
@@ -49,10 +49,13 @@ class Movimiento {
     public function getdiferencia():?float {
         return $this->diferencia;
     }    
+    public function getterminado():?int {
+        return $this->terminado;
+    }    
     public static function fromArray(array $data): Movimiento {
-        $modelo_envia = duplicar_tabla (CAMPOS_ENTIDAD_ENVIA, $data);//para leer datos de la entidad que envia
-        $modelo_recibe = duplicar_tabla(CAMPOS_ENTIDAD_RECIBE, $data);//para leer datos de la entidad que recibe
-        $modelo_propietario = duplicar_tabla(CAMPOS_ENTIDAD_PROPIETARIO, $data);//para leer datos de la entidad que es propietaria del vehiculo
+        $modelo_envia = duplicar_tabla (CAMPOS_ENVIA_MOVIMIENTO, $data);//para leer datos de la entidad que envia
+        $modelo_recibe = duplicar_tabla(CAMPOS_RECIBE_MOVIMIENTO, $data);//para leer datos de la entidad que recibe
+        $modelo_propietario = duplicar_tabla(CAMPOS_PROPIETARIO_VEHICULO_MOVIMIENTO, $data);//para leer datos de la entidad que es propietaria del vehiculo
         $modelo_vehiculo = duplicar_tabla(CAMPOS_VEHICULO, $data);//para leer datos del vehiculo 
         $modelo = duplicar_tabla(CAMPOS_MOVIMIENTO, $data);
         //var_dump($data);
@@ -62,6 +65,6 @@ class Movimiento {
         $vehiculo = new Vehiculo($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], 
                             $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'], $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario'], $modelo_vehiculo['Prox_itv'], $propietario);
         return new Movimiento ($modelo['idMovimiento'], $modelo['envia'], $modelo['recibe'], $modelo['fecha'], $modelo['concepto'], $modelo['vehiculo'], $modelo['observaciones'], 
-                               $modelo['totalEntregas'], $modelo['totalDevoluciones'], $modelo['diferencia'], $envia, $recibe, $vehiculo); 
+                               $modelo['totalEntregas'], $modelo['totalDevoluciones'], $modelo['diferencia'], $modelo['terminado'], $envia, $recibe, $vehiculo); 
     }
 }

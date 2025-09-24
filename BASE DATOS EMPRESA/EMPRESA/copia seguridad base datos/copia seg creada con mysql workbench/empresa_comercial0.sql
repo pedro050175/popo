@@ -16,33 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `devoluciones`
+-- Table structure for table `comercial`
 --
 
-DROP TABLE IF EXISTS `devoluciones`;
+DROP TABLE IF EXISTS `comercial`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `devoluciones` (
-  `idDevolucion` int NOT NULL AUTO_INCREMENT,
-  `fecha` date NOT NULL,
-  `importe` decimal(10,0) NOT NULL,
-  `bancoEnvia` varchar(20) DEFAULT NULL,
-  `bancoRecibe` varchar(20) DEFAULT NULL,
-  `observaciones` varchar(300) DEFAULT NULL,
-  `movimiento` int NOT NULL,
-  PRIMARY KEY (`idDevolucion`),
-  KEY `movimiento` (`movimiento`),
-  CONSTRAINT `devoluciones_ibfk_1` FOREIGN KEY (`movimiento`) REFERENCES `movimientos` (`idMovimiento`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `comercial` (
+  `id_comercial` int NOT NULL AUTO_INCREMENT,
+  `Documento_Id` varchar(14) NOT NULL,
+  `Nombre_comercial` varchar(60) NOT NULL,
+  `Observaciones` varchar(255) DEFAULT NULL,
+  `Direccion` varchar(255) DEFAULT NULL,
+  `Telefono` varchar(13) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_comercial`),
+  UNIQUE KEY `Documento_Id_UNIQUE` (`Documento_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `devoluciones`
+-- Dumping data for table `comercial`
 --
 
-LOCK TABLES `devoluciones` WRITE;
-/*!40000 ALTER TABLE `devoluciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `devoluciones` ENABLE KEYS */;
+LOCK TABLES `comercial` WRITE;
+/*!40000 ALTER TABLE `comercial` DISABLE KEYS */;
+INSERT INTO `comercial` VALUES (1,'52817093p','Martin',NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `comercial` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-03 14:04:40
+-- Dump completed on 2025-09-18 19:14:24

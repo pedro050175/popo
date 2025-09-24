@@ -61,7 +61,7 @@ function validar_campo(campo){
         return validar_entero_campo_text(campo);
     else if (campo.type === "number") return validar_entero_campo_number(campo); 
 }
-function validar_entero_campo_text (campo) { //valida campos de formulariotipo text
+function validar_entero_campo_text (campo) { //valida campos de formulario tipo text
     var cadena = campo.value;
     cadena = cadena.replace(',', '.');//cambio la coma por un punto ya que en sql el decimal es el punto
     if ((cadena<0) || (isNaN(cadena)) ){//compruebo que no sea negativo y que no tenga letras o simbolos
@@ -86,7 +86,7 @@ function validar_entero_campo_number (campo) { //valida campos de formulariotipo
     }
     return true;
 }
-function mostrarMenuVehiculo(menu){//para acceder a elementos de la pagina se usa document
+function mostrarMenuVehiculo(menu){//muestro el menu correspondi y pongo en azul su boton
     //oculto todos y luego solo activo el que se llame menu
     for (let opcion of opciones_menu){
         document.getElementById(opcion).hidden = true;    
@@ -97,11 +97,12 @@ function mostrarMenuVehiculo(menu){//para acceder a elementos de la pagina se us
     creacionCookie("menuVehiculo", menu, expiracion, "/")//cambio valor de la cookie asi al salir de la pagina y entrar recuerda el ultimo menu usado
     /* let boton = event.target; event.target me devuelve el elemento que ha generado el evento, no lo uso porque solo me sirve para poner en azul, pero el resto de botones no los puedo poner en naranja, al final tengo que consultar el estado del resto de botones
     boton.style.color = "blue"; */
-    color_boton_menu();
+    color_boton_menu();//para poner en azul
 }
-function color_boton_menu(){//viendo como esta el MENU puedo saber que boton poner en azul, esta funcion se llama cada vez que se carga la pagina
-    //var cookie = leerCookie("menuVehiculo"); podria consultar aqui la cookie y no haria falta comprobar el estado de opciones_menu, porque ya se que menu esta seleccionado. Y sino existe la cookie porque es la 1º vez que se entra pues pongo azul fotos.
-    for (i=0; i<opciones_menu.length; i++){
+function color_boton_menu(){//compruebo que MENU se muestra para saber que boton poner en azul, esta funcion se llama cada vez que se carga la pagina
+    //var cookie = leerCookie("menuVehiculo"); podria consultar aqui la cookie y no haria falta comprobar el estado de opciones_menu, porque ya sabria que menu esta seleccionado. 
+    // Y sino existe la cookie porque es la 1º vez que se entra pues pongo azul fotos, pero no quiero mezclar cookies de php con JS
+    for (var i=0; i<opciones_menu.length; i++){
         if (document.getElementById(opciones_menu[i]).hidden == true){//si el menu esta oculto hidden ==true pongo el color del boton en naranja
             document.getElementById(botones[i]).style = "color: rgb(223, 94, 3)";
         }else{//sino esta oculto lo pongo en azul
@@ -116,11 +117,11 @@ function mostrar(id){
         document.getElementById(id).hidden=true;
         }
 }
-function creacionCookie(nombre, valor, expiracion, ruta, dominio, seguridad){
+function creacionCookie(nombre, valor, expiracion, ruta, dominio, seguridad){//no se esta usando
         document.cookie = nombre + ' = ' + valor + ' ' + ((expiracion == undefined) ? '' : ('; expires=' + expiracion.toGMTString())) + 
         ((ruta == undefined) ? '' : ('; path=' + ruta)) + ((dominio == undefined) ? '' : ('; domain =' + dominio)) + ((seguridad == true) ? ';seguridad': '');
 }
-function leerCookie(nombre){
+function leerCookie(nombre){//no se esta usando
     if (document.cookie.length == 0) { return null;}
     else {
         var tabElementos = document.cookie.split(";");

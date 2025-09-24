@@ -11,7 +11,6 @@ class FotoRepository {
     public function __construct() {
         $this->conexionPDO = new BaseDatosPDO();
     }
-    
     public function fotos_vehiculo(int $id): ?array {
         $parametros = [':id' =>$id];
         $sql = "SELECT * FROM fotos WHERE id_vehiculo=:id";
@@ -30,7 +29,6 @@ class FotoRepository {
         }
         return $fotos;
     }
-
     public function create (array $foto, array $imagen):void{
         
         $parametros = [
@@ -68,7 +66,6 @@ class FotoRepository {
             }
         }
     }
-
     public function update (array $foto): void{ 
         $parametros = [
             ':destacada' => (isset($foto['destacada'])) ? 1 : 0,
@@ -79,7 +76,6 @@ class FotoRepository {
         $sql = "UPDATE fotos SET destacada = :destacada, descripcion = :descripcion WHERE id = :id";
         $this->conexionPDO->consulta($sql, $parametros);
     }
-
     public function read (int $id): ?Foto {
         $parametros = [':id' =>$id];
         $sql = "SELECT * FROM fotos WHERE id=:id";

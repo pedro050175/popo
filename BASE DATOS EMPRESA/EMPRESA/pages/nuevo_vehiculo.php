@@ -467,6 +467,10 @@
         </table>            
     </div> 
 </div>
+<script>
+    color_boton_menu();//para poner en azul el boton del MENU que se haya activado al consultar la cookie. No lo puedo hacer junto al scritp de abajo porque cuando es nuevo vehiculo, como no carga la parte 
+    //de los MENU la funciona color_boton_menu da error al no encontrar los id de los menu y entonces tampoco no aplica la funci9n busqueda a los selectores de titular y propietario
+</script>
 <?php endif;?>
 <script>
     $(document).ready(function() {
@@ -481,7 +485,6 @@
             allowClear: true,
             width: '100%'
         });
-    color_boton_menu();//para poner en azul el boton del MENU que se haya activado al consultar la cookie 
     });
 </script>
 

@@ -12,6 +12,7 @@ use controllers\CuotaVehiculoController;
 use controllers\MovimientoController;
 use controllers\EntregaController;
 use controllers\DevolucionController;
+use controllers\AlquilerController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -50,6 +51,7 @@ Router::add('GET', '/nuevo_movimiento/:id', function($idMovimiento) {return (new
 Router::add('GET', '/detalles_movimiento/:id', function($idMovimiento) {return (new MovimientoController())->detalles_movimiento($idMovimiento);});
 Router::add('GET', '/borrar_movimiento/:id', function($idMovimiento){return (new MovimientoController())->delete($idMovimiento);});
 Router::add('GET', '/analisis_movimientos',function(){return (new MovimientoController())->analisis();});
+Router::add('GET', '/deuda_empresas',function(){return (new MovimientoController())->deudaEmpresas();});
 //Router::add('POST', '/analisis_movimientos',function(){return (new MovimientoController())->analisis();});
 
 //entregas movimientos
@@ -61,6 +63,13 @@ Router::add('GET', '/borrar_entrega/:id', function($idEntrega){return (new Entre
 Router::add('POST', '/nueva_devolucion', function () {return (new DevolucionController())->save();});
 Router::add('GET', '/editar_devolucion/:id', function($idDevolucion) {return (new DevolucionController())->edit($idDevolucion);});
 Router::add('GET', '/borrar_devolucion/:id', function($idDevolucion){return (new DevolucionController())->delete($idDevolucion);});
+//alquileres 
+Router::add('GET', '/alquileres', function () {return (new AlquilerController())->list();});
+Router::add('GET', '/nuevo_alquiler', function() {return (new AlquilerController())->add();});
+Router::add('POST', '/nuevo_alquiler', function () {return (new AlquilerController())->save();});
+Router::add('GET', '/nuevo_alquiler/:id', function($id) {return (new AlquilerController())->edit($id);});
+Router::add('GET', '/borrar_alquiler/:id', function($id){return (new AlquilerController())->delete($id);});
+
 
 Router::dispatch();
 

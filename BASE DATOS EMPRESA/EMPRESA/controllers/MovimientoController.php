@@ -44,8 +44,8 @@ class MovimientoController{
     }
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $movimiento=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
-        $this->movimientoRepository->save($movimiento);
-        header('Location: '.DIRECTORIO.'movimientos?num_pagina=1');   
+        $idCreado = $this->movimientoRepository->save($movimiento);
+        header('Location: '.DIRECTORIO."nuevo_movimiento/".$idCreado);   
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
@@ -68,8 +68,7 @@ class MovimientoController{
         exit; 
     }
     public function analisis (){
-        
-        if (isset($_GET['envia'])){
+        if (isset($_GET['envia'])){//ya se han leido las entidades, 2º vez que pasa por aqui
             $movimientos1 = $this->movimientoRepository->findAll();
             $movimientos2 = $this->movimientoRepository->findAll(true);
             //var_dump($movimientos1);
@@ -85,7 +84,20 @@ class MovimientoController{
                 $error = "no hay movimientos para esas entidades";
                 $this->pages->render('analisis_movimientos', ['error' => $error]);
                 }
-        } else $this->pages->render('analisis_movimientos');
+        } else $this->pages->render('analisis_movimientos');//1º vez que pasa solo muestra formulario para insertar las entidades a analizar
+    }
+    public function deudaEmpresas(){
+        $empresasPrincipales = array ('Radikal World', 'Stelar Emotions', 'Universo Radikal');
+        
+        foreach ($empresasPrincipales as $empresa1){
+            foreach ($empresasPrincipales as $empresa2){
+                if ($empresa1 != $empresa2){
+                    $deuda = $this->movimientoRepository->deuda_empresas($empresa1, $empresa2);
+                    $deudasEmpresas[] = array ($empresa1, $empresa2, $deuda);
+                }
+            }
+        }
+        $this->pages->render('movimiento_deuda_empresas', ['deudasEmpresas' => $deudasEmpresas]);
     }
     private function leer_ids (?array $movimientos1, ?array $movimientos2): ?array {
         foreach ($movimientos1 as $movimiento){

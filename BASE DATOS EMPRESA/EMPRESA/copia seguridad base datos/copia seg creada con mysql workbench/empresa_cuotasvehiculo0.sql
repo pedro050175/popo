@@ -43,7 +43,7 @@ CREATE TABLE `cuotasvehiculo` (
   KEY `fk_2_id_entidad` (`id_entidad`),
   CONSTRAINT `fk_1_id_vehiculo` FOREIGN KEY (`id_vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE CASCADE,
   CONSTRAINT `fk_2_id_entidad` FOREIGN KEY (`id_entidad`) REFERENCES `entidad` (`id_entidad`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +52,6 @@ CREATE TABLE `cuotasvehiculo` (
 
 LOCK TABLES `cuotasvehiculo` WRITE;
 /*!40000 ALTER TABLE `cuotasvehiculo` DISABLE KEYS */;
-INSERT INTO `cuotasvehiculo` VALUES (1,'2025-01-01',48,1,'renting',1000.00,50000.00,100.00,5000.00,400.00,0000000100,0000010000,'athlon',1,'nada');
 /*!40000 ALTER TABLE `cuotasvehiculo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -65,4 +64,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-03 14:04:40
+-- Dump completed on 2025-09-18 19:14:23

@@ -197,10 +197,11 @@
     flex-wrap: wrap;    /* permite que bajen en pantallas pequeñas */
 }
 .fina td,  /*lo uso para tablas de bootstrap que son muy anchas tabla movimientos de analisis*/
-.fina th {
-    padding: 0.25rem 0.5rem; /* menos altura */
+.fina th { /*th que esten dentro de la clase fina. Es como poner div .popo, seria clase popo que este dentro de un div*/
+    padding: 0.30rem 0.15rem 0.25rem 0.15rem; /* sup, derec, inf, izq    menos altura */
     font-size: 14px;         /* opcional */
-    line-height: 1;        /* compacta más */
+    line-height: 15px;        /* separacion entre lineas */
+    text-align: right;
 }
 .medio td,  /*lo uso para tablas de bootstrap que son muy anchas, listado de entidades, vehiculos y movimientos*/
 .medio th {

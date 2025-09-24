@@ -32,7 +32,7 @@ CREATE TABLE `entidad` (
   `Email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_entidad`),
   UNIQUE KEY `Documento_Id_UNIQUE` (`CIF_DNI`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `entidad` (
 
 LOCK TABLES `entidad` WRITE;
 /*!40000 ALTER TABLE `entidad` DISABLE KEYS */;
-INSERT INTO `entidad` VALUES (1,'B93621670','Stelar Emotions s.l.','Embassy Rentacardeluxe S.L.','Poligono Industrial el puente nave 16, 30560, Alguazas, Murcia','657324455','info@rentcardeluxe.es'),(2,'B01700723','Radikal World S.L.','','C/SIERRA DE GUADARRAMA NUM 6, PUERTA B28830 - SAN FERNANDO DE HENARES, MADRID','657324455','Info@rentcardeluxe.es'),(3,'B10556512','UNIVERSO RADIKAL S.L.','nada','Poligono Industrial el puente nave 16, 30560, Alguazas, Murcia','620236654','administracion@ilbendito.com'),(14,'528174444','Pedro Sandoval Abenza','','GFGF','','popo@wew'),(15,'4875474552','Alicia Serna Ayala','','Gran via','646555616',''),(16,'8787844545','Mariela Sandoval Serna','rtrtr\'123\'','','','sdsd'),(22,'123','jose','123\'123\'','calle','',''),(24,'22322','luis','','','',''),(25,'4875','JOSEFA ABENZA','','','',''),(26,'1452','ANTONIO JOSE ','','','',''),(27,'12123','ANTONIO SANDOVAL GONZALEZ','','','','pedro@hola'),(28,'52847844t','Rafael araez','','','',''),(30,'876778','JOSE','','','620236654','LKLK@JKHSDJHS.COM'),(31,'23232','SDFSDFS','','','657324455','');
+INSERT INTO `entidad` VALUES (1,'B93621670','Stelar Emotions s.l.','Embassy Rentacardeluxe S.L.','Poligono Industrial el puente nave 16, 30560, Alguazas, Murcia','657324455','info@rentcardeluxe.es'),(2,'B01700723','Radikal World S.L.','','C/SIERRA DE GUADARRAMA NUM 6, PUERTA B28830 - SAN FERNANDO DE HENARES, MADRID','657324455','Info@rentcardeluxe.es'),(3,'B10556512','UNIVERSO RADIKAL S.L.','nada','Poligono Industrial el puente nave 16, 30560, Alguazas, Murcia','620236654','administracion@ilbendito.com'),(32,'B02837763','MAGNA VILOTTI S.L.','','','',''),(33,'52817093P','FRANCISCO MARTIN LOPEZ PALAZON','','','',''),(34,'B73198707','LIBECAR AUTOMOCION','','','',''),(35,'B88177035','IL BENDITO COLLETIONS S.L.','','','',''),(36,'B01700772','Radikal Emotion s.l.','','','','');
 /*!40000 ALTER TABLE `entidad` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-03 14:04:41
+-- Dump completed on 2025-09-18 19:14:24
