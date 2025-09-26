@@ -1,4 +1,4 @@
-    <label class="titulo_prin">&nbsp&nbsp&nbsp&nbspCuota</label>
+<p class="titulo_prin">&nbsp&nbsp&nbsp&nbspCuota</p>
 <div>
     <form action="<?= DIRECTORIO ?>nueva_cuota_vehiculo" method="post">
         <fieldset class="mi-fieldset">

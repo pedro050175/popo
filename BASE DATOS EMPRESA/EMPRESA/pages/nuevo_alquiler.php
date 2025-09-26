@@ -210,6 +210,187 @@
    
 </div>
 </form>
+
+<?php if (isset($alquiler)) :?>
+    <!--Formulario nueva ampliacion-->
+
+    <button type="button" class="boton_link small" id="boton_form_ampliacion" onclick="mostrar('ampliacion')">+</button>
+    <form action="<?= DIRECTORIO ?>nueva_ampliacion_alquiler" method="post" id="ampliacion" hidden>
+        <fieldset class="mi-fieldset">
+            <legend class="mi-legend">Nueva ampliacion</legend>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="fechaInicio" class="etiqueta">Fecha inicio:</label> 
+                    <input size=40 class="cuadro_text" type="date" name="ampliacion[fechaInicio]" id="fechaInicio" required>
+                </div>        
+                <div class="col-md-3">
+                    <label for="fechaFin" class="etiqueta">Fecha fin:</label> 
+                    <input size=40 class="cuadro_text" type="date" name="ampliacion[fechaFin]" id="fechaFin">
+                </div>        
+                <div class="col-md-3">
+                    <label for="dias" class="etiqueta">Dias:</label> 
+                    <input class="cuadro_text" type="number" name="ampliacion[dias]" id="dias" placeholder="dias">
+                </div>        
+                <div class="col-md-3">
+                    <label for="kilometros" class="etiqueta">Kilometros:</label> 
+                    <input class="cuadro_text" type="number" name="ampliacion[kilometros]" id="kilometros" placeholder="kilometros">
+                </div>        
+                <div class="col-md-3">
+                    <label class="etiqueta" for="precio" >Precio:</label>&nbsp
+                    <input class="cuadro_text" type="texto" name="ampliacion[precio]" id="precio" placeholder="precio" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="etiqueta" for="ganancia" >Ganancia:</label>&nbsp
+                    <input class="cuadro_text" type="texto" name="ampliacion[ganancia]" id="ganancia" placeholder="ganancia">
+                </div>
+                <div class="col-md-4">
+                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>&nbsp
+                    <input class="cuadro_text" type="texto" name="ampliacion[comisionComercial]" id="comisionComercial" placeholder="Comision Comercial" >
+                </div>
+                <div class="col-md-6">
+                    <label class="etiqueta" for="Observaciones" >Observaciones:</label>
+                    <input size=60 class="cuadro_text" type="text" name="ampliacion[observaciones]" id="Observaciones" placeholder="Observaciones">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="boton_submit" onclick="return validar_entero_campo_text(form.importe)">Guardar</button>
+                    <button type="reset" class="boton_submit">Borrar</button>
+                </div>
+            </div>
+            <input type="hidden" name="ampliacion[alquiler]"  id="alquiler" value="<?=$alquiler->getid()?>">
+        </fieldset>
+    </form>
+
+    <!--listado ampliaciones-->
+<p class="titulo_sec">Ampliaciones</p>
+<div>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="etiqueta" scope="col">Fecha inicio</th>
+                <th class="etiqueta" scope="col">Fecha fin</th>
+                <th class="etiqueta" scope="col">Dias</th>
+                <th class="etiqueta" scope="col">Kilometros</th>
+                <th class="etiqueta" scope="col">Precio</th>
+                <th class="etiqueta" scope="col">Ganancia</th>
+                <th class="etiqueta" scope="col">Comision</th>
+                <th class="etiqueta" scope="col">Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $total = 0; ?>
+            <?php foreach($ampliaciones as $ampliacion) :?>
+                <tr>
+                    <?php $total += $ampliacion->getprecio();?> 
+                    <td><?=formatea_fecha($ampliacion->getfechaInicio())?></td>
+                    <td><?=formatea_fecha($ampliacion->getfechaFin())?></td>
+                    <td><?=$ampliacion->getdias();?>€</td>         
+                    <td><?=$ampliacion->getkilometros();?></td>         
+                    <td><?=number_format($ampliacion->getprecio(), 2, ',', '.');?>€</td>         
+                    <td><?=number_format($ampliacion->getganancia(), 2, ',', '.');?>€</td>         
+                    <td><?=number_format($ampliacion->getcomisionComercial  (), 2, ',', '.');?>€</td>                 
+                    <td><?=$ampliacion->getobservaciones()?></td>         
+                    <td><div class="btn-group" role="group">
+                        <a href="<?= DIRECTORIO ?>editar_ampliacion_alquiler/<?=$ampliacion->getidAmpliacion()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="../borrar_ampliacion_alquiler/<?=$ampliacion->getidAmpliacion()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta ampliacion?');">  
+                            <i class="bi bi-trash"></i>
+                        </a>   
+                        </div>
+                    </td>
+            </tr>    
+            <?php endforeach ;?>    
+        </tbody>
+    </table> 
+    <p class='etiqueta_desplazada'> Suma: <?=number_format($total+$alquiler->getprecio(), 2, ',', '.')?>€</p>   
+</div>
+    <!--listado cobros-->
+<p class="titulo_sec">Cobros</p>
+    <div>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th class="etiqueta" scope="col">Fecha</th>
+                    <th class="etiqueta" scope="col">Importe</th>
+                    <th class="etiqueta" scope="col">Facturado</th>
+                    <th class="etiqueta" scope="col">Facturado a</th>
+                    <th class="etiqueta" scope="col">Contrato Hacienda</th>
+                    <th class="etiqueta" scope="col">Fianza</th>
+                    <th class="etiqueta" scope="col">Parte importe fianza</th>
+                    <th class="etiqueta" scope="col">Banco</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $totalCobros = 0; ?>
+                <?php foreach($cobros as $cobro) :?>
+                    <tr>
+                        <?php $totalCobros += $cobro->getimporte();?> 
+                        <td><?=formatea_fecha($cobro->getfecha())?></td>         
+                        <td><?=number_format($cobro->getimporte(), 2, ',', '.');?>€</td>         
+                        <td><?=$cobro->getfacturado() ? 'SI' : 'NO'?></td>         
+                        <td><?=$cobro->getfacturadoA()?></td>         
+                        <td><?=$cobro->getfianza() ? 'SI' : 'NO'?></td>         
+                        <td><?=number_format($cobro->getparteImporteFianza(), 2, ',', '.');?>€</td>                  
+                        <td><?=$cobro->getbanco()?></td>         
+                        <td><?=$cobro->getobservaciones()?></td>         
+                        <td><div class="btn-group" role="group">
+                            <a href="<?= DIRECTORIO ?>editar_cobro_alquiler/<?=$cobro->getidCobro()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="../borrar_cobro_alquiler/<?=$cobro->getidCobro()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este cobro?');">   
+                                <i class="bi bi-trash"></i>
+                            </a>   
+                            </div>
+                        </td>
+                </tr>    
+                <?php endforeach ;?>   
+            </tbody>
+        </table>            
+        <p class='etiqueta_desplazada'> Suma: <?=number_format($totalCobros, 2, ',', '.')?>€</p>
+    </div>
+
+    <!--listado gastos-->
+<p class="titulo_sec">Gastos</p>
+<div>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="etiqueta" scope="col">Tipo</th>
+                <th class="etiqueta" scope="col">Importe</th>
+                <th class="etiqueta" scope="col">Fecha</th>
+                <th class="etiqueta" scope="col">Paga otro</th>
+                <th class="etiqueta" scope="col">Pagado</th>
+                <th class="etiqueta" scope="col">Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $totalGastos = 0; ?>
+            <?php foreach($gastos as $gasto) :?>
+                <tr>
+                    <?php $totalGastos += $gasto->getimporte();?> 
+                    <td><?=$gasto->gettipo()?></td>
+                    <td><?=number_format($gasto->getimporte(), 2, ',', '.');?>€</td>         
+                    <td><?=formatea_fecha($gasto->getfecha())?></td>         
+                    <td><?=$gasto->getpagaOtro() ? 'SI' : 'NO'?></td>         
+                    <td><?=$gasto->getpagado() ? 'SI' : 'NO'?></td>         
+                    <td><?=$gasto->getobservaciones()?></td>         
+                    <td><div class="btn-group" role="group">
+                        <a href="<?= DIRECTORIO ?>editar_gasto_alquiler/<?=$gasto->getidGasto()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="../borrar_gasto_alquiler/<?=$gasto->getidGasto()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este gasto?');">   
+                            <i class="bi bi-trash"></i>
+                        </a>   
+                        </div>
+                    </td>
+                </tr>    
+            <?php endforeach ;?>   
+        </tbody>
+    </table>            
+    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
+</div> 
+<?php endif;?>
 <script>
     $(document).ready(function() {
         $('#select_vehiculo').select2({

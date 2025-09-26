@@ -19,6 +19,10 @@ define ('CAMPOS_VEHICULO', ["id_vehiculo" => 0, "Matricula" =>'', "Bastidor" => 
                         "Combustible" => '', "Fecha_itv" => '', "Estado" => '', "Clase" => '', "propietario" => 0, "Prox_itv" => '']);    
 define ('CAMPOS_ALQUILER', ["id_alquiler" => 0, "contrato" => '', "vehiculo" => 0, "cliente" => 0, "fechaInicio" => '', "fechaFin" => '', "kilometros" => 0, "kmInicio" => 0, "kmFin" => 0, 
         "dias" => 0, "precio" => 0, "precioKm" => 0, "fianza" => 0, "fianzaDevuelta" => 0, "comercial" => '', "empresa" => 0, "ciudad" => '', "entrega" => '', "comisionComercial" => 0, "ganancia" => 0, "observaciones" => '', "estado" => '']);
+define ('CAMPOS_GASTO_ALQUILER', ["idGasto" => 0, "tipo" =>'', "importe" => 0, "fecha" =>'', "pagaOtro" => 0, "alquiler" => 0, "pagado" => 0, "observaciones" => '']);
+define ('CAMPOS_COBRO_ALQUILER', ["idCobro" => 0, "fecha" =>'', "alquiler" => 0, "importe" => 0, "facturado" => 0, "facturadoA" => '', "contratoHacienda" => '', "fianza" => 0, 
+                                        "parteImporteFianza"=> 0, "banco" => '', "observaciones" => '']);
+define ('CAMPOS_AMPLIACION', ["idAmpliacion" => 0, "fechaInicio" => '', "fechaFin" => '', "dias" => 0, "kilometros" => 0, "precio" => 0, "ganancia" => 0, "comisionComercial" => 0, "observaciones" => '', "alquiler" => 0]);
 define ('CAMPOS_EMPRESA_ALQUILER', ["id_entidad" => 0, "CIF_DNI" => '', "nombreEmpresa" => '', "Observaciones" => '', "Direccion" => '', "Telefono" =>'', "Email" => '']);
 define ('CAMPOS_FOTO', ["id" => 0, "url" => '', "destacada" => 0, "id_vehiculo" => '0', "descripcion" => '']);
 define ('CAMPOS_GASTO_VEHICULO', ["id_gasto" => 0, "tipo" =>'', "Importe" => 0, "Fecha" =>'', "Paga_otro" => 0, "Comentarios" => '', "id_vehiculo" => 0, "pagado" => 0]);

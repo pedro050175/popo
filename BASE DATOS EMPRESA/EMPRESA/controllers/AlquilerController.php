@@ -6,19 +6,29 @@ use repositories\EntidadRepository;
 use repositories\VehiculoRepository;
 use lib\Pages;
 use repositories\AlquilerRepository;
+use repositories\AmpliacionAlquilerRepository;
+use repositories\GastoAlquilerRepository;
+use repositories\CobroAlquilerRepository;
 
 class AlquilerController {
 
     private EntidadRepository $entidadRepository;
     private VehiculoRepository $vehiculoRepository;
     private AlquilerRepository $alquilerRepository;
+    private AmpliacionAlquilerRepository $ampliacionRepository;
+    private GastoAlquilerRepository $gastoRepository;
+    private CobroAlquilerRepository $cobroRepository;
     private Pages $pages;
  
     function __construct(){
         $this->entidadRepository = new EntidadRepository();
         $this->vehiculoRepository = new VehiculoRepository();
         $this->alquilerRepository = new AlquilerRepository();
+        $this->ampliacionRepository = new AmpliacionAlquilerRepository();
+        $this->gastoRepository = new GastoAlquilerRepository();
+        $this->cobroRepository = new CobroAlquilerRepository();
         $this->pages = new Pages();
+    
     }
     public function list() {
         $alquileres = $this->alquilerRepository->findAll();
@@ -41,7 +51,11 @@ class AlquilerController {
         $entidades = $this->entidadRepository->findAll($paginar=false); //carga los propietarios para la lista desplegable propietario
         $vehiculos = $this->vehiculoRepository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $alquiler = $this->alquilerRepository->read($id);
-        $this->pages->render('nuevo_alquiler', ['alquiler' => $alquiler, 'vehiculos' => $vehiculos, 'entidades' => $entidades]);
+        $ampliaciones = $this->ampliacionRepository->ampliacionesAlquiler($id);
+        $cobros = $this->cobroRepository->cobrosAlquiler($id);
+        $gastos = $this->gastoRepository->gastosAlquiler($id);
+
+        $this->pages->render('nuevo_alquiler', ['alquiler' => $alquiler, 'vehiculos' => $vehiculos, 'entidades' => $entidades, 'ampliaciones' => $ampliaciones, 'cobros' => $cobros, 'gastos' => $gastos]);
     }
     public function delete(int $id): void {
         $this->alquilerRepository->delete($id);

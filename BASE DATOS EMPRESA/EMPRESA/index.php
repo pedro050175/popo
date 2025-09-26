@@ -13,6 +13,9 @@ use controllers\MovimientoController;
 use controllers\EntregaController;
 use controllers\DevolucionController;
 use controllers\AlquilerController;
+use controllers\AmpliacionAlquilerController;
+use controllers\CobroAlquilerController;
+use controllers\GastoAlquilerController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -69,6 +72,18 @@ Router::add('GET', '/nuevo_alquiler', function() {return (new AlquilerController
 Router::add('POST', '/nuevo_alquiler', function () {return (new AlquilerController())->save();});
 Router::add('GET', '/nuevo_alquiler/:id', function($id) {return (new AlquilerController())->edit($id);});
 Router::add('GET', '/borrar_alquiler/:id', function($id){return (new AlquilerController())->delete($id);});
+//ampliaciones alquiler
+Router::add('POST', '/nueva_ampliacion_alquiler', function () {return (new AmpliacionAlquilerController())->save();});
+Router::add('GET', '/editar_ampliacion_alquiler/:id', function($id) {return (new AmpliacionAlquilerController())->edit($id);});
+Router::add('GET', '/borrar_ampliacion_alquiler/:id', function($id){return (new AmpliacionAlquilerController())->delete($id);});
+//cobros alquiler
+Router::add('POST', '/nuevo_cobro_alquiler', function () {return (new CobroAlquilerController())->save();});
+Router::add('GET', '/editar_cobro_alquiler/:id', function($id) {return (new CobroAlquilerController())->edit($id);});
+Router::add('GET', '/borrar_cobro_alquiler/:id', function($id){return (new CobroAlquilerController())->delete($id);});
+//gastos alquiler
+Router::add('POST', '/nueva_gasto_alquiler', function () {return (new GastoAlquilerController())->save();});
+Router::add('GET', '/editar_gasto_alquiler/:id', function($id) {return (new GastoAlquilerController())->edit($id);});
+Router::add('GET', '/borrar_gasto_alquiler/:id', function($id){return (new GastoAlquilerController())->delete($id);});
 
 
 Router::dispatch();
