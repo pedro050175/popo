@@ -21,15 +21,15 @@
                     <input class="cuadro_text" type="number" name="ampliacion[kilometros]" id="kilometros" placeholder="kilometros" value="<?=$ampliacion->getkilometros()?>">
                 </div>        
                 <div class="col-md-3">
-                    <label class="etiqueta" for="precio" >Precio:</label>&nbsp
+                    <label class="etiqueta" for="precio" >Precio:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[precio]" id="precio" placeholder="precio" value="<?=$ampliacion->getprecio()?>" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="etiqueta" for="ganancia" >Ganancia:</label>&nbsp
+                    <label class="etiqueta" for="ganancia" >Ganancia:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[ganancia]" id="ganancia" placeholder="ganancia" value="<?=$ampliacion->getganancia()?>" >
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>&nbsp
+                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[comisionComercial]" id="comisionComercial" placeholder="Comision Comercial" value="<?=$ampliacion->getcomisionComercial()?>" >
                 </div>
                 <div class="col-md-6">
@@ -37,7 +37,7 @@
                     <input size=60 class="cuadro_text" type="text" name="ampliacion[observaciones]" id="Observaciones" placeholder="Observaciones" value="<?=quitaEspecialChar($ampliacion->getobservaciones())?>">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="boton_submit" onclick="return validar_entero_campo_text(form.importe)">Guardar</button>
+                    <button type="submit" class="boton_submit" onclick="return validarTablaEnteros([form.dias, form.precio, form.ganancia, form.comisionComercial])">Guardar</button>
                     <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_alquiler/<?=$ampliacion->getalquiler()?>';"><!--regreso al alquiler que estaba con DIRECTORIO/nuevo_vehiculo/$foto->getid_vehiculo()-->
                 </div>
             </div>

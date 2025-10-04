@@ -89,4 +89,15 @@ class GastoVehiculoRepository {
         $sql = "DELETE FROM gastosvehiculo WHERE id_gasto=:id"; 
         $this->conexionPDO->consulta($sql, $parametros);
     }
+    public function gastosVehiculo(){
+        $parametros = [
+        ':desde' => $_GET['desde'],
+        ':hasta' => $_GET['hasta'],
+        ':coche' => $_GET['cocheId']
+        ];
+        $sql = "SELECT Importe, Fecha FROM gastosvehiculo 
+                                            WHERE Fecha BETWEEN :desde AND :hasta AND id_vehiculo=:coche";
+        $this->conexionPDO->consulta($sql, $parametros);        
+        return $this->conexionPDO->extraer_todos();       
+    }
 }

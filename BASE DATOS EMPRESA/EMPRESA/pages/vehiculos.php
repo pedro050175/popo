@@ -4,7 +4,6 @@
             <form action="<?= DIRECTORIO ?>vehiculos" method="get" class="d-flex">
                 <input type="search" name="buscar_marca" class="form-control me-1" id="floatingInput" placeholder="Buscar vehiculo">
                 <input type="search" name="buscar_matr_bast" class="form-control me-1" id="floatingInput" placeholder="Buscar matrícula o bastidor">
-                <input type="hidden" name="num_pagina"   class="form-control me-2" id="floatingInput" value="1"><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>
@@ -47,8 +46,8 @@
                     <td><?=formatea_fecha($vehiculo->getFecha_matricula())?></td>
                     <td><?=formatea_fecha($vehiculo->getFecha_itv())?></td>
                     <td class= <?=$vehiculo->getProx_itv()<date("Y-m-d") ? "td_alerta" : ''?>><?=formatea_fecha($vehiculo->getProx_itv())?></td>
-                    <td><?=$vehiculo->getdatos_propietario()->getNombre()?></td>
-                    <td><?=$vehiculo->getObservaciones()?></td>
+                    <td><?=$vehiculo->getdatos_propietario()?->getNombre() ?? '' ?><td><!--esto equivale a $vehiculo->getDatosPropietario()==null ? '' : $vehiculo->getDatosPropietario()==null -->
+                    <td><?=$vehiculo->getObservaciones()?></td><!-- esto que hace (?->) si getDatosPropietario() == null, no sigue evaluando y devuelve null directamente entonces ?? devuelve ''-->
                     <td>
                         <div class="btn-group" role="group">
                             <a href="<?= DIRECTORIO ?>nuevo_vehiculo/<?=$vehiculo->getId()?>" role="button" class="btn btn-sm btn-outline-secondary">
@@ -69,15 +68,17 @@
         <div class="row mb-3">       
             <div class="col-md-2"> <em class="etiqueta">Vehículos: <?=count($vehiculos)?></em></div>
             <!--todo esto que sigue es para la paginacion-->
-            <div class="col-md-6"> <em class="etiqueta">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></em></div>    
-            <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
-            <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
-            <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
+            <?php if (isset($_GET['num_pagina'])) :?>
+                <div class="col-md-6"> <em class="etiqueta">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></em></div>    
+                <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
+                <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
+                <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
 
-            <div class="col-md-4"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>">[Atras</a>
-            <a href="<?= DIRECTORIO ?>vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>">Siguiente]</a>
-            <a href="<?= DIRECTORIO ?>vehiculos?num_pagina=1&ordenar=<?=$ordenar?>">[Inicio</a>
-            <a href="<?= DIRECTORIO ?>vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
+                <div class="col-md-4"><a href="/mis_pruebas/vehiculos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>">[Atras</a>
+                <a href="<?= DIRECTORIO ?>vehiculos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>">Siguiente]</a>
+                <a href="<?= DIRECTORIO ?>vehiculos?num_pagina=1&ordenar=<?=$ordenar?>">[Inicio</a>
+                <a href="<?= DIRECTORIO ?>vehiculos?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
+            <?php endif ;?>
         </div>  
-        </div>
+    </div>
 </div>

@@ -7,8 +7,9 @@ require_once "Funciones.php";
 class Alquiler {
     
     function __construct (private ?int $id_alquiler, private ?string $contrato, private ?int $vehiculo, private ?int $cliente, private ?string $fechaInicio, private ?string $fechaFin, private ?int $kilometros,
-    private ?int $kmInicio, private ?int $kmFin, private ?string $dias, private ?int $precio, private ?int $precioKm, private ?int $fianza, private ?int $fianzaDevuelta, private ?string $comercial, 
+    private ?int $kmInicio, private ?int $kmFin, private ?int $dias, private ?int $precio, private ?int $precioKm, private ?int $fianza, private ?int $fianzaDevuelta, private ?string $comercial, 
     private ?int $empresa, private ?string $ciudad, private ?string $entrega, private ?int $comisionComercial, private ?int $ganancia, private ?string $observaciones,  private ?string $estado, 
+    private ?float $sumaPrecio, private ?float $sumaDias, private ?float $sumaKilometros, private ?float $sumaGanancia, private ?float $sumaComisionComercial, 
     private ?Vehiculo $vehiculoInfo = null, private ?Entidad $clienteInfo =null, private ?Entidad $empresaInfo = null){}
 
     public function getvehiculoInfo(): ?Vehiculo {
@@ -86,18 +87,43 @@ class Alquiler {
     public function getestado(): ?string {
         return $this->estado;
     }
+    public function getsumaPrecio(): ?float {
+        return $this->sumaPrecio;
+    }
+    public function getsumaDias(): ?float {
+        return $this->sumaDias;
+    }
+    public function getsumaKilometros(): ?float {
+        return $this->sumaKilometros;
+    }
+    public function getsumaGanancia(): ?float {
+        return $this->sumaGanancia;
+    }
+    public function getsumaComisionComercial(): ?float {
+        return $this->sumaComisionComercial;
+    }
     public static function fromArray(array $data): Alquiler {
-        $modelo = duplicar_tabla (CAMPOS_ALQUILER, $data);
-        $modelo_vehiculo = duplicar_tabla (CAMPOS_VEHICULO, $data);
-        $modelo_cliente = duplicar_tabla (CAMPOS_ENTIDAD, $data);
-        $modelo_empresa = duplicar_tabla (CAMPOS_EMPRESA_ALQUILER, $data);
-        $vehiculo = new Vehiculo ($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], 
-              $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'],
-              $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario'], $modelo_vehiculo['Prox_itv']);
-        $cliente = new Entidad($modelo_cliente['id_entidad'], $modelo_cliente['CIF_DNI'], $modelo_cliente['Nombre'], $modelo_cliente['Observaciones'], $modelo_cliente['Direccion'], $modelo_cliente['Telefono'], $modelo_cliente['Email']);
-        $empresa = new Entidad($modelo_empresa['id_entidad'], $modelo_empresa['CIF_DNI'], $modelo_empresa['nombreEmpresa'], $modelo_empresa['Observaciones'], $modelo_empresa['Direccion'], $modelo_empresa['Telefono'], $modelo_empresa['Email']);
-        return new Alquiler ($modelo['id_alquiler'], $modelo['contrato'], $modelo['vehiculo'], $modelo['cliente'], $modelo['fechaInicio'], $modelo['fechaFin'], $modelo['kilometros'],
-        $modelo['kmInicio'], $modelo['kmFin'], $modelo['dias'], $modelo['precio'], $modelo['precioKm'], $modelo['fianza'], $modelo['fianzaDevuelta'], $modelo['comercial'], $modelo['empresa'],
-        $modelo['ciudad'], $modelo['entrega'], $modelo['comisionComercial'], $modelo['ganancia'], $modelo['observaciones'], $modelo['estado'], $vehiculo, $cliente, $empresa); 
+        $vehiculo = null;
+        $cliente = null;
+        $empresa = null;
+        //solo se crean objetos para meter dentro de alquiler si en el SELECT se lee algun campo que pertenece a una tabla relacionada con alquiler
+        if (isset($data['Marca_modelo'])){
+            $vehiculo = new Vehiculo ($data['id_vehiculo']??null, $data['Matricula']??null, $data['Bastidor']??null, $data['Marca_modelo']??null, $data['Km']??null, 
+                                    $data['Fecha_matricula']??null, $data['Observaciones']??null, $data['Combustible']??null, $data['Fecha_itv']??null, $data['Estado']??null,
+                                    $data['Clase']??null, $data['propietario']??null, $data['Prox_itv']??null);
+        }
+        if (isset($data['Nombre'])){
+            $cliente = new Entidad($data['id_entidad']??null, $data['CIF_DNI']??null, $data['Nombre']??null, $data['Observaciones']??null, $data['Direccion']??null, 
+                                    $data['Telefono']??null, $data['Email']??null);
+        }
+        if (isset($data['nombreEmpresa'])){
+            $empresa = new Entidad($data['id_entidad']??null, $data['CIF_DNI']??null, $data['nombreEmpresa']??null, $data['Observaciones']??null, $data['Direccion']??null,
+                                    $data['Telefono']??null, $data['Email']??null);
+        }
+        return new Alquiler ($data['id_alquiler']??null, $data['contrato']??null, $data['vehiculo']??null, $data['cliente']??null, $data['fechaInicio']??null, $data['fechaFin']??null, 
+                            $data['kilometros']??null, $data['kmInicio']??null, $data['kmFin']??null, $data['dias']??null, $data['precio']??null, $data['precioKm']??null, 
+                            $data['fianza']??null, $data['fianzaDevuelta']??null, $data['comercial']??null, $data['empresa']??null, $data['ciudad']??null, $data['entrega']??null,
+                            $data['comisionComercial']??null, $data['ganancia']??null, $data['observaciones']??null, $data['estado']??null,  $data['sumaPrecio']??null, 
+                            $data['sumaDias']??null, $data['sumaKilometros']??null, $data['sumaGanancia']??null, $data['sumaComisionComercial']??null, $vehiculo, $cliente, $empresa); 
     }
 }

@@ -25,8 +25,7 @@ class EntidadController {
 
     }    
     public function list(): void {
-        
-        $entidades = $this->entidad_repository->findAll($paginar=true);
+        $entidades = $this->entidad_repository->findAll();
         $numero_paginas = $this->entidad_repository->getnumpaginas();
         $error = $_GET['error'] ?? null; //a $error le asigna $_GET['error'] si esta existe, variable pasada en la URL, sino le asigna null  
         //file_put_contents("log.txt", "Variable: ". $error. " \n" , FILE_APPEND);

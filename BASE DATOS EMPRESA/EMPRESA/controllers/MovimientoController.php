@@ -38,7 +38,7 @@ class MovimientoController{
         $this->pages->render('movimientos', ['movimientos' => $movimientos, 'error' => $error, 'numPaginas' => $numPaginas]);
     }
     public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
-        $entidades = $this->entidad_repository->findAll($paginar=false); //carga los propietarios para la lista desplegable propietario
+        $entidades = $this->entidad_repository->listReducida(); //carga los propietarios para la lista desplegable propietario
         $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//carga los vehiculos para la lista desplegable vehiculo
         $this->pages->render('nuevo_movimiento', ['entidades' => $entidades, 'vehiculos' => $vehiculos]);
     }
@@ -49,7 +49,7 @@ class MovimientoController{
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
-        $entidades = $this->entidad_repository->findAll($paginar=false); //carga los propietarios para la lista desplegable propietario
+        $entidades = $this->entidad_repository->listReducida(); //carga los propietarios para la lista desplegable propietario
         $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $movimiento = $this->movimientoRepository->read($id);
         $entregas = $this->entregaRepository->entregasMovimiento($id);
@@ -69,9 +69,9 @@ class MovimientoController{
     }
     public function analisis (){
         if (isset($_GET['envia'])){//ya se han leido las entidades, 2º vez que pasa por aqui
-            $movimientos1 = $this->movimientoRepository->findAll();
-            $movimientos2 = $this->movimientoRepository->findAll(true);
-            //var_dump($movimientos1);
+            $movimientos1 = $this->movimientoRepository->findAnalisis(false);
+            $movimientos2 = $this->movimientoRepository->findAnalisis(true);
+
             $ids = $this->leer_ids($movimientos1, $movimientos2);
             if (isset($ids)) {
                 foreach ($ids as $id){//entregas[[entre_mov_id1]=Obj1,Obj2.., [entre_mov_id2]=Obj1,Obj2.., [entre_mov_id3] = ..., ...] el indice de cada tabla de entregas es el id de un movimiento

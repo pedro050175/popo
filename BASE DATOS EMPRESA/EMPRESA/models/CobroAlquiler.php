@@ -39,10 +39,7 @@ class CobroAlquiler {
         return $this->observaciones;
     }
     public static function fromArray(array $data): CobroAlquiler {
-        
-        $modelo = duplicar_tabla(CAMPOS_COBRO_ALQUILER, $data);
-        //var_dump($data);
-        return new CobroAlquiler ($modelo['idCobro'], $modelo['fecha'], $modelo['alquiler'], $modelo['importe'], $modelo['facturado'], $modelo['facturadoA'], $modelo['contratoHacienda'], $modelo['fianza'],
-                                    $modelo['parteImporteFianza'], $modelo['banco'], $modelo['observaciones']); 
+        return new CobroAlquiler ($data['idCobro']??null, $data['fecha']??null, $data['alquiler']??null, $data['importe']??null, $data['facturado']??null, $data['facturadoA']??null,
+                                    $data['contratoHacienda']??null, $data['fianza']??null, $data['parteImporteFianza']??null, $data['banco']??null, $data['observaciones']??null); 
     }
 }

@@ -31,7 +31,7 @@ class CuotaVehiculoController{
         }
     }
     public function edit(int $id): void {
-        $entidades = $this->entidad_repository->findAll(false);
+        $entidades = $this->entidad_repository->listReducida();
         $cuota = $this->cuota_repository->read($id);
         $this->pages->render('editar_cuota_vehiculo', ['cuota' => $cuota, 'entidades' => $entidades] );
     }

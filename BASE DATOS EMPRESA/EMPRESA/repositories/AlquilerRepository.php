@@ -11,6 +11,7 @@ class AlquilerRepository {
 
     public function __construct() {
         $this->conexionPDO = new BaseDatosPDO();
+        $this->numPaginas = 1;
     }
     public function setnumpaginas(int $paginas){
         $this->numPaginas = $paginas;
@@ -26,38 +27,104 @@ class AlquilerRepository {
         
         return $numeroPaginas;
     }
-    public function findAll(): ?array {   
-        
-        $desplazamiento = 0;
-        $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM alquileres");
-        if (($_GET['num_pagina']) <= $this->numPaginas) {
-            $numPagina = intval($_GET['num_pagina']);
-            $desplazamiento = ($numPagina-1) * FILAS_PAGINA;
+    public function alquileresVehiculo(){
+        if (!empty($_GET['cocheId'])){//listado para analisis, se usa el id del coche para buscar alquileres en lugar del nombre
+                    $desde = $_GET['desde'];
+                    $hasta = $_GET['hasta'];
+                    $coche = $_GET['cocheId']; 
+                    $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
+                                            COALESCE(AM.sumaPrecio, 0) AS sumaPrecio,
+                                            COALESCE(AM.sumaDias, 0) AS sumaDias,
+                                            COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
+                                            COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
+                                            COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial 
+                                    FROM alquileres AL
+                                        LEFT JOIN entidad A ON AL.cliente = A.id_entidad
+                                        LEFT JOIN entidad B ON AL.empresa = B.id_entidad
+                                        LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                                        LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
+                                                                    SUM(dias) AS sumaDias,
+                                                                    SUM(kilometros) AS sumaKilometros,
+                                                                    SUM(ganancia) AS sumaGanancia,
+                                                                    SUM(comisionComercial) AS sumaComisionComercial
+                                                    FROM ampliaciones
+                                                    GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler    
+                                    WHERE AL.fechaInicio BETWEEN '$desde' AND '$hasta' AND AL.vehiculo = '$coche'");                   
         }
+        return $this->extraer_todos();                    
+    }
+    public function findAll(): ?array {   
         $buscar = $_GET['buscar'] ?? '';
-        $ordenar= $_GET['ordenar'] ?? null;
         if ($buscar) {
-            $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo, 
+            $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
+                                                    COALESCE(AM.sumaPrecio, 0) AS sumaPrecio,
+                                                    COALESCE(AM.sumaDias, 0) AS sumaDias,
+                                                    COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
+                                                    COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
+                                                    COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial 
                                             FROM alquileres AL
                                                 LEFT JOIN entidad A ON AL.cliente = A.id_entidad
                                                 LEFT JOIN entidad B ON AL.empresa = B.id_entidad
                                                 LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                                            WHERE AL.contrato LIKE '%$buscar%' OR V.Marca_modelo LIKE '%$buscar%' OR A.Nombre LIKE '%$buscar%'
-                                            ORDER BY AL.fechaInicio desc");
-        }else if ($ordenar) {
-                $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
+                                                LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
+                                                                            SUM(dias) AS sumaDias,
+                                                                            SUM(kilometros) AS sumaKilometros,
+                                                                            SUM(ganancia) AS sumaGanancia,
+                                                                            SUM(comisionComercial) AS sumaComisionComercial
+                                                            FROM ampliaciones
+                                                            GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler    
+                                            WHERE AL.contrato LIKE '%$buscar%' OR A.Nombre LIKE '%$buscar%'
+                                            ORDER BY AL.fechaInicio");
+        }else if (!empty($_GET['desde']) | !empty($_GET['hasta']) | !empty($_GET['coche'])){//para buscar por nombre coche o fechas
+                                $desde = $_GET['desde'] != '' ? $_GET['desde'] : '1900-01-01'; // si no escribe en la fecha de inicio tomo la fecha 1900-01-01 como inicial
+                                $hasta = $_GET['hasta'] != '' ? $_GET['hasta'] : date("Y-m-d");
+                                $coche = $_GET['coche'] ?? '';
+                                $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
+                                                    COALESCE(AM.sumaPrecio, 0) AS sumaPrecio,
+                                                    COALESCE(AM.sumaDias, 0) AS sumaDias,
+                                                    COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
+                                                    COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
+                                                    COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial 
                                             FROM alquileres AL
                                                 LEFT JOIN entidad A ON AL.cliente = A.id_entidad
                                                 LEFT JOIN entidad B ON AL.empresa = B.id_entidad
                                                 LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                                            ORDER BY $ordenar LIMIT $desplazamiento, ".FILAS_PAGINA);
-                }else {
-                    $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo
-                                            FROM alquileres AL
-                                                LEFT JOIN entidad A ON AL.cliente = A.id_entidad
-                                                LEFT JOIN entidad B ON AL.empresa = B.id_entidad
-                                                LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                                            ORDER BY AL.fechaInicio LIMIT $desplazamiento, ".FILAS_PAGINA);
+                                                LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
+                                                                            SUM(dias) AS sumaDias,
+                                                                            SUM(kilometros) AS sumaKilometros,
+                                                                            SUM(ganancia) AS sumaGanancia,
+                                                                            SUM(comisionComercial) AS sumaComisionComercial
+                                                            FROM ampliaciones
+                                                            GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler    
+                                            WHERE AL.fechaInicio BETWEEN '$desde' AND '$hasta' AND V.Marca_modelo LIKE '%$coche%'
+                                            ORDER BY AL.fechaInicio"); 
+
+                }else {//listado por defecto
+                        $desplazamiento = 0;
+                        $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM alquileres");
+                        $num_pagina = $_GET['num_pagina'] ?? 1;
+                        if (($num_pagina) <= $this->numPaginas) {
+                            $numPagina = intval($num_pagina);
+                            $desplazamiento = ($numPagina-1) * FILAS_PAGINA;
+                        }
+                        $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
+                                                        COALESCE(AM.sumaPrecio, 0) AS sumaPrecio,
+                                                        COALESCE(AM.sumaDias, 0) AS sumaDias,
+                                                        COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
+                                                        COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
+                                                        COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial
+                                                FROM alquileres AL
+                                                    LEFT JOIN entidad A ON AL.cliente = A.id_entidad
+                                                    LEFT JOIN entidad B ON AL.empresa = B.id_entidad
+                                                    LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                                                    LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
+                                                                                SUM(dias) AS sumaDias,
+                                                                                SUM(kilometros) AS sumaKilometros,
+                                                                                SUM(ganancia) AS sumaGanancia,
+                                                                                SUM(comisionComercial) AS sumaComisionComercial
+                                                                FROM ampliaciones
+                                                                GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
+                                                ORDER BY AL.fechaInicio desc LIMIT $desplazamiento, ".FILAS_PAGINA);
                 }
         return $this->extraer_todos();    
     }
@@ -107,9 +174,11 @@ class AlquilerRepository {
         $parametros = Limpiar_parametros($parametros);
         $sql = "INSERT INTO alquileres (contrato, vehiculo, cliente, fechaInicio, fechaFin, kilometros, kmInicio, kmFin, dias, precio, precioKm, fianza, fianzaDevuelta, comercial, empresa, ciudad, entrega, comisionComercial, ganancia, observaciones, estado) VALUES 
                                          (:contrato,:vehiculo,:cliente,:fechaInicio,:fechaFin,:kilometros,:kmInicio,:kmFin,:dias,:precio,:precioKm,:fianza,:fianzaDevuelta,:comercial,:empresa,:ciudad,:entrega,:comisionComercial,:ganancia,:observaciones,:estado)"; 
-        //var_dump($parametros);
-        $this->conexionPDO->consulta($sql, $parametros);
-        return $this->conexionPDO->id_ultimo_insertado();//devuelvo el id ultimo creado para regresar al ultimo creado
+        $ok = $this->conexionPDO->consulta($sql, $parametros);
+        
+        if ($ok) {
+            return $this->conexionPDO->id_ultimo_insertado();//devuelvo el id ultimo creado para regresar al ultimo creado
+        }else return "0";//hay que controlar el error si se duplica contrato,en consultaPDO hay un catch (PDOException hay qeu ver como pasar ese error al cliente 
     }
     public function update (array $alquiler): void{ 
         $parametros = [
@@ -142,14 +211,31 @@ class AlquilerRepository {
                                        ciudad = :ciudad, entrega = :entrega, comisionComercial = :comisionComercial, ganancia = :ganancia, observaciones = :observaciones, estado = :estado
                                      WHERE id_alquiler = :id_alquiler";
        
-        $this->conexionPDO->consulta($sql, $parametros);
+        $this->conexionPDO->consulta($sql, $parametros);//hay que controlar el error si se duplica contrato,en consultaPDO hay un catch (PDOException hay qeu ver como pasar ese error al cliente 
     }
     public function read (int $id): ?Alquiler {
-        $this->conexionPDO->consulta("SELECT * FROM alquileres WHERE (id_alquiler=$id)");
+        $this->conexionPDO->consulta("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo
+                                            FROM alquileres AL
+                                                LEFT JOIN entidad A ON AL.cliente = A.id_entidad
+                                                LEFT JOIN entidad B ON AL.empresa = B.id_entidad
+                                                LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                                            WHERE (id_alquiler=$id)");        
         return $this->extraer_registro();
     }
     public function delete (int $id): void {
        $this->conexionPDO->consulta("DELETE FROM alquileres WHERE (id_alquiler=$id)");
     }  
+    public function totalAlquileresVehiculoTabla(): array{//en esta funcion devuelvo la tabla leida del SELECT no lo meto en objetos
+        $parametros = [
+        ':desde' => $_GET['desde'],
+        ':hasta' => $_GET['hasta'],
+        ':cocheId' => $_GET['cocheId'] 
+        ]; //tengo que leer id_alquiler aunqeu no lo muestre porque lo necesito para luego sacas las ampliaciones de este alquiler
+        $sql = "SELECT id_alquiler, ganancia, fechaInicio, comisionComercial FROM alquileres
+                        WHERE fechaInicio BETWEEN :desde AND :hasta AND vehiculo = :cocheId";
+        $this->conexionPDO->consulta($sql, $parametros); 
+        return $this->conexionPDO->extraer_todos();       
+        
+    }
 }
 ?>

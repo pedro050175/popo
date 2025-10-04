@@ -4,11 +4,11 @@
             <legend class="mi-legend">Editar devolución</legend>
             <div class="row">
                   <div class="col-md-4">
-                    <label class="etiqueta" for="fecha">Fecha:</label>&nbsp
+                    <label class="etiqueta" for="fecha">Fecha:</label>
                     <input class="cuadro_text" type="date" name="devolucion[fecha]" id="fecha" value="<?=$devolucion->getfecha()?>" required>
                 </div>       
                 <div class="col-md-4">
-                    <label class="etiqueta" for="importe">Importe:</label>&nbsp
+                    <label class="etiqueta" for="importe">Importe:</label>
                     <input class="cuadro_text" type="texto" name="devolucion[importe]" id="importe" placeholder="Importe" value="<?=$devolucion->getimporte()?>" required>
                 </div>
             </div>

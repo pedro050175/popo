@@ -14,6 +14,7 @@ class VehiculoRepository {
     public function __construct() {
         $this->conexion = new BaseDatos();
         $this->conexionPDO = new BaseDatosPDO();
+        $this->num_paginas = 1;
     }
     public function setnumpaginas(int $paginas){
         $this->num_paginas = $paginas;
@@ -34,8 +35,9 @@ class VehiculoRepository {
         }
         $desplazamiento = 0;
         $this->num_paginas = $this->numero_paginas("SELECT COUNT(*) FROM vehiculos");
-        if (($_GET['num_pagina']) <= $this->num_paginas) {
-            $num_pagina = intval($_GET['num_pagina']);
+        $num_pagina = $_GET['num_pagina'] ?? 1;
+        if (($num_pagina) <= $this->num_paginas) {
+            $num_pagina = intval($num_pagina);
             $desplazamiento = ($num_pagina-1) * FILAS_PAGINA;
         }
         $campo_ord = $_GET['ordenar'] ?? null;
@@ -49,7 +51,7 @@ class VehiculoRepository {
                 $busca = $_GET['buscar_matr_bast'] ?? null;
                 if ($busca) {
                     $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
-                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad LIMIT $desplazamiento, ".FILAS_PAGINA); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
+                } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad ORDER BY id_vehiculo desc LIMIT $desplazamiento, ".FILAS_PAGINA); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    
         return $this->extraer_todos();    

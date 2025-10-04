@@ -12,6 +12,7 @@ class EntidadRepository {
     
     public function __construct() {
         $this->conexion = new BaseDatos();
+        $this->num_paginas = 1;
     }
     public function setnumpaginas(int $paginas){
         $this->num_paginas = $paginas;
@@ -25,15 +26,12 @@ class EntidadRepository {
     
         return $numero_paginas;
     }
-    public function findAll(?bool $paginar=true): ?array {//$paginar=false no pagina, se usa para campo de lista desplegable en formularios relacionados (propietarios) donde deben cargarse todas las entidades 
-        if (!$paginar){
-            $this->conexion->consulta ("SELECT id_entidad, Nombre FROM entidad ORDER BY Nombre");
-            return $this->extraer_todos();
-        }
+    public function findAll(): ?array { 
         $desplazamiento = 0;
         $this->num_paginas = $this->numero_paginas("SELECT COUNT(*) FROM entidad");
-        if (($_GET['num_pagina']) <= $this->num_paginas) {
-            $num_pagina = intval($_GET['num_pagina']);
+        $num_pagina = $_GET['num_pagina'] ?? 1;
+        if (($num_pagina) <= $this->num_paginas) {
+            $num_pagina = intval($num_pagina);
             $desplazamiento = ($num_pagina-1) * FILAS_PAGINA;
         }
         //file_put_contents("log.txt", "deplazamiento: ". $num_filas. "num paginas: ". $numero_paginas. " \n" , FILE_APPEND);
@@ -53,6 +51,10 @@ class EntidadRepository {
             }
         }    
         return $this->extraer_todos();    
+    }
+    public function listReducida(): ?array{    
+        $this->conexion->consulta ("SELECT id_entidad, Nombre FROM entidad ORDER BY Nombre");
+        return $this->extraer_todos();
     }
     public function extraer_registro(): ?Entidad {
         return ($entidad = $this->conexion->extraer_registro()) ? Entidad::fromArray($entidad):null;
@@ -76,8 +78,7 @@ class EntidadRepository {
             $valor_escapado = addslashes($valor);//esto es por si el valor que inserta el usuario en el formulario lleva 'xxx' le pone \'xxx\' lo escapa, si no lo escapara no se insertaria correctamente porque confundiria las 'xxx' con los delimitadores de campo de la consulta sql
             $entidad['entidad'][$indice] = $valor_escapado;
         }
-        //echo "<br/>";
-        //print_r($entidad['entidad']);
+
         $values = implode("', '", $entidad['entidad']);$fields = implode(',', array_keys($entidad['entidad']));
         $this->conexion->consulta ("INSERT INTO entidad ($fields) VALUES ('$values')");
 

@@ -72,6 +72,10 @@ Router::add('GET', '/nuevo_alquiler', function() {return (new AlquilerController
 Router::add('POST', '/nuevo_alquiler', function () {return (new AlquilerController())->save();});
 Router::add('GET', '/nuevo_alquiler/:id', function($id) {return (new AlquilerController())->edit($id);});
 Router::add('GET', '/borrar_alquiler/:id', function($id){return (new AlquilerController())->delete($id);});
+Router::add('GET', '/analisis_alquileres', function(){return (new AlquilerController())->analizar();});
+Router::add('GET', '/detalles_alquiler/:id', function($id) {return (new AlquilerController())->detalles_alquiler($id);});
+Router::add('GET', '/total_alquileres_vehiculo', function() {return (new AlquilerController())->totalAlquileresVehiculo();});
+
 //ampliaciones alquiler
 Router::add('POST', '/nueva_ampliacion_alquiler', function () {return (new AmpliacionAlquilerController())->save();});
 Router::add('GET', '/editar_ampliacion_alquiler/:id', function($id) {return (new AmpliacionAlquilerController())->edit($id);});
@@ -81,7 +85,7 @@ Router::add('POST', '/nuevo_cobro_alquiler', function () {return (new CobroAlqui
 Router::add('GET', '/editar_cobro_alquiler/:id', function($id) {return (new CobroAlquilerController())->edit($id);});
 Router::add('GET', '/borrar_cobro_alquiler/:id', function($id){return (new CobroAlquilerController())->delete($id);});
 //gastos alquiler
-Router::add('POST', '/nueva_gasto_alquiler', function () {return (new GastoAlquilerController())->save();});
+Router::add('POST', '/nuevo_gasto_alquiler', function () {return (new GastoAlquilerController())->save();});
 Router::add('GET', '/editar_gasto_alquiler/:id', function($id) {return (new GastoAlquilerController())->edit($id);});
 Router::add('GET', '/borrar_gasto_alquiler/:id', function($id){return (new GastoAlquilerController())->delete($id);});
 

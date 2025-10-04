@@ -18,37 +18,37 @@
                     <label for="tipo">Tipo cuota</label>
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="importe" >Fecha inicio:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Fecha inicio:</label>
                     <input class="cuadro_text" type="date" name="cuota[inicio]" id="inicio" placeholder="Fecha inicio" value = "<?= $cuota->getinicio()?>">
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="duracion" >Duracion:</label>&nbsp
+                    <label class="etiqueta" for="duracion" >Duracion:</label>
                     <input class="cuadro_text" type="number" name="cuota[duracion]" id="duracion" placeholder="Meses" value = "<?= $cuota->getduracion()?>">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <label class="etiqueta" for="cuota" >Cuota:</label>&nbsp
+                    <label class="etiqueta" for="cuota" >Cuota:</label>
                     <input class="cuadro_text" type="text" name="cuota[cuota]" id="cuota" value = "<?= $cuota->getcuota()?>">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="totalPagar" >Total pagar:</label>&nbsp
+                    <label class="etiqueta" for="totalPagar" >Total pagar:</label>
                     <input class="cuadro_text" type="text" name="cuota[totalPagar]" id="totalPagar" value = "<?= $cuota->gettotalPagar()?>">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="pagoFinal" >Pago final:</label>&nbsp
+                    <label class="etiqueta" for="pagoFinal" >Pago final:</label>
                     <input class="cuadro_text" type="text" name="cuota[pagoFinal]" id="pagoFinal" value = "<?= $cuota->getpagoFinal()?>">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="entrada" >Entrada:</label>&nbsp
+                    <label class="etiqueta" for="entrada" >Entrada:</label>
                     <input class="cuadro_text" type="text" name="cuota[entrada]" id="entrada" value = "<?= $cuota->getentrada()?>">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="fianza" >Fianza:</label>&nbsp
+                    <label class="etiqueta" for="fianza" >Fianza:</label>
                     <input class="cuadro_text" type="text" name="cuota[fianza]" id="fianza" value = "<?= $cuota->getfianza()?>">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="km" >Kilometros:</label>&nbsp
+                    <label class="etiqueta" for="km" >Kilometros:</label>
                     <input class="cuadro_text" type="number" name="cuota[km]" id="km" value = "<?= $cuota->getkm()?>">
                 </div>
             </div>

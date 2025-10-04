@@ -53,18 +53,32 @@ class Movimiento {
         return $this->terminado;
     }    
     public static function fromArray(array $data): Movimiento {
-        $modelo_envia = duplicar_tabla (CAMPOS_ENVIA_MOVIMIENTO, $data);//para leer datos de la entidad que envia
-        $modelo_recibe = duplicar_tabla(CAMPOS_RECIBE_MOVIMIENTO, $data);//para leer datos de la entidad que recibe
-        $modelo_propietario = duplicar_tabla(CAMPOS_PROPIETARIO_VEHICULO_MOVIMIENTO, $data);//para leer datos de la entidad que es propietaria del vehiculo
-        $modelo_vehiculo = duplicar_tabla(CAMPOS_VEHICULO, $data);//para leer datos del vehiculo 
-        $modelo = duplicar_tabla(CAMPOS_MOVIMIENTO, $data);
-        //var_dump($data);
-        $propietario = new Entidad($modelo_propietario['id_entidad'], $modelo_propietario['CIF_DNI'], $modelo_propietario['nombrePropietario'], $modelo_propietario['Observaciones'], $modelo_propietario['Direccion'], $modelo_propietario['Telefono'], $modelo_propietario['Email']);
-        $envia = new Entidad ($modelo_envia['id_entidad'], $modelo_envia['CIF_DNI'], $modelo_envia['nombreEnvia'], $modelo_envia['Observaciones'], $modelo_envia['Direccion'], $modelo_envia['Telefono'], $modelo_envia['Email']);
-        $recibe = new Entidad ($modelo_recibe['id_entidad'], $modelo_recibe['CIF_DNI'], $modelo_recibe['nombreRecibe'], $modelo_recibe['Observaciones'], $modelo_recibe['Direccion'], $modelo_recibe['Telefono'], $modelo_recibe['Email']);
-        $vehiculo = new Vehiculo($modelo_vehiculo['id_vehiculo'], $modelo_vehiculo['Matricula'], $modelo_vehiculo['Bastidor'], $modelo_vehiculo['Marca_modelo'], $modelo_vehiculo['Km'], $modelo_vehiculo['Fecha_matricula'], $modelo_vehiculo['Observaciones'], $modelo_vehiculo['Combustible'], 
-                            $modelo_vehiculo['Fecha_itv'], $modelo_vehiculo['Estado'], $modelo_vehiculo['Clase'], $modelo_vehiculo['propietario'], $modelo_vehiculo['Prox_itv'], $propietario);
-        return new Movimiento ($modelo['idMovimiento'], $modelo['envia'], $modelo['recibe'], $modelo['fecha'], $modelo['concepto'], $modelo['vehiculo'], $modelo['observaciones'], 
-                               $modelo['totalEntregas'], $modelo['totalDevoluciones'], $modelo['diferencia'], $modelo['terminado'], $envia, $recibe, $vehiculo); 
+        
+        $envia = null;
+        $recibe = null;
+        $vehiculo = null;
+        //solo se crean objetos para meter dentro de movimiento si en el SELECT se lee algun campo que pertenece a una tabla diferente de movimientos
+        if (array_key_exists('nombreEnvia', $data)){//compruebo si existe el campo nombreEnvia porque en el SELECT no leo envia (id de envia), solo leo nombreEnvia
+            $envia = new Entidad ($data['id_entidad']??null, $data['CIF_DNI']??null, $data['nombreEnvia']??null, $data['Observaciones']??null, $data['Direccion']??null, 
+                                $data['Telefono']??null, $data['Email']??null);
+        }
+        if (array_key_exists('nombreRecibe', $data)){//compruebo si existe el campo nombreRecibe porque en el SELECT no leo envia (id de recibe), solo leo nombreRecibe
+            $recibe = new Entidad ($data['id_entidad']??null, $data['CIF_DNI']??null, $data['nombreRecibe']??null, $data['Observaciones']??null, $data['Direccion']??null, 
+                                $data['Telefono']??null, $data['Email']??null);
+        }
+        if (array_key_exists('Marca_modelo', $data)){//compruebo si existe el campo Marca_modelo porque en el SELECT no leo envia (vehiculo), solo leo Marca_modelo
+            $propietario = null;
+            if (array_key_exists('nombrePropietario', $data)){//si existe el propietario creo una entidad para el vehiculo
+                $propietario = new Entidad($data['id_entidad']??null, $data['CIF_DNI']??null, $data['nombrePropietario']??null, $data['Observaciones']??null, $data['Direccion']??null,
+                                 $data['Telefono']??null, $data['Email']??null);
+            }
+
+            $vehiculo = new Vehiculo($data['id_vehiculo']??null, $data['Matricula']??null, $data['Bastidor']??null, $data['Marca_modelo']??null, $data['Km']??null, 
+                                $data['Fecha_matricula']??null, $data['Observaciones']??null, $data['Combustible']??null, $data['Fecha_itv']??null, $data['Estado']??null, 
+                                $data['Clase']??null, $data['propietario']??null, $data['Prox_itv']??null, $propietario);
+        }
+        return new Movimiento ($data['idMovimiento']??null, $data['envia']??null, $data['recibe']??null, $data['fecha']??null, $data['concepto']??null, 
+                                $data['vehiculo']??null, $data['observaciones']??null, $data['totalEntregas']??null, $data['totalDevoluciones']??null,
+                                $data['diferencia']??null, $data['terminado']??null, $envia, $recibe, $vehiculo); 
     }
 }

@@ -9,19 +9,19 @@
                     <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" value="<?=quitaEspecialChar($gasto->getTipo())?>" required>
                 </div>        
                 <div class="col-md-4">
-                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Importe:</label>
                     <input class="cuadro_text" type="texto" name="gasto[importe]" id="importe" placeholder="Importe" value="<?=$gasto->getImporte()?>" required>
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="importe" >Fecha:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Fecha:</label>
                     <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" value="<?=$gasto->getFecha()?>" required>
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="paga_otro" >Paga otro:</label>&nbsp
+                    <label class="etiqueta" for="paga_otro" >Paga otro:</label>
                     <input class="cuadro_text" type="checkbox" name="gasto[paga_otro]" id="paga_otro" <?=($gasto->getPaga_otro()) ? 'checked' : ''?>>
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="pagado" >Pagado:</label>&nbsp
+                    <label class="etiqueta" for="pagado" >Pagado:</label>
                     <input class="cuadro_text" type="checkbox" name="gasto[pagado]" id="pagado" <?=($gasto->getPagado()==1) ? 'checked' : ''?>>
                 </div>
                 <div class="col-md-6">

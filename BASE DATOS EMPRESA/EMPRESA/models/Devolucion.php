@@ -30,7 +30,7 @@ class Devolucion{
         return $this->movimiento;
     }
     public static function fromArray(array $data): Devolucion {
-        $modelo = duplicar_tabla (CAMPOS_DEVOLUCION, $data); 
-        return new Devolucion ($modelo['idDevolucion'], $modelo['fecha'], $modelo['importe'], $modelo['bancoEnvia'], $modelo['bancoRecibe'], $modelo['observaciones'], $modelo['movimiento']);  
+        return new Devolucion ($data['idDevolucion']??null, $data['fecha']??null, $data['importe']??null, $data['bancoEnvia']??null, $data['bancoRecibe']??null, $data['observaciones']??null,
+                                $data['movimiento']??null);  
     }
 }

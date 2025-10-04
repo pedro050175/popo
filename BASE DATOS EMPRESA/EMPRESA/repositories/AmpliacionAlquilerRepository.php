@@ -79,5 +79,16 @@ class AmpliacionAlquilerRepository{
         $sql = "DELETE FROM ampliaciones WHERE idAmpliacion=:id"; 
         $this->conexionPDO->consulta($sql, $parametros);
     }
+    public function ampliacionesAlquilerFecha($alquiler){
+        $parametros = [
+        ':desde' => $_GET['desde'],
+        ':hasta' => $_GET['hasta'],
+        ':alquiler' => $alquiler
+        ];
+        $sql = "SELECT   ganancia, fechaInicio, comisionComercial FROM ampliaciones 
+                                            WHERE fechaInicio BETWEEN :desde AND :hasta AND alquiler = :alquiler";
+        $this->conexionPDO->consulta($sql, $parametros);        
+        return $this->conexionPDO->extraer_todos();       
+    }
 }
 ?>

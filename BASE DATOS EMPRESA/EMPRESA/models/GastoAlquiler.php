@@ -5,7 +5,6 @@ require_once "Funciones.php";
 class GastoAlquiler{
     function __construct(private ?int $idGasto, private ?string $tipo, private ?float $importe, private ?string $fecha, private ?int $pagaOtro, private ?int $alquiler, private ?int $pagado, private ?string $observaciones){}
     
-    
     public function getidGasto(): ?int {
         return $this->idGasto;
     }
@@ -31,11 +30,7 @@ class GastoAlquiler{
         return $this->observaciones;
     }
     public static function fromArray(array $data): GastoAlquiler {
-        
-        $modelo = duplicar_tabla(CAMPOS_GASTO_ALQUILER, $data);
-        //var_dump($data);
-        return new GastoAlquiler ($modelo['idGasto'], $modelo['tipo'], $modelo['importe'], $modelo['fecha'], $modelo['pagaOtro'], $modelo['alquiler'],  $modelo['pagado'], $modelo['observaciones']); 
+        return new GastoAlquiler ($data['idGasto']??null, $data['tipo']??null, $data['importe']??null, $data['fecha']??null, $data['pagaOtro']??null, $data['alquiler']??null, 
+                                $data['pagado']??null, $data['observaciones']??null); 
     }
-
-
 }

@@ -2,7 +2,7 @@
         <div class="alert alert-danger" role="alert">
             <?= htmlspecialchars($error) ?>
         </div>
-    <?php endif; ?>
+<?php endif; ?>
 <div>
     <form action="<?= DIRECTORIO?>analisis_movimientos" method = "GET">
         <fieldset class="mi-fieldset">
@@ -20,7 +20,7 @@
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>movimientos?num_pagina=1';">
                 <button type="reset" class="boton_link">Borrar</button>
                 <button type="submit" class="boton_link">Analizar</button>
-                <input type="hidden" name="num_pagina" value="1">
+                
         </fieldset>
     </form>
 </div>

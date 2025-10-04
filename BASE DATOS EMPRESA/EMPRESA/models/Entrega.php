@@ -29,9 +29,9 @@ class Entrega {
     public function getmovimiento(): ?int {
         return $this->movimiento;
     }
-    public static function fromArray(array $data): Entrega {
-        $modelo = duplicar_tabla (CAMPOS_ENTREGA, $data); 
-        return new Entrega ($modelo['idEntrega'], $modelo['fecha'], $modelo['importe'], $modelo['bancoEnvia'], $modelo['bancoRecibe'], $modelo['observaciones'], $modelo['movimiento']); 
+    public static function fromArray(array $data): Entrega { 
+        return new Entrega ($data['idEntrega']??null, $data['fecha']??null, $data['importe']??null, $data['bancoEnvia']??null, $data['bancoRecibe']??null, $data['observaciones']??null, 
+                            $data['movimiento']??null); 
     }
 
 }

@@ -14,4 +14,12 @@ class Pages {
         require_once "pages/footer.php";
 
     }
+    public function renderNoHeader(string $pageName, ?array $params = null){//para cuando la paquina la llama con fetch no tiene que llevar header ni footer
+        if ($params != null) {
+            foreach ($params as $name => $value) {
+                $$name = $value;      
+            }
+        }
+        require_once "pages/$pageName.php";
+    }
 }

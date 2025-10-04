@@ -21,14 +21,14 @@ class Router {
         
         $action = preg_replace('/[?].+/','',$action); //1º elimino todo lo que hay en la url al encontrar un ? porque detras de ? vienen parametros que no puedo usar para acceder a la tabla routes
         
-        //file_put_contents("log.txt", "ruta 2º limpiada: ".$action."\n" , FILE_APPEND);
+        //file_put_contents("log.txt", "ruta 1º limpiada: ".$action."\n" , FILE_APPEND);
         $param = null;
         preg_match('/[0-9]+$/', $action, $match);//busca la expresion regular (numeros uno o mas veces que se repiten hasta el final) en action y lo que en coincida con la expresion lo guarda en match
         if (!empty($match)) { //si hay parametro lo busca en action y lo reemplaza por :id que es lo que hay en la tabla routes, sino no encuentra la funcion que guarado con add  [GET][action]
             $param = $match[0];
             $action = preg_replace('/'.$match[0].'/',':id',$action);
         } 
-        //file_put_contents("log.txt", "ruta 1º limpiada: ".$action."\n" , FILE_APPEND);       
+        //file_put_contents("log.txt", "ruta 2º limpiada: ".$action."\n" , FILE_APPEND);       
         //para quitar de la URL los parametros ?campo=valor
         
         //file_put_contents("log.txt", "PARAMETRO: ".$param."\n" , FILE_APPEND);

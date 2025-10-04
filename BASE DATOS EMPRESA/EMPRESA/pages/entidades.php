@@ -4,7 +4,6 @@
             <form action="<?= DIRECTORIO ?>entidades" method="get" class="d-flex">
                 <input type="search" name="buscar_dnicif" class="form-control me-2" id="buscar_dnicif" placeholder="Buscar DNI/CIF">
                 <input type="search" name="buscar_nombre" class="form-control me-2" id="busca_nombre" placeholder="Buscar nombre">
-                <input type="hidden" name="num_pagina"   class="form-control me-2" id="num_pagina" value="1"><!--hay que poner el num de pagina en la URL para que no falle en metodo findAll del repository ya que da por echo que hay un $_GET['num_apgina'-->
                 <button type="submit" class="boton_submit">Buscar</button>
             </form>
         </div>
@@ -63,17 +62,16 @@
         <div class="row mb-3">       
             <div class="col-md-2"><em class="etiqueta">Entidades: <?=count($entidades)?></em></div>
             <!--todo esto que sigue es para la paginacion-->
-            
-            <div class="col-md-6"><em class="etiqueta">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></em></div>
-            
-            <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
-            <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
-            <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
-            
-            <div class="col-md-4"><a href="<?= DIRECTORIO ?>entidades?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>">[Atras</a>
-            <a href="<?= DIRECTORIO ?>entidades?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>">Siguiente]</a>
-            <a href="<?= DIRECTORIO ?>entidades?num_pagina=1&ordenar=<?=$ordenar?>">[Inicio</a>
-            <a href="<?= DIRECTORIO ?>entidades?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
+            <?php if (isset($_GET['num_pagina'])) :?>
+                <div class="col-md-6"><em class="etiqueta">Pagina: <?=$_GET['num_pagina']?> de: <?= $num_paginas?></em></div>                
+                <?php $_GET['num_pagina'] < $num_paginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
+                <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
+                <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
+                <div class="col-md-4"><a href="<?= DIRECTORIO ?>entidades?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>">[Atras</a>
+                <a href="<?= DIRECTORIO ?>entidades?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>">Siguiente]</a>
+                <a href="<?= DIRECTORIO ?>entidades?num_pagina=1&ordenar=<?=$ordenar?>">[Inicio</a>
+                <a href="<?= DIRECTORIO ?>entidades?num_pagina=<?=$num_paginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
+            <?php endif ;?>
         </div>
     </div>  
 </div>

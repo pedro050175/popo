@@ -1,26 +1,4 @@
 <?php var_dump($cuotas); ?>
 <?=$destacada?>
 
-
-    $esOtraEntidad = false;
-    $fin = false;
-    $movimiento = current($movimientos);
-    $entidadInicial = $movimiento->getenviaInfo()->getNombre(); 
-    $total = $movimiento->getdiferencia();
-    
- 
-            if (!next($movimientos)) {
-                $fin = true;
-            }else {
-                $movimiento = current($movimientos);
-                if ($movimiento->getenviaInfo()->getNombre() != $entidadInicial){
-                    $esOtraEntidad = true;
-                    echo ("Total deuda: $debe");
-                    $debe = 0;
-                } else {
-                    $debe += $movimiento->getdiferencia();
-                }
-            }
-
-       
-?>
+$vehiculo->getdatos_propietario()==null ? '' : 

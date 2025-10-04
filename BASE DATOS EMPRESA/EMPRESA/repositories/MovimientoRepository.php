@@ -11,6 +11,7 @@ class MovimientoRepository{
 
     function __construct(){
         $this->conexionPDO = new BaseDatosPDO();
+        $this->numPaginas = 1;
     }
     public function setnumpaginas(int $paginas){
         $this->numPaginas = $paginas;
@@ -26,13 +27,7 @@ class MovimientoRepository{
         
         return $numeroPaginas;
     }
-    public function findAll($invertir=false): ?array {
-        $desplazamiento = 0;
-        $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM movimientos");
-        if (($_GET['num_pagina']) <= $this->numPaginas) {
-            $numPagina = intval($_GET['num_pagina']);
-            $desplazamiento = ($numPagina-1) * FILAS_PAGINA;
-        }
+    public function findAnalisis ($invertir){
         if ($invertir) {
             $recibe = $_GET['envia'] ?? null;
             $envia = $_GET['recibe'] ?? null;
@@ -40,8 +35,8 @@ class MovimientoRepository{
             $envia = $_GET['envia'] ?? null;
             $recibe = $_GET['recibe'] ?? null;
             }
-        if (($envia) or ($recibe) and ($invertir)) { //listado para analizar no lee los movimientos terminados
-            $this->conexionPDO->consulta ("SELECT   M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+        $this->conexionPDO->consulta ("SELECT M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, 
+                                              V.Marca_modelo, C.Nombre AS nombrePropietario, 
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
@@ -62,10 +57,16 @@ class MovimientoRepository{
                                                     FROM devoluciones
                                                     GROUP BY movimiento
                                                 ) D ON M.idMovimiento = D.movimiento
-                                            WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%' and  M.terminado is null 
-                                            ORDER BY M.fecha desc");//muestra los no terminados (terminado==null)
-        } else if (($envia) or ($recibe)) {//listado para buscar
-                $this->conexionPDO->consulta ("SELECT   M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+                                            WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%' and  M.terminado = 0 
+                                            ORDER BY M.fecha desc");//muestra los no terminados (terminado=0)
+        return $this->extraer_todos(); 
+    }
+    public function findAll(): ?array {
+        
+        $envia = $_GET['envia'] ?? null;
+        $recibe = $_GET['recibe'] ?? null;
+        if (($envia) or ($recibe)) {//listado para buscar se muestran terminados y no terminados
+                $this->conexionPDO->consulta ("SELECT M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
@@ -88,10 +89,10 @@ class MovimientoRepository{
                                                 ) D ON M.idMovimiento = D.movimiento
                                             WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%'
                                             ORDER BY M.fecha desc");
-            } else {  //listado buscar 
+            } else {  //listado buscar se muestran terminados y no terminados
                 $buscar = $_GET['vehiculo_id'] ?? null;
                 if ($buscar){
-                    $this->conexionPDO->consulta ("SELECT   M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+                    $this->conexionPDO->consulta ("SELECT  M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
@@ -114,8 +115,15 @@ class MovimientoRepository{
                                                 ) D ON M.idMovimiento = D.movimiento
                                                 WHERE M.idMovimiento LIKE '%$buscar%' OR V.Marca_modelo LIKE '%$buscar%' OR M.concepto LIKE '%$buscar%'               
                                             ORDER  BY m.fecha DESC");
-                            } else {//por defecto
-                                 $this->conexionPDO->consulta ("SELECT   M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+                            } else {//por defecto, se muestran terminados y no terminados
+                                    $desplazamiento = 0;
+                                    $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM movimientos");
+                                    $num_pagina = $_GET['num_pagina'] ?? 1;
+                                    if (($num_pagina) <= $this->numPaginas) {
+                                        $numPagina = intval($num_pagina);
+                                        $desplazamiento = ($numPagina-1) * FILAS_PAGINA;
+                                    }
+                                 $this->conexionPDO->consulta ("SELECT  M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia

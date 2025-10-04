@@ -33,7 +33,7 @@
         ?>
         <div class="col-md-3">
             <label for="select-envia" class="form-label">Envia</label>
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-1">
                 <select  name="data[movimiento][envia]" class="form-select" id="select_envia" required>
                     <option value="" disabled <?= $enviaActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
                     <?php foreach ($lista as $id => $entidad): ?>
@@ -47,7 +47,7 @@
         ?>
         <div class="col-md-3">
             <label for="select-recibe" class="form-label">Recibe</label>
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-1">
                 <select name="data[movimiento][recibe]" class="form-select" id="select_recibe" required>
                     <option value="" disabled <?= $recibeActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                     <?php foreach ($lista as $id => $entidad): ?>
@@ -82,7 +82,7 @@
         ?>
         <div class="col-md-6">
             <label for="select-vehiculo" class="form-label">Vehiculo</label>
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-1">
                 <select name="data[movimiento][vehiculo]" class="form-select" id="select_vehiculo">
                     <option disabled <?= $vehiculoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                     <?php foreach ($listaVehiculos as $id => $vehiculo): ?>
@@ -92,7 +92,7 @@
             </div>
         </div>
         <div class="col-md-2">
-            <label class="etiqueta" for="terminado" >Finalizado:</label>&nbsp
+            <label class="etiqueta" for="terminado" >Finalizado:</label>
             <input class="cuadro_text" type="checkbox" name="data[movimiento][terminado]" id="terminado" <?=isset($movimiento) ? (($movimiento->getterminado()==1) ? 'checked' : '') : '' ?>><!--si estoy editando existe movimiento evalua esto ($movimiento->getterminado()==1) ? 'checked' : '', por eso esta todo entre () y si no estoy editando pone '' que son los : '' del final-->
         </div>         
     </div>
@@ -106,27 +106,27 @@
             <legend class="mi-legend">Nueva entrega</legend>
             <div class="row">       
                 <div class="col-md-6">
-                    <label class="etiqueta" for="fecha" >Fecha:</label>&nbsp
+                    <label class="etiqueta" for="fecha" >Fecha:</label>
                     <input class="cuadro_text" type="date" name="entrega[fecha]" id="entrega_fecha" placeholder="Fecha" required>
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Importe:</label>
                     <input class="cuadro_text" type="text" name="entrega[importe]" id="entrega_importe" placeholder="Importe" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label class="etiqueta" for="banco_envia" >Banco envia:</label>&nbsp
+                    <label class="etiqueta" for="banco_envia" >Banco envia:</label>
                     <input size=60 class="cuadro_text" type="text" name="entrega[bancoEnvia]" id="entrega_banco_envia" placeholder="Banco envia">
                 </div>
                 <div class="col-md-6">
-                    <label class="etiqueta" for="banco_recibe" >Banco envia:</label>&nbsp
+                    <label class="etiqueta" for="banco_recibe" >Banco envia:</label>
                     <input size=60 class="cuadro_text" type="text" name="entrega[bancoRecibe]" id="entrega_banco_recibe" placeholder="Banco recibe">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <label class="etiqueta" for="observaciones" >Observaciones:</label>&nbsp
+                    <label class="etiqueta" for="observaciones" >Observaciones:</label>
                     <input size=60 class="cuadro_text" type="text" name="entrega[observaciones]" id="entrega_observaciones" placeholder="Observaciones">
                 </div>
                 <div class="col-md-4">

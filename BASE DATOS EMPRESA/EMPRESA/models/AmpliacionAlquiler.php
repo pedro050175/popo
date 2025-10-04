@@ -5,8 +5,8 @@ require_once "Funciones.php";
 
 class AmpliacionAlquiler {
     
-    function __construct (private ?int $idAmpliacion, private ?string $fechaInicio, private ?string $fechaFin, private ?int $kilometros, private ?string $dias, private ?int $precio,  
-                            private ?int $comisionComercial, private ?int $ganancia, private ?string $observaciones, private ?int $alquiler){}
+    function __construct (private ?int $idAmpliacion, private ?string $fechaInicio, private ?string $fechaFin, private ?int $kilometros, private ?int $dias, private ?float $precio,  
+                            private ?float $comisionComercial, private ?float $ganancia, private ?string $observaciones, private ?int $alquiler){}
 
     public function getidAmpliacion(): ?int {
         return $this->idAmpliacion;
@@ -23,13 +23,13 @@ class AmpliacionAlquiler {
     public function getdias (): ?int {
         return $this->dias;
     }
-    public function getprecio (): ?int {
+    public function getprecio (): ?float {
         return $this->precio;
     } 
-    public function getcomisionComercial (): ?int {
+    public function getcomisionComercial (): ?float {
         return $this->comisionComercial;
     }
-    public function getganancia(): ?int {
+    public function getganancia(): ?float {
         return $this->ganancia;
     }
     public function getobservaciones(): ?string {
@@ -39,8 +39,7 @@ class AmpliacionAlquiler {
         return $this->alquiler;
     }
     public static function fromArray(array $data): AmpliacionAlquiler {
-        $modelo = duplicar_tabla (CAMPOS_AMPLIACION, $data);
-        return new AmpliacionAlquiler ($modelo['idAmpliacion'], $modelo['fechaInicio'], $modelo['fechaFin'], $modelo['dias'], $modelo['kilometros'], $modelo['precio'], $modelo['ganancia'], 
-                                        $modelo['comisionComercial'], $modelo['observaciones'], $modelo['alquiler']); 
+        return new AmpliacionAlquiler ($data['idAmpliacion']??null, $data['fechaInicio']??null, $data['fechaFin']??null, $data['kilometros']??null, $data['dias']??null, $data['precio']??null,  
+                                        $data['comisionComercial']??null, $data['ganancia']??null, $data['observaciones']??null, $data['alquiler']??null); 
     }
 }

@@ -57,13 +57,14 @@ class CuotaVehiculo {
         return $this->observaciones;
     }
     public static function fromArray(array $data): CuotaVehiculo {
-        $modelo_propietario = duplicar_tabla (CAMPOS_ENTIDAD, $data);
-        $modelo = duplicar_tabla(CAMPOS_CUOTA_VEHICULO, $data);
-
-        $propietario = new Entidad ($modelo_propietario['id_entidad'], $modelo_propietario['CIF_DNI'], $modelo_propietario['Nombre'], $modelo_propietario['Observaciones'], 
-                                    $modelo_propietario['Direccion'], $modelo_propietario['Telefono'], $modelo_propietario['Email']);
-        return new CuotaVehiculo ($modelo['idCuota'], $modelo['inicio'], $modelo['duracion'], $modelo['id_vehiculo'], $modelo['tipo'], $modelo['cuota'], $modelo['totalPagar'], $modelo['pagoFinal'], 
-                          $modelo['entrada'], $modelo['fianza'], $modelo['km'], $modelo['kmAno'], $modelo['financiera'], $modelo['id_entidad'], $modelo['observaciones'], $propietario);  
+//solo se crean objetos para meter dentro de cuota si en el SELECT se lee algun campo que pertenece a una tabla diferente de cuota
+        if (isset($data['Nombre'])){
+            $propietario = new Entidad ($data['id_entidad']??null, $data['CIF_DNI']??null, $data['Nombre']??null, $data['Observaciones']??null, 
+            $data['Direccion']??null, $data['Telefono']??null, $data['Email']??null);
+        }
+        return new CuotaVehiculo ($data['idCuota']??null, $data['inicio']??null, $data['duracion']??null, $data['id_vehiculo']??null, $data['tipo']??null, $data['cuota']??null, 
+                                    $data['totalPagar']??null, $data['pagoFinal']??null, $data['entrada']??null, $data['fianza']??null, $data['km']??null, $data['kmAno']??null, 
+                                    $data['financiera']??null, $data['id_entidad']??null, $data['observaciones']??null, $propietario);  
     }
 
 }
