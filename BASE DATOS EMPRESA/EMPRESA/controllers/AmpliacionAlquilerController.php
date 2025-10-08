@@ -12,7 +12,6 @@ class AmpliacionAlquilerController {
         $this->ampliacionAlquilerRepository = new AmpliacionAlquilerRepository();
         $this->pages = new Pages();
     }
-
 public function edit ($id){
     $ampliacion = $this->ampliacionAlquilerRepository->read($id);
     $this->pages->render('editar_ampliacion_alquiler', ['ampliacion' => $ampliacion]); 
@@ -36,11 +35,6 @@ public function delete(int $id): void {
     header('Location: '.DIRECTORIO.'nuevo_alquiler/'.$alquiler);//cargo el mismo vehiculo que estaba editando    
     exit; 
 }
-    
-    
-    
-
-
 
 }
 ?>

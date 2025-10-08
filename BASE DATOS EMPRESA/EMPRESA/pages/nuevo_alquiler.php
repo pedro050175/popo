@@ -133,7 +133,7 @@
                 </div>
             </div>
             <?php
-                $clienteActual = isset($alquiler) ? $alquiler->getempresa() : '';//estoy editando un alquiler
+                $clienteActual = isset($alquiler) ? $alquiler->getcliente() : '';//estoy editando un alquiler
                 $clienteActual = $clienteActual!=0 ? $clienteActual : '';
                 foreach ($entidades as $entidad){
                     $lista[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
@@ -144,7 +144,7 @@
                     <select name="data[cliente]" class="form-select" id="select_cliente" 
                             required
                             oninvalid="document.getElementById('clienteError').style.display='block';"
-                            oninput="document.getElementById('clienteError').style.display='none';">
+                            oninput="document.getElementById('clienteError').style.display='none';"><!--esto es por si no elige un cliente, oninvalid es evento de no elegido (clienteError esta definido abajo) y oninput es evento de que se ha eligido para quitar el error-->
                         <option value = "" disabled <?= $clienteActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                         <?php foreach ($lista as $id => $entidad): ?>
                             <option value="<?= $id?>" <?= $id == $clienteActual ? 'selected' : '' ?>><?= $entidad ?></option>

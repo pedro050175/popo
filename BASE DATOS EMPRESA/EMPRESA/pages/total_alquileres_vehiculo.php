@@ -2,10 +2,11 @@
 header("Content-Type: text/plain; charset=UTF-8");
 
 
-print_r($alquileresUnionAmpliaciones);
-echo "</br>";
-//print_r($ampliaciones);
+//print_r($alquileresVehiculo);
 
-echo "Hola desde PHP";
+//echo "</br>";
+//print_r($tabla);
+
+//echo "Hola desde PHP";
 
 ?>

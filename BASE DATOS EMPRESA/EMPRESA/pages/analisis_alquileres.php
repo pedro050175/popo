@@ -10,11 +10,11 @@
         <div class="row">
             <div class="col-md-3">
                 <label for="desde" class="etiqueta">Desde:</label>
-                <input type="date" name="desde" class="cuadro_text" id="desde" value = "<?= $_GET['desde'] ?? ''?>">
+                <input type="date" name="desde" class="cuadro_text" id="desde" value = "<?= $_GET['desde'] ?? ''?>" required>
             </div>
             <div class="col-md-3">
                 <label for="hasta" class="etiqueta">Hasta:</label>
-                <input type="date" name="hasta" class="cuadro_text" id="hasta" value = "<?= $_GET['hasta'] ?? ''?>">
+                <input type="date" name="hasta" class="cuadro_text" id="hasta" value = "<?= $_GET['hasta'] ?? ''?>" required>
             </div>
             <?php
                 $vehiculoActual = $_GET['cocheId'] ?? '';
@@ -25,12 +25,12 @@
             <div class="col-md-4">
                 <label for="select_vehiculo" class="form-label">Vehiculo</label><!--label fuera del floating para que no se solape con el cuadro de texto -->
                 <div class="form-floating mb-1">
-                    <select name="cocheId" 
+                    <select name="cocheId[]" multiple
                             class="form-select" id="select_vehiculo" 
                             required
                             oninvalid="this.setCustomValidity('Por favor selecciona un vehiculo')"
                             oninput="this.setCustomValidity('')"><!--esto hay que ponerlo para que al seleccionar un valor se entere de que has seleccionado y no de error otra vez-->
-                        <option value = "" disabled <?= $vehiculoActual == '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
+                        
                         <?php foreach ($listaVehiculos as $id => $vehiculo): ?><!--el id es un numero y $_GET['cocheId'] es un string y en la comparacion ($id === $vehiculoActual) === dice igual valor y tipo con lo que nucan son iguales hay que poner solo ==--> 
                             <option value="<?= $id?>" <?= $id == $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
                         <?php endforeach; ?>
@@ -41,7 +41,7 @@
             <div class="col-md-6">
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">
                 <button type="reset" class="boton_link">Borrar</button>
-                <button type="submit" class="boton_link">Analizar</button>
+                <button type="submit" class="boton_link" onclick = "validaFechas(this.form.desde.value, this.form.hasta.value)">Analizar</button>
                 <button type="button" class="boton_link" id = "botonMeses">Por meses</button>
             </div>
         </div>
@@ -198,23 +198,40 @@
         if (cont.style.display === "none" || cont.style.display === "") {//si no esta visible ejecuto todo
             var desde = document.getElementById("desde").value;
             var hasta = document.getElementById("hasta").value;
-            var cocheId = document.getElementById("select_vehiculo").value; 
-            if (desde!="" && hasta!="" && cocheId!=""){//compruebo que hayan datos
-                fetch('/mis_pruebas/total_alquileres_vehiculo?desde=' + desde + '&hasta=' + hasta + '&cocheId= ' + cocheId) //ejecutando paso a paso no se ve entrar en el fetch, hay que escribir en console para ver que hace
-                    .then(response => {
-                            console.log("Respuesta HTTP:", response.status);
-                            return response.text()
-                        })
-                    .then(data => {
-                        console.log("Contenido recibido:", data);
-                        cont.innerHTML = data;
-                        cont.style.display = "block"; //muestro los datos
-                        document.getElementById("botonMeses").innerText = "Ocultar datos";//cambio el texto del boton
+            var cocheIds = new Array;
+            var selectVehiculo = document.getElementById("select_vehiculo");
+            for (var i=0; i<selectVehiculo.length; i++){
+                if (selectVehiculo.options[i].selected){
+                    cocheIds.push(selectVehiculo.options[i].value);
+                }
+            }
+            console.log (cocheIds); 
+            let okFechas = validaFechas(desde, hasta);
+            if (desde && hasta && cocheIds.length > 0 && okFechas){//compruebo que hayan datos if (desde) equivale a (desde!="")
+                //fetch('/mis_pruebas/total_alquileres_vehiculo?desde=' + desde + '&hasta=' + hasta + '&coche= ' + coche) para un solo coche metodo GET, paso datos en la URL 
+                fetch('/mis_pruebas/total_alquileres_vehiculo', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        desde: desde,
+                        hasta: hasta,
+                        cocheIds: cocheIds
                     })
-                    .catch(error => {
-                        console.error("Error en fetch:", error);
-                        document.getElementById("contenidoMeses").innerHTML = "Error: " + error;
-                    });
+                })
+                .then(response => {
+                        console.log("Respuesta HTTP:", response.status);
+                        return response.text()
+                    })
+                .then(data => {
+                    console.log("Contenido recibido:", data);
+                    cont.innerHTML = data;
+                    cont.style.display = "block"; //muestro los datos
+                    document.getElementById("botonMeses").innerText = "Ocultar datos";//cambio el texto del boton
+                })
+                .catch(error => {
+                    console.error("Error en fetch:", error);
+                    document.getElementById("contenidoMeses").innerHTML = "Error: " + error;
+                });
             }
         }else {// Si ya está visible → lo ocultamos
                 cont.style.display = "none";

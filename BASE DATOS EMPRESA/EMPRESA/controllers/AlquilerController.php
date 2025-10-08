@@ -75,7 +75,7 @@ class AlquilerController {
         exit; 
     }
     public function analizar(){
-        $vehiculos = $this->vehiculoRepository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'coche' leo todos los vehiculos
+        $vehiculos = $this->vehiculoRepository->cochesAlquilados();//para rellenar el campo de lista desplegable 'coche' leo los coches que se han alquilado
         if (isset($_GET['cocheId'])){//ya se han leido las entidades, 2º vez que pasa por aqui
             $alquileres = $this->alquilerRepository->alquileresVehiculo(); 
             $ids = $this->leer_ids($alquileres);
@@ -100,32 +100,220 @@ class AlquilerController {
     }
     
     public function totalAlquileresVehiculo(){
-        //leo la tabla leida del SELECT, no lo meto en objetos
-        $alquileres = $this->alquilerRepository->totalAlquileresVehiculoTabla();
-        //$alquileresUnionAmpliaciones=[];
-        foreach ($alquileres as $alquiler){
-            $ampliacionesAlquileres[] = $this->ampliacionRepository->ampliacionesAlquilerFecha($alquiler['id_alquiler']);//leo las ampliaciones de todos los alquileres
-            //y aprovecho el foreach para meter los alquileres leidos en una tabla que leevara alquileres y ampliaciones
-            $alquileresUnionAmpliaciones[] = ['fecha' => $alquiler['fechaInicio'], 'ganacia' => $alquiler['ganancia'], 'comision' => $alquiler['comisionComercial']];
+        //se trabaja con la tabla directamente leida del SELECT, no lo convierto en objetos
+        //esto es una tabla con los alquileres de un vehiculo dentro del rango de fechas
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $desde = $input['desde'] ?? null;
+        $hasta = $input['hasta'] ?? null;
+        $cocheIds = $input['cocheIds'] ?? [];
+        
+        //var_dump($desde);
+        foreach ($cocheIds as $id){
+            $datos = $this->alquilerRepository->totalAlquileresVehiculoTabla($desde, $hasta, $id);
+            if (!empty($datos)){ 
+                $alquileresVehiculo[$id]= $datos;
+            } 
         }
-        foreach ($ampliacionesAlquileres as $ampliacionesAlquiler){//ampliacionesAlquileres es una tabla q por cada alquiler tiene sus ampliaciones, [0]->tabla de ampliaciones, [1]->tabla de amplia... y a su vez cada tabla de ampliaciones sera [0]->ampliacion0 [1]->ampliacion1...
-            foreach ($ampliacionesAlquiler as $ampliacion){//el 1º for recorre todas las tablas que contienen ampliaciones y en el 2º recorro esas ampliaciones y cada ampliacion la meto en la tabla union
-                $alquileresUnionAmpliaciones[] = ['fecha' => $ampliacion['fechaInicio'], 'ganacia' => $ampliacion['ganancia'], 'comision' => $ampliacion['comisionComercial']];
+        //resultado de alquileres para dos vehiculos: id=82 (1 alquiler) y id=1 (3 alquileres)
+        //Array (indices asociativo) ( [82] => Array ( [0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 
+        //                              [1] => Array ( [0] => Array ( [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 ) 
+        //                                             [1] => Array ( [ganancia] => 5000.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 555.00 ) 
+        //                                             [2] => Array ( [ganancia] => 2800.00 [fechaInicio] => 2025-10-04 [comisionComercial] => 200.00 ) ) )
+        
+        print_r($alquileresVehiculo);
+        echo "</br>";
+            //leo las ampliaciones de un coche dentro del rango fechas. no puedo leer las ampliaciones de un alquiler porque el alquiler puede que no este entre las fechas pero las ampliaciones si
+        foreach ($cocheIds as $id){
+            $datos = $this->ampliacionRepository->ampliacionesAlquilerCoche($desde, $hasta, $id);
+            if (!empty($datos)){ 
+                $ampliacionesVehiculo[$id] = $datos;
+            }
+        } 
+        //resultado de las ampliaciones del vehiculo con id=1, tiene 3. el vehiculo 82 no tiene ampliaciones
+        //Array (indices asociativo) ( [1] => Array ( [0] => Array ( [ganancia] => 1350.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 100.00 ) 
+        //                                            [1] => Array ( [ganancia] => 1400.00 [fechaInicio] => 2025-09-23 [comisionComercial] => 100.00 ) 
+        //                                            [2] => Array ( [ganancia] => 2000.00 [fechaInicio] => 2025-10-01 [comisionComercial] => 200.00 ) ) ) 
+    
+        print_r($ampliacionesVehiculo);
+        echo "</br>";
+            //concanteno las dos tablas
+        foreach ($cocheIds as $id){
+            $alquileresUnionAmpliaciones[$id] = [...$alquileresVehiculo[$id] ?? [], ...$ampliacionesVehiculo[$id] ?? []];//esto se llama unpacking y solo funciona con arrays con indices numericos, con asociativos no va, habria que usar array_merge()
+            //, con los ... se crea una lista con los elementos y con [...$alquilere] crea una tabla de indices numericos de las dos listas creadas. 
+            //pongo ?? [] porque puede ser que no exita empliaciones para un id, en ese caso ... de null es null y no se crea tabla, ni siquiera null
+        }
+        //resultado de la union de los alquileres y las ampliaciones
+        //Array ( [82] => Array ( [0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 
+        //         [1] => Array ( [0] => Array ( [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 ) 
+        //                        [1] => Array ( [ganancia] => 5000.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 555.00 ) 
+        //                        [2] => Array ( [ganancia] => 2800.00 [fechaInicio] => 2025-10-04 [comisionComercial] => 200.00 ) 
+        //                        [3] => Array ( [ganancia] => 1350.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 100.00 ) 
+        //                        [4] => Array ( [ganancia] => 1400.00 [fechaInicio] => 2025-09-23 [comisionComercial] => 100.00 ) 
+        //                        [5] => Array ( [ganancia] => 2000.00 [fechaInicio] => 2025-10-01 [comisionComercial] => 200.00 ) ) )  
+        //no es necesario ordenar porque cada alquiler/ampliacion se asigan a la tabla meseAñoGanancia por indice asociativo
+                
+        //el año lo saco de la 1º fecha de la tabla Union, como la tabla union es asociativa no puedo situarme con el indice 0,
+        //current devuelve el 1º elemento de la tabla union, que es una tabla de alquileres: en este caso el 82 es una tabla con un alquiler, el alquiler [0] 
+        //([0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 
+        $alquiler = current($alquileresUnionAmpliaciones);
+        $año = substr($alquiler[0]['fechaInicio'], 0, 4);//con [0] me situo en el 1º alquiler de esa tabla y con ['fechaInicio'] en la fecha del alquiler
+        //creo una tabla asociativa con 12 meses, donde el indice de cada mes es ['2025-01' => suma importes alqui/ampliac,...'2025-12' => suma importes alqui/ampliac
+        foreach ($alquileresUnionAmpliaciones as $indice => $fila){//el indice es el id de un coche 82, 1    
+            for ($i=1; $i<=12; $i++){
+                if ($i<10) {
+                    $mesesAñoGanancia [$indice]["$año-0$i"]= 0;//a meses de un solo digito le añado el 0. inicializo a 0 el valor de cada mes
+                }else $mesesAñoGanancia [$indice]["$año-$i"]= 0;
             }
         }
-        //ordenar por fecha
-        $this->ordenarTabla($alquileresUnionAmpliaciones);
+        //resultado de mesesGanacia para los 82 y 1. dos array de 12 elementos (12 meses)
+        //Array ( [82] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 0 [2025-11] => 0 [2025-12] => 0 ) 
+        //         [1] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 0 [2025-11] => 0 [2025-12] => 0 ) )
+        //cojo las ganancias de cada mes y las sumo a el mes correspondiente, todo se consigue por el indice asocietivo [año-mes]
+        //Array ( [82] => Array ( [0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 5400 los sumo con lo que tiene la celda [2025-10]
+        //         [1] => Array ( [0] => Array ( [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 )   4900.00 los sumo con lo que tiene la [2025-09]
+        //                        [1] => Array ( [ganancia] => 5000.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 555.00 ) 5000.00 los sumo con lo que tiene la [2025-09]
+        //                        [2] => Array ( [ganancia] => 2800.00 [fechaInicio] => 2025-10-04 [comisionComercial] => 200.00 ) ....
+        //                        [3] => Array ( [ganancia] => 1350.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 100.00 ) ...
+        //                        [4] => Array ( [ganancia] => 1400.00 [fechaInicio] => 2025-09-23 [comisionComercial] => 100.00 ) ....
+        //                        [5] => Array ( [ganancia] => 2000.00 [fechaInicio] => 2025-10-01 [comisionComercial] => 200.00 ) ) ) 2000.00 los sumo a la [2025-10]
+        foreach ($alquileresUnionAmpliaciones as $id => $alquileresAmpliaciones){//para cada vehiculo/id [82,1] saco su tabla de alquileres/ampiaciones
+            foreach ($alquileresAmpliaciones as $alquiler){//de su tabla de alquileres/ampliaciones: para cada alquiler/ampliacion 
+                $indice = substr($alquiler['fechaInicio'],0,7);//calculo en que mes tengo que insertar la ganancia, lleyendo la fecha y quitandole el dia, de 2025-09-25 me quedo con 2025-09 que me srive de indice
+                $mesesAñoGanancia["$id"][$indice] += $alquiler['ganancia']; //uso el inidce calculado para sumarlo a ese mes
+            }
+        }
+        //resultado de la suma: 
+        //Array ( [82] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 5400 [2025-11] => 0 [2025-12] => 0 ) 
+        //         [1] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 12650 [2025-10] => 4800 [2025-11] => 0 [2025-12] => 0 ) ) 
+        //voy a obtener el nombre del coche para añadirlo a cada array $meseAño. aqyu hago un select para sacar el Marca_modelo
+        foreach ($alquileresUnionAmpliaciones as $id => $fila){
+            $nombresCoche[$id] = $this->vehiculoRepository->nombreCoche($id);//esto me devuelve array asociativo con 1 elemento ['Marca_modelo' => 'Jeep']
+        }
+        //resultado nombresCoche: Array ( [82] => Array ( [Marca_modelo] => FERRARI 296GTS ) [1] => Array ( [Marca_modelo] => JEEP GRANGLER V6 ) )    
+        //aqui concateno el nombre de cada coche con su array de mesAño
+        foreach ($nombresCoche as $id => $nombreCoche){
+            $mesesAñoGanancia[$id] = array_merge(['Nombre coche' => $nombreCoche['Marca_modelo']], $mesesAñoGanancia[$id]);
+        }
+        //resultado: Array ( [82] => Array ( [Nombre coche] => FERRARI 296GTS [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 5400 [2025-11] => 0 [2025-12] => 0 ) 
+        //                    [1] => Array ( [Nombre coche] => JEEP GRANGLER V6 [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 12650 [2025-10] => 4800 [2025-11] => 0 [2025-12] => 0 ) ) 
+        print_r($mesesAñoGanancia);
+        //$gastos = $this->gastoVehiculoRepository->gastosVehiculo();//leo los gastos de ese vehiculo (ojo no son los gastos de alquileres, son los del vehiculo)
+        //$this->pages->renderNoHeader('total_alquileres_vehiculo', ['alquileresUnionAmpliaciones' => $alquileresUnionAmpliaciones, 'gastos' => $gastos, 'alquileresVehiculo' => $alquileresVehiculo]);
+    }
+    public function totalAlquileresVehiculoV2(){//version que lee todos los alquileres y amplieaciones en una sola consulta
+        //se trabaja con la tabla directamente leida del SELECT, no lo convierto en objetos
+        //esto es una tabla con los alquileres de un vehiculo dentro del rango de fechas
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $desde = $input['desde'] ?? null;
+        $hasta = $input['hasta'] ?? null;
+        $cocheIds = $input['cocheIds'] ?? [];
         
-        $gastos = $this->gastoVehiculoRepository->gastosVehiculo();//leo los gastos de ese vehiculo (ojo no son los gastos de alquileres, son los del vehiculo)
-        $this->pages->renderNoHeader('total_alquileres_vehiculo', ['alquileresUnionAmpliaciones' => $alquileresUnionAmpliaciones, 'gastos' => $gastos, 'alquileres' => $alquileres]);
+        //var_dump($desde);
+        foreach ($cocheIds as $id){
+            $datos = $this->alquilerRepository->totalAlquileresVehiculoTablaV2($desde, $hasta, $id);
+            if (!empty($datos)){ 
+                $alquileresVehiculo[$id]= $datos;
+            } 
+        }
+        //resultado de alquileres para dos vehiculos: id=82 (1 alquiler) y id=1 (3 alquileres)
+        //Array (indices asociativo) ( [82] => Array ( [0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 
+        //                              [1] => Array ( [0] => Array ( [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 ) 
+        //                                             [1] => Array ( [ganancia] => 5000.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 555.00 ) 
+        //                                             [2] => Array ( [ganancia] => 2800.00 [fechaInicio] => 2025-10-04 [comisionComercial] => 200.00 ) ) )
+        
+        print_r($alquileresVehiculo);
+        echo "</br>";
+            //leo las ampliaciones de un coche dentro del rango fechas. no puedo leer las ampliaciones de un alquiler porque el alquiler puede que no este entre las fechas pero las ampliaciones si
+        foreach ($cocheIds as $id){
+            $datos = $this->ampliacionRepository->ampliacionesAlquilerCocheV2($desde, $hasta, $id);
+            if (!empty($datos)){ 
+                $ampliacionesVehiculo[$id] = $datos;
+            }
+        } 
+        //resultado de las ampliaciones del vehiculo con id=1, tiene 3. el vehiculo 82 no tiene ampliaciones
+        //Array (indices asociativo) ( [1] => Array ( [0] => Array ( [ganancia] => 1350.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 100.00 ) 
+        //                                            [1] => Array ( [ganancia] => 1400.00 [fechaInicio] => 2025-09-23 [comisionComercial] => 100.00 ) 
+        //                                            [2] => Array ( [ganancia] => 2000.00 [fechaInicio] => 2025-10-01 [comisionComercial] => 200.00 ) ) ) 
+    
+        print_r($ampliacionesVehiculo);
+        echo "</br>";
+            //concanteno las dos tablas
+        foreach ($cocheIds as $id){
+            $alquileresUnionAmpliaciones[$id] = [...$alquileresVehiculo[$id] ?? [], ...$ampliacionesVehiculo[$id] ?? []];//esto se llama unpacking y solo funciona con arrays con indices numericos, con asociativos no va, habria que usar array_merge()
+            //, con los ... se crea una lista con los elementos y con [...$alquilere] crea una tabla de indices numericos de las dos listas creadas. 
+            //pongo ?? [] porque puede ser que no exita empliaciones para un id, en ese caso ... de null es null y no se crea tabla, ni siquiera null
+        }
+        //resultado de la union de los alquileres y las ampliaciones
+        //Array ( [82] => Array ( [0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 
+        //         [1] => Array ( [0] => Array ( [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 ) 
+        //                        [1] => Array ( [ganancia] => 5000.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 555.00 ) 
+        //                        [2] => Array ( [ganancia] => 2800.00 [fechaInicio] => 2025-10-04 [comisionComercial] => 200.00 ) 
+        //                        [3] => Array ( [ganancia] => 1350.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 100.00 ) 
+        //                        [4] => Array ( [ganancia] => 1400.00 [fechaInicio] => 2025-09-23 [comisionComercial] => 100.00 ) 
+        //                        [5] => Array ( [ganancia] => 2000.00 [fechaInicio] => 2025-10-01 [comisionComercial] => 200.00 ) ) )  
+        //no es necesario ordenar porque cada alquiler/ampliacion se asigan a la tabla meseAñoGanancia por indice asociativo
+                
+        //el año lo saco de la 1º fecha de la tabla Union, como la tabla union es asociativa no puedo situarme con el indice 0,
+        //current devuelve el 1º elemento de la tabla union, que es una tabla de alquileres: en este caso el 82 es una tabla con un alquiler, el alquiler [0] 
+        //([0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 
+        $alquiler = current($alquileresUnionAmpliaciones);
+        $año = substr($alquiler[0]['fechaInicio'], 0, 4);//con [0] me situo en el 1º alquiler de esa tabla y con ['fechaInicio'] en la fecha del alquiler
+        //creo una tabla asociativa con 12 meses, donde el indice de cada mes es ['2025-01' => suma importes alqui/ampliac,...'2025-12' => suma importes alqui/ampliac
+        foreach ($alquileresUnionAmpliaciones as $indice => $fila){//el indice es el id de un coche 82, 1    
+            for ($i=1; $i<=12; $i++){
+                if ($i<10) {
+                    $mesesAñoGanancia [$indice]["$año-0$i"]= 0;//a meses de un solo digito le añado el 0. inicializo a 0 el valor de cada mes
+                }else $mesesAñoGanancia [$indice]["$año-$i"]= 0;
+            }
+        }
+        //resultado de mesesGanacia para los 82 y 1. dos array de 12 elementos (12 meses)
+        //Array ( [82] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 0 [2025-11] => 0 [2025-12] => 0 ) 
+        //         [1] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 0 [2025-11] => 0 [2025-12] => 0 ) )
+        //cojo las ganancias de cada mes y las sumo a el mes correspondiente, todo se consigue por el indice asocietivo [año-mes]
+        //Array ( [82] => Array ( [0] => Array ( [ganancia] => 5400.00 [fechaInicio] => 2025-10-03 [comisionComercial] => 600.00 ) ) 5400 los sumo con lo que tiene la celda [2025-10]
+        //         [1] => Array ( [0] => Array ( [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 )   4900.00 los sumo con lo que tiene la [2025-09]
+        //                        [1] => Array ( [ganancia] => 5000.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 555.00 ) 5000.00 los sumo con lo que tiene la [2025-09]
+        //                        [2] => Array ( [ganancia] => 2800.00 [fechaInicio] => 2025-10-04 [comisionComercial] => 200.00 ) ....
+        //                        [3] => Array ( [ganancia] => 1350.00 [fechaInicio] => 2025-09-25 [comisionComercial] => 100.00 ) ...
+        //                        [4] => Array ( [ganancia] => 1400.00 [fechaInicio] => 2025-09-23 [comisionComercial] => 100.00 ) ....
+        //                        [5] => Array ( [ganancia] => 2000.00 [fechaInicio] => 2025-10-01 [comisionComercial] => 200.00 ) ) ) 2000.00 los sumo a la [2025-10]
+        foreach ($alquileresUnionAmpliaciones as $id => $alquileresAmpliaciones){//para cada vehiculo/id [82,1] saco su tabla de alquileres/ampiaciones
+            foreach ($alquileresAmpliaciones as $alquiler){//de su tabla de alquileres/ampliaciones: para cada alquiler/ampliacion 
+                $indice = substr($alquiler['fechaInicio'],0,7);//calculo en que mes tengo que insertar la ganancia, lleyendo la fecha y quitandole el dia, de 2025-09-25 me quedo con 2025-09 que me srive de indice
+                $mesesAñoGanancia["$id"][$indice] += $alquiler['ganancia']; //uso el inidce calculado para sumarlo a ese mes
+            }
+        }
+        //resultado de la suma: 
+        //Array ( [82] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 5400 [2025-11] => 0 [2025-12] => 0 ) 
+        //         [1] => Array ( [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 12650 [2025-10] => 4800 [2025-11] => 0 [2025-12] => 0 ) ) 
+        //voy a obtener el nombre del coche para añadirlo a cada array $meseAño. aqyu hago un select para sacar el Marca_modelo
+        foreach ($alquileresUnionAmpliaciones as $id => $fila){
+            $nombresCoche[$id] = $this->vehiculoRepository->nombreCoche($id);//esto me devuelve array asociativo con 1 elemento ['Marca_modelo' => 'Jeep']
+        }
+        //resultado nombresCoche: Array ( [82] => Array ( [Marca_modelo] => FERRARI 296GTS ) [1] => Array ( [Marca_modelo] => JEEP GRANGLER V6 ) )    
+        //aqui concateno el nombre de cada coche con su array de mesAño
+        foreach ($nombresCoche as $id => $nombreCoche){
+            $mesesAñoGanancia[$id] = array_merge(['Nombre coche' => $nombreCoche['Marca_modelo']], $mesesAñoGanancia[$id]);
+        }
+        //resultado: Array ( [82] => Array ( [Nombre coche] => FERRARI 296GTS [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 0 [2025-10] => 5400 [2025-11] => 0 [2025-12] => 0 ) 
+        //                    [1] => Array ( [Nombre coche] => JEEP GRANGLER V6 [2025-01] => 0 [2025-02] => 0 [2025-03] => 0 [2025-04] => 0 [2025-05] => 0 [2025-06] => 0 [2025-07] => 0 [2025-08] => 0 [2025-09] => 12650 [2025-10] => 4800 [2025-11] => 0 [2025-12] => 0 ) ) 
+        print_r($mesesAñoGanancia);
+        //$gastos = $this->gastoVehiculoRepository->gastosVehiculo();//leo los gastos de ese vehiculo (ojo no son los gastos de alquileres, son los del vehiculo)
+        //$this->pages->renderNoHeader('total_alquileres_vehiculo', ['alquileresUnionAmpliaciones' => $alquileresUnionAmpliaciones, 'gastos' => $gastos, 'alquileresVehiculo' => $alquileresVehiculo]);
     }
     public function ordenarTabla(array $tabla):array{
-        for ( $i=0; $i<count($tabla); $i++ ){
-            $posicionMenor=0;
-            $fechaMenor=$tabla[$i];// ['fecha'];
-
+        for ( $i=0; $i<sizeof($tabla); $i++ ){  
+            for ($j=$i; $j<sizeof($tabla); $j++){
+                if ($tabla[$j]['fechaInicio']<$tabla[$i]['fechaInicio']){
+                    $temp=$tabla[$i];
+                    $tabla[$i]=$tabla[$j];
+                    $tabla[$j]=$temp;
+                }
+            }
             
         }
-    //return $array;
+    return $tabla;
     }
 }

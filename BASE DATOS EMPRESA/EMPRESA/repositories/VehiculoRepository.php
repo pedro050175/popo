@@ -73,7 +73,6 @@ class VehiculoRepository {
             $this->update($vehiculo);
         } else { $this->create($vehiculo);}
     }
-
     public function create (array $data):void{
         
         $parametros = [
@@ -120,7 +119,6 @@ class VehiculoRepository {
        
         $this->conexionPDO->consulta($sql, $parametros);
     }
-
     public function read (int $id): ?Vehiculo {
         $this->conexion->consulta("SELECT * FROM vehiculos WHERE (id_vehiculo=$id)");
         return $this->extraer_registro();
@@ -146,7 +144,21 @@ class VehiculoRepository {
         }
         return $relacionada;
     }    
-  
+    public function nombreCoche(string $id): mixed { //devuelver Marca_modelo del coche id
+         $parametros = [
+        ':id' => $id 
+        ]; 
+        $sql = "SELECT Marca_modelo FROM vehiculos
+                        WHERE id_vehiculo = :id";
+        $this->conexionPDO->consulta($sql, $parametros); 
+        return $this->conexionPDO->extraer_registro();
+    }
+    public function cochesAlquilados(){//solo lee los que tienen algun alquiler
+        $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo, Matricula, Bastidor FROM vehiculos 
+                                    JOIN alquileres ON id_vehiculo = vehiculo
+                                    ORDER BY Marca_modelo");
+            return $this->extraer_todos();
+    }
     /* public function create (array $data):void{ PARA USAR CON LA CLASE BaseDatos de mysql
         //en un campo date, o int o uno que sea unique como matricula o bastidor de mysql no se puede guaradar un '' hay que guardar null. en los campos unique da error de que ya existe y en los date o int dice que el tipo no es correcto
         foreach ($data[vehiculo] as $campo => $valor) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo

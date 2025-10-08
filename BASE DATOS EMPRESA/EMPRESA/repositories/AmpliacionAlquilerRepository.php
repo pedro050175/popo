@@ -79,14 +79,31 @@ class AmpliacionAlquilerRepository{
         $sql = "DELETE FROM ampliaciones WHERE idAmpliacion=:id"; 
         $this->conexionPDO->consulta($sql, $parametros);
     }
-    public function ampliacionesAlquilerFecha($alquiler){
+    public function ampliacionesAlquilerCoche($desde, $hasta, $vehiculo){//leo las ampliaciones de un coche
+        //como la tabla ampliaciones no esta relacionada con vehiculos, tengo que usar ampliaciones para cruzarlas y poder sacar las ampliaciones de un coche 
         $parametros = [
-        ':desde' => $_GET['desde'],
-        ':hasta' => $_GET['hasta'],
-        ':alquiler' => $alquiler
+        ':desde' => $desde,
+        ':hasta' => $hasta,
+        ':vehiculo' => $vehiculo
         ];
-        $sql = "SELECT   ganancia, fechaInicio, comisionComercial FROM ampliaciones 
-                                            WHERE fechaInicio BETWEEN :desde AND :hasta AND alquiler = :alquiler";
+        $sql = "SELECT   AM.ganancia, AM.fechaInicio, AM.comisionComercial FROM ampliaciones AM
+                                JOIN alquileres AL ON AM.alquiler = AL.id_alquiler
+                                JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                        WHERE AM.fechaInicio BETWEEN :desde AND :hasta AND V.id_vehiculo = :vehiculo";
+        $this->conexionPDO->consulta($sql, $parametros);        
+        return $this->conexionPDO->extraer_todos();       
+    }
+    public function ampliacionesAlquilerCocheV2($desde, $hasta, $vehiculo){//leo todas las ampliaciones de todos los vehiculos
+        //como la tabla ampliaciones no esta relacionada con vehiculos, tengo que usar ampliaciones para cruzarlas y poder sacar las ampliaciones de un coche 
+        $parametros = [
+        ':desde' => $desde,
+        ':hasta' => $hasta,
+        ':vehiculo' => $vehiculo
+        ];
+        $sql = "SELECT   AM.ganancia, AM.fechaInicio, AM.comisionComercial FROM ampliaciones AM
+                                JOIN alquileres AL ON AM.alquiler = AL.id_alquiler
+                                JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                        WHERE AM.fechaInicio BETWEEN :desde AND :hasta AND V.id_vehiculo = :vehiculo";
         $this->conexionPDO->consulta($sql, $parametros);        
         return $this->conexionPDO->extraer_todos();       
     }

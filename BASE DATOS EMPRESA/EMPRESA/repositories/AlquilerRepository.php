@@ -225,13 +225,25 @@ class AlquilerRepository {
     public function delete (int $id): void {
        $this->conexionPDO->consulta("DELETE FROM alquileres WHERE (id_alquiler=$id)");
     }  
-    public function totalAlquileresVehiculoTabla(): array{//en esta funcion devuelvo la tabla leida del SELECT no lo meto en objetos
+    public function totalAlquileresVehiculoTabla($desde, $hasta, $idCoche): array{//en esta funcion devuelvo la tabla leida del SELECT no lo meto en objetos
         $parametros = [
-        ':desde' => $_GET['desde'],
-        ':hasta' => $_GET['hasta'],
-        ':cocheId' => $_GET['cocheId'] 
-        ]; //tengo que leer id_alquiler aunqeu no lo muestre porque lo necesito para luego sacas las ampliaciones de este alquiler
-        $sql = "SELECT id_alquiler, ganancia, fechaInicio, comisionComercial FROM alquileres
+        ':desde' => $desde,
+        ':hasta' => $hasta,
+        ':cocheId' => $idCoche 
+        ];
+        $sql = "SELECT ganancia, fechaInicio, comisionComercial FROM alquileres
+                        WHERE fechaInicio BETWEEN :desde AND :hasta AND vehiculo = :cocheId";
+        $this->conexionPDO->consulta($sql, $parametros); 
+        return $this->conexionPDO->extraer_todos();       
+        
+    }
+    public function totalAlquileresVehiculoTablaV2($desde, $hasta, $idCoche): array{//leo todos los alquileres de todos los vehiculos que me pasan en parametros
+        $parametros = [
+        ':desde' => $desde,
+        ':hasta' => $hasta,
+        ':cocheId' => $idCoche 
+        ];
+        $sql = "SELECT ganancia, fechaInicio, comisionComercial FROM alquileres
                         WHERE fechaInicio BETWEEN :desde AND :hasta AND vehiculo = :cocheId";
         $this->conexionPDO->consulta($sql, $parametros); 
         return $this->conexionPDO->extraer_todos();       

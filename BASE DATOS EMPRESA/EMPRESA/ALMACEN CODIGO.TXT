@@ -1,4 +1,3 @@
-<?php var_dump($cuotas); ?>
-<?=$destacada?>
-
-$vehiculo->getdatos_propietario()==null ? '' : 
+<?php 
+<option value = "" disabled <?= $vehiculoActual == '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
+?>

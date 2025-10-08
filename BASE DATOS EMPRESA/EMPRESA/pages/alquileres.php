@@ -5,19 +5,19 @@
             <div class="row">
                 <div class="col-md-3">
                     <label for="buscar" class="etiqueta">"Contrato/Cliente"</label>    
-                    <input type="search" name="buscar" class="cuadro_text" id="buscar" >
+                    <input type="search" name="buscar" class="cuadro_text" id="buscar" value="<?= $_GET['buscar'] ?? ''?>">
                 </div>
                 <div class="col-md-2">
                     <label for="desde" class="etiqueta">Desde:</label>
-                    <input type="date" name="desde" class="cuadro_text" id="desde" >
+                    <input type="date" name="desde" class="cuadro_text" id="desde" value="<?= $_GET['desde'] ?? ''?>">
                 </div>
                 <div class="col-md-2">
                     <label for="hasta" class="etiqueta">Hasta:</label>
-                    <input type="date" name="hasta" class="cuadro_text" id="hasta">
+                    <input type="date" name="hasta" class="cuadro_text" id="hasta" value="<?= $_GET['hasta'] ?? ''?>">
                 </div>
                 <div class="col-md-2">
                     <label for="coche" class="etiqueta">coche:</label>
-                    <input type="search" name="coche" class="cuadro_text" id="coche">
+                    <input type="search" name="coche" class="cuadro_text" id="coche" value="<?= $_GET['coche'] ?? ''?>">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="boton_submit">Buscar</button> 
@@ -31,11 +31,11 @@
     </form>
 </div>
 
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger" role="alert">
-            <?= htmlspecialchars($error) ?>
-        </div>
-    <?php endif; ?>    
+<?php if (!empty($error)): ?>
+    <div class="alert alert-danger" role="alert">
+        <?= htmlspecialchars($error) ?>
+    </div>
+<?php endif; ?>    
 
 <table class="table table-hover table-striped fina">
     <thead>
@@ -48,7 +48,6 @@
             <th scope="col">Precio</th>
             <th scope="col">Dias</th>
             <th scope="col">Comision</th>
-            <th scope="col">Ganancia</th>
             <th scope="col">Fianza</th>
             <th scope="col">Fianza devl</th>
             <th scope="col">Comercial</th>
@@ -70,12 +69,11 @@
                         <?=$alquiler->getvehiculoInfo()->getMarca_modelo()?>
                     </a>
                 </td>
-                <td><?=$alquiler->getclienteInfo()->getNombre()?></td>
+                <td style="color:blueviolet"><?=$alquiler->getclienteInfo()->getNombre()?></td>
                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
-                <td><?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
+                <td style="color: red"><?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
                 <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
                 <td><?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€</td>
-                <td><?=number_format($alquiler->getganancia()+$alquiler->getsumaGanancia(), 2, ',', '.')?>€</td>
                 <td><?=number_format($alquiler->getfianza(), 2, ',', '.')?>€</td>
                 <td><?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€</td>
                 <td><?=$alquiler->getcomercial()?></td>
@@ -118,4 +116,16 @@
         <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$numPaginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
     <?php endif ;?>
 </div>  
-
+<script>
+$(document).ready(function() {
+    if (document.getElementById("desde").value!=""){
+        document.getElementById("desde").focus();
+    }
+    if (document.getElementById("coche").value!=''){
+        document.getElementById("coche").focus();
+    }
+    if (document.getElementById("buscar").value!=""){
+        document.getElementById("buscar").focus();
+    }
+});
+</script>

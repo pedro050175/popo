@@ -74,7 +74,7 @@ Router::add('GET', '/nuevo_alquiler/:id', function($id) {return (new AlquilerCon
 Router::add('GET', '/borrar_alquiler/:id', function($id){return (new AlquilerController())->delete($id);});
 Router::add('GET', '/analisis_alquileres', function(){return (new AlquilerController())->analizar();});
 Router::add('GET', '/detalles_alquiler/:id', function($id) {return (new AlquilerController())->detalles_alquiler($id);});
-Router::add('GET', '/total_alquileres_vehiculo', function() {return (new AlquilerController())->totalAlquileresVehiculo();});
+Router::add('POST', '/total_alquileres_vehiculo', function() {return (new AlquilerController())->totalAlquileresVehiculoV2();});
 
 //ampliaciones alquiler
 Router::add('POST', '/nueva_ampliacion_alquiler', function () {return (new AmpliacionAlquilerController())->save();});
