@@ -1,22 +1,23 @@
 <form action="<?= DIRECTORIO ?>nuevo_movimiento" method="post">
-    <?php if (isset($movimiento)) :?>
-    <input type="hidden" name="data[movimiento][idMovimiento]" id='id_movimiento' value="<?=$movimiento->getidMovimiento()?>">
-    <?php endif;?>      
+<?php if (isset($movimiento)) :?>    
+        <input type="hidden" name="data[movimiento][idMovimiento]" id='id_movimiento' value="<?= $movimiento->getidMovimiento()?>"><!--no se puede poner aqui (isset($movimiento) ? $movimiento->getidMovimiento() : '' porque se crearia la variable data[movimiento][idMovimiento] cuando es un nuevo movimiento y el repository lo detectaria como una edicion de un mov existente-->
+<?php endif ;?>          
 <div class="container mt-1">
-        <div class="row">
-            <div class="col">
-                <h5 class="titulo_prin"><?= (isset($movimiento)) ? 'Modificar ' : 'Nuevo '?>Movimiento</h5>
-            </div>
-            <div class="col text-end">  
-                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>movimientos?num_pagina=1';">   
-                <button type="submit" class="boton_submit" onclick = "return comprobarEntidades(this.form)"> <?= (isset($movimiento)) ? 'Guardar' : 'Crear' ?></button>
-                <button type="reset" class="boton_submit" <?= (isset($movimiento)) ? 'hidden' : ''?>>Borrar</button>
-            </div>
+    <div class="row">
+        <div class="col">
+            <h5 class="titulo_prin"><?= (isset($movimiento)) ? 'Modificar ' : 'Nuevo '?>Movimiento</h5>
         </div>
+        <div class="col text-end">  <!--en un onclick en cuanto se hace un return no sigue ejecutando instrucciones p.e no puedo mostrar un mensaje con return confirm('') y luego hacer algo mas, lo que venga despues no se ejecuta-->
+            <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>movimientos?num_pagina=1';">   
+            <button type="submit" class="boton_submit" onclick = "return comprobarEntidades(this.form)"> <?= (isset($movimiento)) ? 'Guardar' : 'Crear' ?></button>
+            <button type="reset" class="boton_submit" <?= (isset($movimiento)) ? 'hidden' : ''?>>Limpiar</button>
+            <button type="button" class="boton_submit" <?= (isset($movimiento)) ? '' : 'hidden'?> id = "eliminar" >Eliminar</button> 
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-1">    
             <div class="form-floating mb-1">
-                <p><strong>#: <?=(isset($movimiento))?$movimiento->getidMovimiento():''?></strong></p> 
+                <p><strong>#: <?= (isset($movimiento))?$movimiento->getidMovimiento():''?></strong></p> 
             </div>
         </div>
         <div class="col-md-3">    
@@ -64,7 +65,6 @@
                 <label for="concepto">Concepto</label>
             </div>
         </div>           
-        
         <div class="col-md-6">
             <div class="form-floating mb-1">
                 <input type="text" name="data[movimiento][observaciones]" class="form-control" id="observaciones" placeholder="Observaciones" value="<?=(isset($movimiento))?quitaEspecialChar($movimiento->getobservaciones()):''?>">
@@ -131,7 +131,7 @@
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="boton_submit" id = "guardarEntrega">Guardar entrega</button>
-                    <button type="reset" class="boton_submit">Borrar</button>
+                    <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div> 
             <input type="hidden" name="entrega[movimiento]" value="<?=$movimiento->getidMovimiento()?>" id="id_movimiento">
@@ -141,7 +141,7 @@
     <!--Entregas listado-->
     <div class="container mt-1"><!--esto desplaza a la derecha un poco todo lo que haya dentro, tablas, etiquetas etc-->
         <div id = "entregas">
-            <table class = "mi_tabla" >
+            <table class = "mi_tabla w400" >
                 <caption>Entregas</caption>
                 <colgroup>
                     <col style="width: 100px;">
@@ -197,32 +197,32 @@
             <legend class="mi-legend">Nueva devolucion</legend>
             <div class="row">       
                 <div class="col-md-6">
-                    <label class="etiqueta" for="fecha" >Fecha:</label>&nbsp
+                    <label class="etiqueta" for="fecha" >Fecha:</label>
                     <input class="cuadro_text" type="date" name="devolucion[fecha]" id="devolucion_fecha" placeholder="Fecha" required>
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Importe:</label>
                     <input class="cuadro_text" type="text" name="devolucion[importe]" id="devolucion_importe" placeholder="Importe" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label class="etiqueta" for="banco_envia" >Banco envia:</label>&nbsp
+                    <label class="etiqueta" for="banco_envia" >Banco envia:</label>
                     <input size=60 class="cuadro_text" type="text" name="devolucion[bancoEnvia]" id="devolucion_banco_envia" placeholder="Banco envia">
                 </div> 
                 <div class="col-md-6">
-                    <label class="etiqueta" for="banco_recibe" >Banco recibe:</label>&nbsp
+                    <label class="etiqueta" for="banco_recibe" >Banco recibe:</label>
                     <input size=60 class="cuadro_text" type="text" name="devolucion[bancoRecibe]" id="devolucion_banco_recibe" placeholder="Banco recibe">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    <label class="etiqueta" for="observaciones" >Observaciones:</label>&nbsp
+                    <label class="etiqueta" for="observaciones" >Observaciones:</label>
                     <input size=60 class="cuadro_text" type="text" name="devolucion[observaciones]" id="devolucion_observaciones" placeholder="Observaciones">
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="boton_submit" id = "guardarDevolucion" >Guardar devolución</button>
-                    <button type="reset" class="boton_submit">Borrar</button>
+                    <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div>
             <input type="hidden" name="devolucion[movimiento]" value="<?=$movimiento->getidMovimiento()?>" id="id_movimiento">
@@ -231,7 +231,7 @@
     <!--Devoluciones listado-->
     <div class="container mt-1">
         <div id = "devoluciones">
-            <table class = "mi_tabla" >
+            <table class = "mi_tabla w400" >
                 <caption>Devoluciones</caption>
                 <colgroup>
                     <col style="width: 100px;">
@@ -310,11 +310,20 @@
     });
     var form2 = document.getElementById("devolucion");
     var boton2 = document.getElementById("guardarDevolucion");
-    boton2.addEventListener("click", function (event) {
+    boton2.addEventListener("click", function (event) {//event es el parametro de la funcion y es el evento "click"
         escribirLocalStorage("devolucion");
         if (!validar_entero_campo_text(form2.devolucion_importe)) {
             event.preventDefault(); // evita que se envíe el form
         }
     });
     mostrarEntregaDevolucion();//cada vez que carga el la pagina comprueba si hay que mostrar el form entregas o devoluciones
+//aunque se puede hacer eso eliminar.addEventListener("click", ... no es una buena practica, hay navegadores que no lo soportan, o si este script estuviera en el HEAD no reconoceria eliminar porque aun no se ha cargado el HTML 
+    document.getElementById("eliminar").addEventListener("click", function (event) {
+        if (confirm('Estas seguro que quieres borrar este movimiento?')){
+            window.location.href='<?= DIRECTORIO ?>borrar_movimiento/<?= $movimiento->getidMovimiento() ?? ''?>'; 
+            //var a = <?= $movimiento->getidMovimiento() ?? ''?>; esto se puede hacer porque en servidor de PHP se poner el valor de $movimeinto->get..., es un literal que se escribe igual que se escribe en el HTML
+        } else {
+            event.preventDefault();
+            }
+    });
 </script>

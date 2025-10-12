@@ -191,7 +191,7 @@
     margin: 0px !important;         /* separación entre bloques */
 }
 /* Tabla principal de cada movimiento en analisis*/
-.bloque-movimiento > .table {/*table que hay justo depsues de bloque-movimiento*/
+.bloque-movimiento > .table {/*table que hay justo despues de bloque-movimiento*/
     margin-bottom: 15px; /* espacio debajo de la tabla principal */
 }
 /* Subtablas (Entregas y Devoluciones) en analisis*/

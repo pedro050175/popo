@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-md-7">
             <form action="<?= DIRECTORIO ?>movimientos" method="get" class="d-flex">
-                <input type="search" name="envia" class="form-control me-1" id="floatingInput" placeholder="Buscar envia">
-                <input type="search" name="recibe" class="form-control me-1" id="floatingInput" placeholder="Buscar recibe">
-                <input type="search" name="vehiculo_id" class="form-control me-1" id="floatingInput" placeholder="vehiculo/id/concepto">
+                <input type="search" name="envia" class="form-control me-1" id="floatingInput" placeholder="Buscar envia" value="<?= $_GET['envia'] ?? ''?>">
+                <input type="search" name="recibe" class="form-control me-1" id="floatingInput" placeholder="Buscar recibe" value="<?= $_GET['recibe'] ?? ''?>">
+                <input type="search" name="vehiculo_id" class="form-control me-1" id="floatingInput" placeholder="vehiculo/id/concepto" value="<?= $_GET['vehiculo_id'] ?? ''?>">
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>

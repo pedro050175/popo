@@ -93,17 +93,24 @@ class AmpliacionAlquilerRepository{
         $this->conexionPDO->consulta($sql, $parametros);        
         return $this->conexionPDO->extraer_todos();       
     }
-    public function ampliacionesAlquilerCocheV2($desde, $hasta, $vehiculo){//leo todas las ampliaciones de todos los vehiculos
+    public function ampliacionesAlquilerCocheV2($desde, $hasta, $cocheIds){//leo todas las ampliaciones de todos los vehiculos
         //como la tabla ampliaciones no esta relacionada con vehiculos, tengo que usar ampliaciones para cruzarlas y poder sacar las ampliaciones de un coche 
-        $parametros = [
-        ':desde' => $desde,
-        ':hasta' => $hasta,
-        ':vehiculo' => $vehiculo
-        ];
-        $sql = "SELECT   AM.ganancia, AM.fechaInicio, AM.comisionComercial FROM ampliaciones AM
+        $parametros = [];//los parametros tiene que ser un array asociativo
+        $placeholders = [];
+        foreach ($cocheIds as $i => $id) {
+            $key = ':id' . $i;              // Ejemplo: :id0, :id1, :id2...
+            $placeholders[] = $key; //aqui se crea una tabla [:id1,:id5,:id9] que es la que ira dentro del IN
+            $parametros[$key] = (int)$id;  //[':id0' => 1, ':id1' => 5, ':id2' => 9] array asociativo       Forzamos a entero por seguridad
+        }
+        
+        $in = implode(',', $placeholders); //la tabla del IN la convierte a string separado por ,
+        $parametros[':desde'] = $desde;//añade los dos parametros de fechas
+        $parametros[':hasta'] = $hasta;
+        $sql = "SELECT   AL.vehiculo, AM.ganancia, AM.fechaInicio FROM ampliaciones AM
                                 JOIN alquileres AL ON AM.alquiler = AL.id_alquiler
                                 JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                        WHERE AM.fechaInicio BETWEEN :desde AND :hasta AND V.id_vehiculo = :vehiculo";
+                        WHERE AM.fechaInicio BETWEEN :desde AND :hasta AND V.id_vehiculo IN ($in)";
+
         $this->conexionPDO->consulta($sql, $parametros);        
         return $this->conexionPDO->extraer_todos();       
     }

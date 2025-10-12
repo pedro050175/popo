@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-md-6">
             <form action="<?= DIRECTORIO ?>vehiculos" method="get" class="d-flex">
-                <input type="search" name="buscar_marca" class="form-control me-1" id="floatingInput" placeholder="Buscar vehiculo">
-                <input type="search" name="buscar_matr_bast" class="form-control me-1" id="floatingInput" placeholder="Buscar matrícula o bastidor">
+                <input type="search" name="buscar_marca" class="form-control me-1" id="floatingInput" placeholder="Buscar vehiculo" value="<?= $_GET['buscar_marca'] ?? ''?>">
+                <input type="search" name="buscar_matr_bast" class="form-control me-1" id="floatingInput" placeholder="Buscar matrícula o bastidor" value="<?= $_GET['buscar_matr_bast'] ?? ''?>">
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>

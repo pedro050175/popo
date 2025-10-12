@@ -10,7 +10,7 @@
             <div class="col text-end">  
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">   
                 <button type="submit" class="boton_submit" onclick = "return validarAlquiler(this.form)"> <?= (isset($alquiler)) ? 'Guardar' : 'Crear' ?></button>
-                <button type="reset" class="boton_submit" <?= (isset($alquiler)) ? 'hidden' : ''?>>Borrar</button>
+                <button type="reset" class="boton_submit" <?= (isset($alquiler)) ? 'hidden' : ''?>>Limpiar</button>
             </div>
         </div>
         
@@ -253,7 +253,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="boton_submit" onclick="return validarTablaEnteros([form.dias, form.precio, form.ganancia, form.comisionComercial])">Guardar</button>
-                    <button type="reset" class="boton_submit">Borrar</button>
+                    <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div>
             <input type="hidden" name="ampliacion[alquiler]"  id="alquiler" value="<?=$alquiler->getid()?>">
@@ -346,7 +346,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="boton_submit" onclick="return validarTablaEnteros([form.importe, form.parteImporteFianza])">Guardar</button>
-                    <button type="reset" class="boton_submit">Borrar</button>
+                    <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div>
             <input type="hidden" name="cobro[alquiler]"  id="alquiler" value="<?=$alquiler->getid()?>">
@@ -431,7 +431,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="boton_submit" onclick="return validarTablaEnteros([form.importe])">Guardar</button>
-                    <button type="reset" class="boton_submit">Borrar</button>
+                    <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div>
             <input type="hidden" name="gasto[alquiler]"  id="alquiler" value="<?=$alquiler->getid()?>">

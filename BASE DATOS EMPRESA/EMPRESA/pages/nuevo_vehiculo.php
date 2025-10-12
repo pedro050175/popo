@@ -10,7 +10,7 @@
                 <div class="col text-end">  
                     <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>vehiculos?num_pagina=1';">   
                     <button type="submit" class="boton_submit" onclick="return validarDatos(this.form)"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
-                    <button type="reset" class="boton_submit" <?= (isset($vehiculo)) ? 'hidden' : ''?>>Borrar</button>
+                    <button type="reset" class="boton_submit" <?= (isset($vehiculo)) ? 'hidden' : ''?>>Limpiar</button>
                 </div>
             </div>
         <div class="row">
@@ -256,7 +256,7 @@
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="boton_submit" onclick= "return validar_entero_campo_text(form.importe)" >Guardar Gasto</button>
-                    <button type="reset" class="boton_submit">Borrar</button>
+                    <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div>
             <input type="hidden" name="gasto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
@@ -406,7 +406,7 @@
             </div>
             <div class="col-md-4">
                 <button type="submit" class="boton_submit" onclick="return validarCuotas(this.form)">Guardar Cuota</button>
-                <button type="reset" class="boton_submit">Borrar</button>
+                <button type="reset" class="boton_submit">Limpiar</button>
             </div>
             </div>
             <input type="hidden" name="cuota[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">

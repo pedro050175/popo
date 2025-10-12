@@ -3,7 +3,7 @@
             <?= htmlspecialchars($error) ?>
         </div>
 <?php endif; ?>
-<form action="<?= DIRECTORIO ?>analisis_alquileres" method="get" class="d-flex">
+<form action="<?= DIRECTORIO ?>analisis_alquileres" method="get" class="d-flex" id="formAnalizar">
     <fieldset class="mi-fieldset">
     <legend class="mi-legend">Analisis coche</legend>
     <div class = bloque-movimiento>
@@ -25,7 +25,7 @@
             <div class="col-md-4">
                 <label for="select_vehiculo" class="form-label">Vehiculo</label><!--label fuera del floating para que no se solape con el cuadro de texto -->
                 <div class="form-floating mb-1">
-                    <select name="cocheId[]" multiple
+                    <select name="cocheId" multiple
                             class="form-select" id="select_vehiculo" 
                             required
                             oninvalid="this.setCustomValidity('Por favor selecciona un vehiculo')"
@@ -36,13 +36,20 @@
                         <?php endforeach; ?>
                     </select> 
                 </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">
-                <button type="reset" class="boton_link">Borrar</button>
-                <button type="submit" class="boton_link" onclick = "validaFechas(this.form.desde.value, this.form.hasta.value)">Analizar</button>
+                <button type="button" class="boton_link" id = "ocultarAnalisis">Ocultar Analisis</button>
+                <button type="submit" class="boton_link" id = "botonAnalisis">Analizar</button>
+                <spam class="etiqueta_mini">"Analizar" solo analiza el 1º vehiculo seleccionado en la lista</spam>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <button type="button" class="boton_link" id = "botonMeses">Por meses</button>
+                <spam class="etiqueta_mini">"Por meses" analiza todos los vehiculos seleccionados en la lista (la lista solo muestra vehiculos que tienen alquileres)</spam>
             </div>
         </div>
     </div>
@@ -52,40 +59,37 @@
       $totalGastosAlquileres = 0;
 ?>
 <?php if (!empty($alquileres)) :?>
+<div id = "datosAnalisis">    
     <spam class = "etiqueta_desplazada blue">Alquileres de <?= $alquileres[0]->getvehiculoInfo()->getMarca_modelo()?></spam> 
     <?php foreach ($alquileres as $alquiler):?>
         <div class = "bloque-movimiento">
             <?php
-                $totalAlquileres += $alquiler->getprecio()+$alquiler->getsumaPrecio(); //precio alquiler actual + precio de todas las ampliaciones
-                $alquilerActual = $alquiler->getid();
+                $totalAlquileres += $alquiler->getganancia()+$alquiler->getsumaGanancia(); //Esto suma todos los alquileres de esas fechas. ganancia del alquiler actual + ganancia de todas las ampliaciones
+                $alquilerActual = $alquiler->getid();//usamos la ganancia porque es lo que importa en el analisis
             ?> 
             <table class = "mi_tabla">
                 <caption>Alquiler inicial</caption>
                 <thead>
                     <tr>
                         <th class="etiqueta">Cliente</th>
-                        <th class="etiqueta">Contrato</th>
-                        <th class="etiqueta">Comision</th>
                         <th class="etiqueta">Fecha</th>
-                        <th class="etiqueta">Precio</th>
+                        <th class="etiqueta">Ganancia</th>
                         <th class="etiqueta">Dias</th>
                     </tr>
                 </thead>
                 <tbody>
-                        <tr>
+                        <tr><!--muestro un alquiler-->
                             <td><?=$alquiler->getclienteInfo()->getNombre()?></td>
-                            <td><?=$alquiler->getcontrato()?></td>
-                            <td><?=number_format($alquiler->getcomisionComercial(), 2, ',', '.')?>€</td>
                             <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
-                            <td><?=number_format($alquiler->getprecio(), 2, ',', '.')?>€</td>
-                            <td><?=$alquiler->getdias()?>€</td> 
+                            <td><?=number_format($alquiler->getganancia(), 2, ',', '.')?>€</td>
+                            <td><?=$alquiler->getdias()?></td> 
                         </tr>
                 </tbody>
             </table>
             <p></p>
             <!--Ampliaciones-->
             <div class = "contenedor-tablas">
-                <?php $totalAmpliaciones = $alquiler->getprecio(); //ampliaciones se inicia con el precio del alquiler y va sumando precio de ampliaciones
+                <?php $totalAmpliacionesMasAlquiler = $alquiler->getganancia(); //ampliaciones se inicia con el precio del alquiler y va sumando precio de ampliaciones
                     $totalDias = $alquiler->getdias();  //dias se inicia con los dias del alquiler y va sumando dias de ampliaciones
                     //IMPORTANTE inicializar aqui estos contadores porque si los pongo dentro del if y no existen ampliaciones, no se incian y mas abajo en la resta de importe - gastos para calcular el benicio del alquiler daria error 
                 ?>
@@ -96,38 +100,33 @@
                             <col style="width: 100px;">
                             <col style="width: 100px;">
                             <col style="width: 100px;">
-                            <col style="width: 80px;">
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>Comision</th>
                                 <th>Fecha</th>
-                                <th>Precio</th>
+                                <th>Ganancia</th>
                                 <th>Dias</th>
                             </tr>
                             <tr><!--esto es para que los datos del alquiler salgan en la tabla ampliaciones en la 1º fila-->
-                                <td><?=number_format($alquiler->getcomisionComercial(), 2, ',', '.')?>€</td>
                                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
-                                <td><?=number_format($alquiler->getprecio(), 2, ',', '.')?>€</td>
+                                <td><?=number_format($alquiler->getganancia(), 2, ',', '.')?>€</td>
                                 <td><?=$alquiler->getdias()?></td> 
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($ampliaciones[$alquilerActual] as $ampliacion) :?>
                                 <tr>
-                                    <?php $totalAmpliaciones += $ampliacion->getprecio();
+                                    <?php $totalAmpliacionesMasAlquiler += $ampliacion->getganancia();
                                             $totalDias += $ampliacion->getdias()
                                     ?>
-                                    <td><?= number_format($ampliacion->getcomisionComercial(), 2, ',', '.');?>€</td>
                                     <td><?= formatea_fecha($ampliacion->getfechaInicio())?></td>
-                                    <td><?= number_format($ampliacion->getprecio(), 2, ',', '.');?>€</td>
+                                    <td><?= number_format($ampliacion->getganancia(), 2, ',', '.');?>€</td>
                                     <td><?= $ampliacion->getdias()?></td>
                                 </tr>
                             <?php endforeach ;?>
                             <tr>
-                                <td></td>
                                 <td>Total</td>
-                                <td><?=number_format($totalAmpliaciones, 2, ',', '.')?>€</td>
+                                <td><?=number_format($totalAmpliacionesMasAlquiler, 2, ',', '.')?>€</td>
                                 <td><?=$totalDias?></td>
                             </tr>
                         </tbody>
@@ -168,7 +167,7 @@
                     </table>
                 <?php endif ;?>
             </div>
-            <p>Beneficio de este alquiler: <?=number_format($totalAmpliaciones-$totalGastos, 2, ',', '.')?>€</p>                
+            <p>Beneficio (Ganancia) de este alquiler: <?=number_format($totalAmpliacionesMasAlquiler-$totalGastos, 2, ',', '.')?>€</p>                
         </div>
     <?php endforeach ;?>
     <table class = "tabla_resumen" >
@@ -188,13 +187,16 @@
             </tr>
         </tbody>
     </table>
+</div>
 <?php endif ;?>
 
 <div id="contenidoMeses"></div>
+<div id="contenidoTotal"></div>
 
-<script>
+<script>//si no esta visible hace la llamada AJAX y muestra datos, si ya esta visible los oculta, cada vez que muestra datos refresca haciendo una nueva llamada AJAX
     document.getElementById("botonMeses").addEventListener("click", function(){
         const cont = document.getElementById("contenidoMeses");
+        const contTotal = document.getElementById("contenidoTotal");
         if (cont.style.display === "none" || cont.style.display === "") {//si no esta visible ejecuto todo
             var desde = document.getElementById("desde").value;
             var hasta = document.getElementById("hasta").value;
@@ -205,11 +207,10 @@
                     cocheIds.push(selectVehiculo.options[i].value);
                 }
             }
-            console.log (cocheIds); 
             let okFechas = validaFechas(desde, hasta);
             if (desde && hasta && cocheIds.length > 0 && okFechas){//compruebo que hayan datos if (desde) equivale a (desde!="")
                 //fetch('/mis_pruebas/total_alquileres_vehiculo?desde=' + desde + '&hasta=' + hasta + '&coche= ' + coche) para un solo coche metodo GET, paso datos en la URL 
-                fetch('/mis_pruebas/total_alquileres_vehiculo', {
+                fetch('/mis_pruebas/total_alquileres_vehiculo_fecha', {//muestro total de ganancia por meses, entre 2 fechas, de los vehiculos elegidos
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -221,22 +222,68 @@
                 .then(response => {
                         console.log("Respuesta HTTP:", response.status);
                         return response.text()
-                    })
+                })
                 .then(data => {
                     console.log("Contenido recibido:", data);
                     cont.innerHTML = data;
                     cont.style.display = "block"; //muestro los datos
-                    document.getElementById("botonMeses").innerText = "Ocultar datos";//cambio el texto del boton
                 })
                 .catch(error => {
                     console.error("Error en fetch:", error);
-                    document.getElementById("contenidoMeses").innerHTML = "Error: " + error;
+                    cont.innerHTML = "Error: " + error;
+                });
+
+                fetch('/mis_pruebas/total_alquileres_vehiculos', {//muestro el total de ganacia de todos los alquileres+ampli de los vehiculos 
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        cocheIds: cocheIds
+                    })
+                })
+                .then(response => {
+                        console.log("Respuesta HTTP:", response.status);
+                        return response.text()
+                })
+                .then(data => {
+                    console.log("Contenido recibido:", data);
+                    contTotal.innerHTML = data;
+                    contTotal.style.display = "block"; //muestro los datos
+                })
+                .catch(error => {
+                    console.error("Error en fetch:", error);
+                    contTotal.innerHTML = "Error: " + error;
                 });
             }
+            
         }else {// Si ya está visible → lo ocultamos
                 cont.style.display = "none";
-                document.getElementById("botonMeses").innerText = "Mostrar datos";
+                contTotal.style.display = "none";
             }
+    });
+    
+    document.getElementById("formAnalizar").addEventListener("submit", function(eventoSubmit){//capturo evento enviar del formulario
+            eventoSubmit.preventDefault();//evita el envío automático
+            var desde = document.getElementById("desde").value;
+            var hasta = document.getElementById("hasta").value;
+            let okFechas = validaFechas(desde, hasta);
+            if (okFechas){
+                this.submit();//envio formulario
+            }
+    });
+    document.getElementById("ocultarAnalisis").addEventListener("click", function(){
+        const contenedor = document.getElementById("datosAnalisis");
+        if (contenedor!=null){//cuando aun no hay datos mostrados no existe el contenedor   
+            const displayActual = window.getComputedStyle(contenedor).display; //tengo que usar esta propiedad porque si uso contenedor.style.display==="none" como es una propiedad CSS 
+            // cuando se carga el contenedor no existe contenedor.style.display porque no se le ha asignado todavia ningun valor, sin embargo window.getComputedStyle(contenedor).display 
+            //devuelve el valor real de display aunque nose haya hecho ninguna vez style = "algo"
+            if (displayActual==="none"){//si no esta visible lo muestro
+                contenedor.style.display = "block";
+                this.innerText = "Ocultar analisis";
+            } else {//lo oculto
+                contenedor.style.display = "none";
+                this.innerText = "Mostrar analisis"
+            }
+        }
     });
 
     $(document).ready(function() {

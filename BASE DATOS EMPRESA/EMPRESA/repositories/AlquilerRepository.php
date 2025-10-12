@@ -125,7 +125,22 @@ class AlquilerRepository {
                                                                 FROM ampliaciones
                                                                 GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
                                                 ORDER BY AL.fechaInicio desc LIMIT $desplazamiento, ".FILAS_PAGINA);
-                }
+    }
+//con esto se consigue el total de precio, dias, ganacia, es decir, la suma de todas las ampliaciones mas la del alquiler para no tener que sumarlo luego en la pagina
+/* SELECT   AL.vehiculo, AL.fechaInicio, V.Marca_modelo, 
+                                        COALESCE(AM.sumaGanancia, 0) + COALESCE(AL.ganancia) AS TotalGanancia,
+                                        COALESCE(AM.sumaDias, 0) + COALESCE(AL.dias) AS TotalDias, 
+                                        COALESCE(AM.sumaPrecio, 0) + COALESCE(AL.precio) AS TotalPrecio
+                                FROM alquileres AL
+                                    LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                                    LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
+                                                                SUM(dias) AS sumaDias,
+                                                                SUM(ganancia) AS sumaGanancia
+                                                FROM ampliaciones
+                                                GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
+                                                WHERE vehiculo IN (82, 1) 
+                                                ORDER BY AL.fechaInicio;*/
+     
         return $this->extraer_todos();    
     }
     public function extraer_todos(): ?array {
@@ -225,7 +240,8 @@ class AlquilerRepository {
     public function delete (int $id): void {
        $this->conexionPDO->consulta("DELETE FROM alquileres WHERE (id_alquiler=$id)");
     }  
-    public function totalAlquileresVehiculoTabla($desde, $hasta, $idCoche): array{//en esta funcion devuelvo la tabla leida del SELECT no lo meto en objetos
+    public function totalAlquileresVehiculo($desde, $hasta, $idCoche): array{//en esta funcion devuelvo la tabla leida del SELECT no lo meto en objetos
+        /*leo los alquileres de un vehiculo entre fechas*/
         $parametros = [
         ':desde' => $desde,
         ':hasta' => $hasta,
@@ -237,17 +253,70 @@ class AlquilerRepository {
         return $this->conexionPDO->extraer_todos();       
         
     }
-    public function totalAlquileresVehiculoTablaV2($desde, $hasta, $idCoche): array{//leo todos los alquileres de todos los vehiculos que me pasan en parametros
-        $parametros = [
-        ':desde' => $desde,
-        ':hasta' => $hasta,
-        ':cocheId' => $idCoche 
-        ];
-        $sql = "SELECT ganancia, fechaInicio, comisionComercial FROM alquileres
-                        WHERE fechaInicio BETWEEN :desde AND :hasta AND vehiculo = :cocheId";
-        $this->conexionPDO->consulta($sql, $parametros); 
-        return $this->conexionPDO->extraer_todos();       
+    public function totalAlquileresVehiculos($cocheIds, $desde = null, $hasta = null): array{
+    //leo todos los alquileres de todos los vehiculos que me pasan en parametro $cocheIds
+    //para poder hacer la consulta con varios ids voy a esponer un ejemplo para que se entienda como hay que formar el array de $parametros
+    //ya que $cocheIds no se puede poner directamente en los parametros de la consulta, hay que crear un :id por cada id del array $cochesIds
+    //Si seleccionas 3 coches ($cocheIds = [1, 5, 9]) y pasas fechas: $desde = '2025-09-01'; $hasta = '2025-09-30'; tengo que construir esto:
+    //                           SELECT vehiculo, ganancia, fechaInicio, comisionComercial
+    //                                  FROM alquileres
+    //                                  WHERE vehiculo IN (:id0, :id1, :id2) tengo que crear tantos paramentros como :idx hay en la consulta
+    //                                  AND fechaInicio BETWEEN :desde AND :hasta
+    //                                 $parametros = [
+    //                                                    ':id0' => 1,
+    //                                                    ':id1' => 5,
+    //                                                    ':id2' => 9,
+    //                                                    ':desde' => '2025-09-01',
+    //                                                    ':hasta' => '2025-09-30'
+    //  
+        $parametros = [];//los parametros tiene que ser un array asociativo
+        $placeholders = [];
+        foreach ($cocheIds as $i => $id) {
+            $key = ':id' . $i;              // Ejemplo: :id0, :id1, :id2...
+            $placeholders[] = $key; //aqui se crea una tabla [:id1,:id5,:id9] que es la que ira dentro del IN
+            $parametros[$key] = (int)$id;  //[':id0' => 1, ':id1' => 5, ':id2' => 9] array asociativo       Forzamos a entero por seguridad
+        }
+        $in = implode(',', $placeholders); //la tabla del IN la convierte a string separado por ,                                  ]
         
+        if (!empty($desde) && !empty($hasta)){  //alquileres de vehiculos por fechas      
+            $parametros[':desde'] = $desde;//añade los dos parametros de fechas
+            $parametros[':hasta'] = $hasta;
+            $sql = "SELECT vehiculo, ganancia, fechaInicio FROM alquileres
+                            WHERE vehiculo IN ($in) 
+                            AND fechaInicio BETWEEN :desde AND :hasta";
+        }else {//todos los alquileres de vehiculos
+            $sql = "SELECT ALS.vehiculo, ALS.Marca_modelo,  MIN(ALS.fechaInicio) AS primerAlquiler,
+                           SUM(ALS.TotalGananciaAlquiler) AS totalGananciaAlquileres,SUM(ALS.TotalPrecioAlquiler) AS totalPrecioAlquileres,SUM(ALS.TotalDiasAlquiler) AS totalDiasAlquileres FROM
+                            (SELECT AL.vehiculo, V.Marca_modelo, AL.fechaInicio,
+                                        COALESCE(AM.sumaGanancia, 0) + COALESCE(AL.ganancia) AS TotalGananciaAlquiler,
+                                        COALESCE(AM.sumaDias, 0) + COALESCE(AL.dias) AS TotalDiasAlquiler, 
+                                        COALESCE(AM.sumaPrecio, 0) + COALESCE(AL.precio) AS TotalPrecioAlquiler
+                            FROM alquileres AL
+                                    LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
+                                    LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
+                                                                SUM(dias) AS sumaDias,
+                                                                SUM(ganancia) AS sumaGanancia
+                                                FROM ampliaciones
+                                                GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
+                            WHERE vehiculo IN ($in)) AS ALS
+                    GROUP BY Al.vehiculo";
+        /*hay 3 SELECT, el 2º select me da este resultado, todos los alquileres de los dos coches del IN, con el total del precio, ganancia y dias (suma del alquliles mas todas las amplia):
+                1	JEEP GRANGLER V6	2025-09-24	8550.00	13	8950.00
+                1	JEEP GRANGLER V6	2025-09-25	5000.00	15	5555.00
+                1	JEEP GRANGLER V6	2025-10-04	4800.00	4	5200.00
+                82	FERRARI 296GTS 	    2025-10-03	5400.00	2	6000.00
+        con el 3º SELECT (mas interno) se se suman todas las ampliaciones (importe, ganancia, dias)(SELECT alquiler, SUM(precio) AS sumaPrecio ...FROM ampliaciones GROUP BY alquiler)       
+        el 2º SELECT no agrupa nada solo muestra la suma del precio del alquiler con la suma de las ampliaciones (AM.sumaPrecio) + (AL.precio)
+        Como necesito el total de ganacia de alquileres de cada coche tengo que agrupar por coche (Al.vehiculo) el resultado del 2º SELECT, asi que como el 2º SELECT me da una tabla
+        lo meto todo entre parentisis y hago el 1º SELECT sobre la tabla que me da el 2º SELECT y obtengo esto:
+                1	JEEP GRANGLER V6	2025-09-24	18350.00	19705.00	32
+                82	FERRARI 296GTS 	    2025-10-03	5400.00	    6000.00	    2
+        y como colofon con MIN(ALS.fechaInicio) agrupo por la menor fechaInicio y asi obntengo la fecha del 1º alquiler para luego saber desde cuando se alquila ese coche
+        */            
+
+        } 
+        $this->conexionPDO->consulta($sql, $parametros); 
+        return $this->conexionPDO->extraer_todos();   
     }
 }
 ?>

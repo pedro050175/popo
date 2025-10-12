@@ -13,7 +13,7 @@
             <div class="col text-end">  
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>entidades?num_pagina=1';">
                 <button type="submit" class="boton_submit"> <?= (isset($entidad)) ? 'Guardar' : 'Crear' ?></button>
-                <button type="reset" class="boton_submit" <?= (isset($entidad)) ? 'hidden' : ''?>>Borrar</button>
+                <button type="reset" class="boton_submit" <?= (isset($entidad)) ? 'hidden' : ''?>>Limpiar</button>
             </div>
         </div>
 <div class="row">

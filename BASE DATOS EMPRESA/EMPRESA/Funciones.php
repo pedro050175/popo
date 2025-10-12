@@ -32,4 +32,17 @@ function errorFile(string $error): string {
 function quitaEspecialChar(?string $cadena): string{//en los campos de formulario text, si el valor a cargar en el cuadro lleva comillas u otros simbolos especiales, el navegador hace que no se muestre el texto entre comillas
     return (htmlspecialchars($cadena ?? '', ENT_QUOTES, 'UTF-8'));
 }
+function ordenar(array $tabla):array{
+        for ( $i=0; $i<sizeof($tabla); $i++ ){  
+            for ($j=$i; $j<sizeof($tabla); $j++){
+                if ($tabla[$j]<$tabla[$i]){
+                    $temp=$tabla[$i];
+                    $tabla[$i]=$tabla[$j];
+                    $tabla[$j]=$temp;
+                }
+            }
+            
+        }
+    return $tabla;
+    }
 ?>

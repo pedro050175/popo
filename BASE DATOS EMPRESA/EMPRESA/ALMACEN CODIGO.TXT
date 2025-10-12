@@ -1,3 +1,62 @@
-<?php 
-<option value = "" disabled <?= $vehiculoActual == '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
-?>
+Enviar el formulario desde un botón con JavaScript (sin validar)
+Si tienes este HTML:
+<form id="miFormulario" action="procesar.php" method="POST">
+  <input type="text" name="nombre" placeholder="Tu nombre">
+  <button type="button" id="btnEnviar">Enviar</button>
+</form>
+
+ <script>
+document.getElementById("btnEnviar").addEventListener("click", function() {
+    // Aquí puedes hacer algo antes del envío (por ejemplo validar)
+    console.log("Enviando formulario...");
+
+    // Envía el formulario manualmente
+    document.getElementById("miFormulario").submit();
+});
+</script>
+ 🔹 Usa type="button" en el <button> para que no lo envíe automáticamente.  
+
+    🧩 2️⃣ Interceptar el envío y hacer algo antes
+    Si el botón sí tiene type="submit", puedes capturar el evento submit y decidir cuándo enviarlo:
+    <form id="miFormulario" action="procesar.php" method="POST">
+  <input type="text" name="nombre">
+  <button type="submit">Enviar</button>
+</form>
+
+<script>
+document.getElementById("miFormulario").addEventListener("submit", function(e) {
+    e.preventDefault(); // 🔹 evita el envío automático
+
+    // Tu código JS aquí (validaciones, confirmaciones, etc.)
+    console.log("Validando antes de enviar...");
+
+    // Si todo está correcto:
+    this.submit(); // 🔹 envía manualmente
+});
+</script>
+
+
+🧩 3️⃣ Enviar por AJAX (sin recargar la página)
+Si no quieres recargar la página, puedes usar fetch():
+<form id="miFormulario" action="procesar.php" method="POST">
+  <input type="text" name="nombre">
+  <button type="submit">Enviar</button>
+</form>
+
+<script>
+document.getElementById("miFormulario").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch(this.action, {
+        method: this.method,
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log("Respuesta del servidor:", data);
+    })
+    .catch(error => console.error("Error:", error));
+});
+</script>

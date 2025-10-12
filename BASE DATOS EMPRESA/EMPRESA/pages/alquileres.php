@@ -40,17 +40,14 @@
 <table class="table table-hover table-striped fina">
     <thead>
         <tr>
-            <th scope="col">Id</th>
             <th scope="col">Contrato</th>
             <th scope="col">Vehiculo</th>
             <th scope="col">Cliente</th>
             <th scope="col">Fecha_inicio</th>
             <th scope="col">Precio</th>
             <th scope="col">Dias</th>
-            <th scope="col">Comision</th>
             <th scope="col">Fianza</th>
             <th scope="col">Fianza devl</th>
-            <th scope="col">Comercial</th>
             <th scope="col">Empresa</th>
             <th scope="col">Estado</th>
             <th scope="col">Observaciones</th>
@@ -62,7 +59,6 @@
             <tr>
                 <?php $total += $alquiler->getprecio()+$alquiler->getsumaPrecio(); ?>
     
-                <td><?=$alquiler->getid()?></a></td>
                 <td><?=$alquiler->getcontrato()?></td>
                 <td>
                     <a href="<?= DIRECTORIO ?>detalles_alquiler/<?=$alquiler->getid()?>" target="_blank" rel="noopener noreferrer">
@@ -73,10 +69,10 @@
                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
                 <td style="color: red"><?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
                 <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
-                <td><?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€</td>
+                <!--<td><?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€</td>-->
                 <td><?=number_format($alquiler->getfianza(), 2, ',', '.')?>€</td>
                 <td><?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€</td>
-                <td><?=$alquiler->getcomercial()?></td>
+                <!--<td><?=$alquiler->getcomercial()?></td>-->
                 <td><?=$alquiler->getempresaInfo()->getNombre()?></td>
                 <td><?=$alquiler->getestado()?></td> 
                 <td><?=$alquiler->getobservaciones()?></td>

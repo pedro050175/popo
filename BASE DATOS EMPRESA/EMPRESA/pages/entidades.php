@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-md-6">
             <form action="<?= DIRECTORIO ?>entidades" method="get" class="d-flex">
-                <input type="search" name="buscar_dnicif" class="form-control me-2" id="buscar_dnicif" placeholder="Buscar DNI/CIF">
-                <input type="search" name="buscar_nombre" class="form-control me-2" id="busca_nombre" placeholder="Buscar nombre">
+                <input type="search" name="buscar_dnicif" class="form-control me-2" id="buscar_dnicif" placeholder="Buscar DNI/CIF" value="<?= $_GET['buscar_dnicif'] ?? ''?>">
+                <input type="search" name="buscar_nombre" class="form-control me-2" id="busca_nombre" placeholder="Buscar nombre" value="<?= $_GET['buscar_nombre'] ?? ''?>">
                 <button type="submit" class="boton_submit">Buscar</button>
             </form>
         </div>
