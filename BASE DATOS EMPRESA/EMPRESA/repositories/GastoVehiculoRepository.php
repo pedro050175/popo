@@ -89,14 +89,16 @@ class GastoVehiculoRepository {
         $sql = "DELETE FROM gastosvehiculo WHERE id_gasto=:id"; 
         $this->conexionPDO->consulta($sql, $parametros);
     }
-    public function gastosVehiculo(){
-        $parametros = [
-        ':desde' => $_GET['desde'],
-        ':hasta' => $_GET['hasta'],
-        ':coche' => $_GET['cocheId']
-        ];
-        $sql = "SELECT Importe, Fecha FROM gastosvehiculo 
-                                            WHERE Fecha BETWEEN :desde AND :hasta AND id_vehiculo=:coche";
+    public function gastosVehiculos($cocheIds){
+        $parametros = [];
+        $in = [];
+        parametrosIn($in, $parametros, $cocheIds);//$in y $parametros se pasan por referencia a la funcion, alli seran modificados, $in lleva los ids para el IN y $parametros los paramet
+        
+        $sql = "SELECT G.id_vehiculo, SUM(Importe) AS totalGastos FROM gastosvehiculo G
+                    JOIN vehiculos V ON G.id_vehiculo = V.id_vehiculo 
+                    WHERE G.id_vehiculo IN($in)
+                    GROUP BY G.id_vehiculo";
+                                            
         $this->conexionPDO->consulta($sql, $parametros);        
         return $this->conexionPDO->extraer_todos();       
     }

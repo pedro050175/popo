@@ -253,7 +253,7 @@ class AlquilerRepository {
         return $this->conexionPDO->extraer_todos();       
         
     }
-    public function totalAlquileresVehiculos($cocheIds, $desde = null, $hasta = null): array{
+    public function totalAlquileresVehiculosGastos($cocheIds, $desde = null, $hasta = null): array{
     //leo todos los alquileres de todos los vehiculos que me pasan en parametro $cocheIds
     //para poder hacer la consulta con varios ids voy a esponer un ejemplo para que se entienda como hay que formar el array de $parametros
     //ya que $cocheIds no se puede poner directamente en los parametros de la consulta, hay que crear un :id por cada id del array $cochesIds
@@ -270,48 +270,76 @@ class AlquilerRepository {
     //                                                    ':hasta' => '2025-09-30'
     //  
         $parametros = [];//los parametros tiene que ser un array asociativo
-        $placeholders = [];
-        foreach ($cocheIds as $i => $id) {
-            $key = ':id' . $i;              // Ejemplo: :id0, :id1, :id2...
-            $placeholders[] = $key; //aqui se crea una tabla [:id1,:id5,:id9] que es la que ira dentro del IN
-            $parametros[$key] = (int)$id;  //[':id0' => 1, ':id1' => 5, ':id2' => 9] array asociativo       Forzamos a entero por seguridad
-        }
-        $in = implode(',', $placeholders); //la tabla del IN la convierte a string separado por ,                                  ]
-        
-        if (!empty($desde) && !empty($hasta)){  //alquileres de vehiculos por fechas      
+        $in = [];
+        parametrosIn($in, $parametros, $cocheIds);//$in y $parametros se pasan por referencia a la funcion, alli seran modificados, $in lleva los ids para el IN y $parametros los parametros para la consulta  
+            
+        if (!empty($desde) && !empty($hasta)){  //alquileres de vehiculos por fechas para formar la tabla de meses del año    
             $parametros[':desde'] = $desde;//añade los dos parametros de fechas
             $parametros[':hasta'] = $hasta;
             $sql = "SELECT vehiculo, ganancia, fechaInicio FROM alquileres
                             WHERE vehiculo IN ($in) 
-                            AND fechaInicio BETWEEN :desde AND :hasta";
-        }else {//todos los alquileres de vehiculos
-            $sql = "SELECT ALS.vehiculo, ALS.Marca_modelo,  MIN(ALS.fechaInicio) AS primerAlquiler,
-                           SUM(ALS.TotalGananciaAlquiler) AS totalGananciaAlquileres,SUM(ALS.TotalPrecioAlquiler) AS totalPrecioAlquileres,SUM(ALS.TotalDiasAlquiler) AS totalDiasAlquileres FROM
-                            (SELECT AL.vehiculo, V.Marca_modelo, AL.fechaInicio,
-                                        COALESCE(AM.sumaGanancia, 0) + COALESCE(AL.ganancia) AS TotalGananciaAlquiler,
-                                        COALESCE(AM.sumaDias, 0) + COALESCE(AL.dias) AS TotalDiasAlquiler, 
-                                        COALESCE(AM.sumaPrecio, 0) + COALESCE(AL.precio) AS TotalPrecioAlquiler
-                            FROM alquileres AL
-                                    LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                                    LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
-                                                                SUM(dias) AS sumaDias,
-                                                                SUM(ganancia) AS sumaGanancia
-                                                FROM ampliaciones
-                                                GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
-                            WHERE vehiculo IN ($in)) AS ALS
-                    GROUP BY Al.vehiculo";
-        /*hay 3 SELECT, el 2º select me da este resultado, todos los alquileres de los dos coches del IN, con el total del precio, ganancia y dias (suma del alquliles mas todas las amplia):
+                            AND fechaInicio BETWEEN :desde AND :hasta" ;
+        }else {//todos los alquileres de vehiculos, para forma la tabla del todos los alquileres mas gastos mas cuota
+            $sql = "SELECT TAL.*, TG.totalGastos, C.cuota, C.inicio AS fechaInicioCuota, C.entrada /* todos los campos de TAL (total ampliaciones), el total de gastos de TG, y la cuota de C.aqui esta lo que se va a mandar a la pagina*/
+                        FROM /* SELECT de la tabla que nos da este SELECT de abajo */
+                            (SELECT ALS.vehiculo, ALS.Marca_modelo, MIN(ALS.fechaInicio) AS primerAlquiler,/*SELECT de alquileres y agrupa los vehiculos por la suma (SUM) de Precio, Ganancia, Dias y la fecha menor MIN */
+                                    SUM(ALS.TotalGananciaAlquiler) AS totalGananciaAlquileres,SUM(ALS.TotalPrecioAlquiler) AS totalPrecioAlquileres,SUM(ALS.TotalDiasAlquiler) AS totalDiasAlquileres 
+                                FROM
+                                            (SELECT AL.vehiculo, V.Marca_modelo, AL.fechaInicio,/* SELECT que calcula alquileres+ampliaciones, pero repite un coche tantas veces como alquileres */
+                                                    COALESCE(AM.sumaGanancia, 0) + COALESCE(AL.ganancia) AS TotalGananciaAlquiler,
+                                                    COALESCE(AM.sumaDias, 0) + COALESCE(AL.dias) AS TotalDiasAlquiler, 
+                                                    COALESCE(AM.sumaPrecio, 0) + COALESCE(AL.precio) AS TotalPrecioAlquiler
+                                                FROM alquileres AL
+                                                LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo /* union para para sacar el nombre del coche */
+                                                LEFT JOIN /* union alquiler con sus ampliaciones */
+                                                    (SELECT alquiler, SUM(precio) AS sumaPrecio,  SUM(dias) AS sumaDias, SUM(ganancia) AS sumaGanancia /* SELECT de ampliaciones y agrupa por la suma de precio... de las ampliaciones */        
+                                                        FROM ampliaciones
+                                                    GROUP BY alquiler) AM /* las ampliaciones me salen repetidas y las agrupo por alquiler sumando el total*/
+                                                ON AM.alquiler = AL.id_alquiler /* union alquiler con ampliaciones */
+                                            WHERE vehiculo IN ($in)) AS ALS /* (ALS alquil+ampli) solo de los coches indicados, y esos alquileres son los indices a buscar de las ampliaciones, sino se pusiera sacaria los alquileres de todos los coches */
+                            GROUP BY Al.vehiculo) TAL /* (TAL total alquileres). agrupo por la suma para que no me repita los coches */
+                    LEFT JOIN /* JOIN mas externo que junta los alqui/amplia con los gastos */
+                        (SELECT id_vehiculo, SUM(Importe) AS totalGastos  /* saco total de gastos sumando precio*/
+                               FROM gastosvehiculo  /* SELECT que saca todos los gastos de los coches */ 
+									WHERE id_vehiculo IN ($in)
+						GROUP BY id_vehiculo) TG /* (TG total gastos) agrupo para sumar total gastos ya que salen coches repetidos*/
+                    ON TG.id_vehiculo = TAL.vehiculo /* TAL se junta con TG */
+                    LEFT JOIN /* este JOIN junta la cuota con los vehiculos */
+                        (SELECT id_vehiculo, cuota, inicio, entrada 
+                            FROM cuotasvehiculo/* leo la cuota */
+                                WHERE id_vehiculo IN ($in)) C 
+                    ON C.id_vehiculo = TAL.vehiculo";
+        /*inicialmente saco las alquileres y ampliaciones de loscoches con una estructura de 3 SELECT anidados. de los 3 SELECT, 
+        el 2º select me da este resultado, todos los alquileres de los dos coches del IN, con el total del precio, ganancia y dias (suma del alquliles mas todas las amplia):
                 1	JEEP GRANGLER V6	2025-09-24	8550.00	13	8950.00
                 1	JEEP GRANGLER V6	2025-09-25	5000.00	15	5555.00
                 1	JEEP GRANGLER V6	2025-10-04	4800.00	4	5200.00
                 82	FERRARI 296GTS 	    2025-10-03	5400.00	2	6000.00
         con el 3º SELECT (mas interno) se se suman todas las ampliaciones (importe, ganancia, dias)(SELECT alquiler, SUM(precio) AS sumaPrecio ...FROM ampliaciones GROUP BY alquiler)       
-        el 2º SELECT no agrupa nada solo muestra la suma del precio del alquiler con la suma de las ampliaciones (AM.sumaPrecio) + (AL.precio)
+        el 2º SELECT no agrupa nada, solo muestra la suma del precio del alquiler con la suma de las ampliaciones (AM.sumaPrecio) + (AL.precio)
         Como necesito el total de ganacia de alquileres de cada coche tengo que agrupar por coche (Al.vehiculo) el resultado del 2º SELECT, asi que como el 2º SELECT me da una tabla
         lo meto todo entre parentisis y hago el 1º SELECT sobre la tabla que me da el 2º SELECT y obtengo esto:
                 1	JEEP GRANGLER V6	2025-09-24	18350.00	19705.00	32
                 82	FERRARI 296GTS 	    2025-10-03	5400.00	    6000.00	    2
         y como colofon con MIN(ALS.fechaInicio) agrupo por la menor fechaInicio y asi obntengo la fecha del 1º alquiler para luego saber desde cuando se alquila ese coche
+        Despues tengo que sacar los gastos de los vehiculos, tengo un select individuial, que me los da en una tabla asi:
+        LEFT JOIN (SELECT G.id_vehiculo, SUM(Importe) AS totalGastos FROM gastosvehiculo G
+									WHERE G.id_vehiculo IN(82, 1)
+									GROUP BY G.id_vehiculo) TG ON TG.id_vehiculo = TAL.vehiculo
+            1	2900.00
+            82	3000.00 
+        pues junto el select de los gastos con toda la estructura del select total de alquileres y ampliaciones con
+        un LEFT JOIN y lo saco todo de una:
+            1	JEEP GRANGLER V6	2025-09-24	18350.00	19705.00	32	2900.00
+            82	FERRARI 296GTS 	    2025-10-03	5400.00	    6000.00	    2	3000.00
+        ahora añado otro JOIN de una subconsulta para sacar la cuota de los vehiculos   
+        LEFT JOIN (SELECT id_vehiculo, cuota FROM cuotasvehiculo
+                    WHERE id_vehiculo IN(82, 1)) C ON C.id_vehiculo = TAL.vehiculo; 
+         resultado:   82	5300.00
+         resultado de la consulta global (solo tiene cuota el 82):
+            1	JEEP GRANGLER V6	2025-09-24	18350.00	19705.00	32	2900.00	
+            82	FERRARI 296GTS 	    2025-10-03	5400.00	    6000.00	    2	3000.00	5300.00
+        
         */            
 
         } 

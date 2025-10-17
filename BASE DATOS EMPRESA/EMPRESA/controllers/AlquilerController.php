@@ -108,7 +108,7 @@ class AlquilerController {
         $hasta = $input['hasta'] ?? null;
         $cocheIds = $input['cocheIds'] ?? [];
         
-        $datos = $this->alquilerRepository->totalAlquileresVehiculos($cocheIds, $desde, $hasta);
+        $datos = $this->alquilerRepository->totalAlquileresVehiculosGastos($cocheIds, $desde, $hasta);
         if (!empty($datos)){ 
             $alquileresVehiculos= $datos;
         }
@@ -142,7 +142,9 @@ class AlquilerController {
         //[0] => Array ( [vehiculo] => 1 [ganancia] => 4900.00 [fechaInicio] => 2025-09-24 [comisionComercial] => 100.00 ) 
         $año = substr($alquileresUnionAmpliaciones[0]['fechaInicio'], 0, 4);//con [0] me situo en el 1º alquiler de esa tabla y con ['fechaInicio'] en la fecha del alquiler
         //por cada id de coche creo una tabla asociativa con 12 meses, donde el indice de cada mes es ['2025-01' => suma importes alqui/ampliac,...'2025-12' => suma importes alqui/ampliac
-        foreach ($cocheIds as $id){//el indice es el id de un coche 82, 1    
+        $cochesIdsOrdenados = $this->ordenarTabla($cocheIds);/* la ordeno para que luego me salgan las tablas de meses ordenadas por el id del coche, y me coincida con el orden de la tabla gastos se mostrara despues*/
+        /* da igual que lo ordene en la consulta, el orden que siguen las tablas de meses se lo da el orden de la lista desplegable que me da la tabla $cocheIds */
+        foreach ($cochesIdsOrdenados as $id){//el indice es el id de un coche 82, 1    
             for ($i=1; $i<=12; $i++){
                 if ($i<10) {
                     $mesesAñoGananciaVehiculos [$id]["$año-0$i"]= 0;//a meses de un solo digito le añado el 0. inicializo a 0 el valor de cada mes
@@ -202,29 +204,22 @@ class AlquilerController {
         //resultado
         //Array ( [82] => Array ( [nombreCoche] => FERRARI 296GTS [2025-01] => 0 ...... [2025-10] => 5400 [2025-11] => 0 [2025-12] => 0 [total] => 5400 ) 
         //         [1] => Array ( [nombreCoche] => JEEP GRANGLER V6 [2025-01] => 0 [2025-02] => 0 .....[2025-09] => 13550 [2025-10] => 4800 [2025-12] => 0 [total] => 18350 ) ) 
-
-        //$gastos = $this->gastoVehiculoRepository->gastosVehiculo();//leo los gastos de ese vehiculo (ojo no son los gastos de alquileres, son los del vehiculo)
         $this->pages->renderNoHeader('total_alquileres_vehiculo_fecha', ['mesesAñoGananciaVehiculos' => $mesesAñoGananciaVehiculos, 'desde' => $desde, 'hasta' => $hasta]);
     }
 
-    public function totalAlquileresVehiculos(){//esta funcion lee todos los alquileres de vehiculos con el total de sus ampliaciones, como no hay fechas se puede leer alquiler y la suma del importe de sus ampliaciones 
+    public function totalAlquileresVehiculos(){//esta funcion lee todos los alquileres de vehiculos con el total de sus ampliaciones, 
+        //como no hay fechas se puede leer alquiler y la suma del importe de sus ampliaciones. tmb lee todos los gastos de los coches y la cuota si la tiene
         $input = json_decode(file_get_contents('php://input'), true);
         $cocheIds = $input['cocheIds'];
 
-        $datos = $this->alquilerRepository->totalAlquileresVehiculos($cocheIds);
-        if (!empty($datos)){ 
-            $alquileresVehiculos= $datos;
-        }
+        $totalAlquileresVehiculos = $this->alquilerRepository->totalAlquileresVehiculosGastos($cocheIds);
         /* resultado
-            Array ( [0] => Array ( [vehiculo] => 1 [Marca_modelo] => JEEP GRANGLER V6 [primerAlquiler] => 2025-09-24 [totalGananciaAlquileres] => 18350.00 [totalPrecioAlquileres] => 19705.00 [totalDiasAlquileres] => 32 )
-                    [1] => Array ( [vehiculo] => 82 [Marca_modelo] => FERRARI 296GTS [primerAlquiler] => 2025-10-03 [totalGananciaAlquileres] => 5400.00 [totalPrecioAlquileres] => 6000.00 [totalDiasAlquileres] => 2 ) ) */
-        
-         $this->pages->renderNoHeader('total_alquileres_vehiculo', ['alquileresVehiculos' => $alquileresVehiculos]);
-        
-
+            Array ( [0] => Array ( [vehiculo] => 1 [Marca_modelo] => JEEP GRANGLER V6 [primerAlquiler] => 2025-09-24 [totalGananciaAlquileres] => 18350.00 [totalPrecioAlquileres] => 19705.00 [totalDiasAlquileres] => 32 [totalGastos] => 2900 [cuota] => null  )
+                    [1] => Array ( [vehiculo] => 82 [Marca_modelo] => FERRARI 296GTS [primerAlquiler] => 2025-10-03 [totalGananciaAlquileres] => 5400.00 [totalPrecioAlquileres] => 6000.00 [totalDiasAlquileres] => 2 [totalGastos] => 3000 [cuota] => 5300) ) 
+                    con una consulta muy potente leo tmb total gastos vehiculos*/
+                   
+        $this->pages->renderNoHeader('total_alquileres_vehiculo', ['totalAlquileresVehiculos' => $totalAlquileresVehiculos]);
     }
-
-
 
 
     //esta funcion no se esta usando la dejo para que se vea otra forma de trabajar las tablas
@@ -326,13 +321,12 @@ class AlquilerController {
     public function ordenarTabla(array $tabla):array{
         for ( $i=0; $i<sizeof($tabla); $i++ ){  
             for ($j=$i; $j<sizeof($tabla); $j++){
-                if ($tabla[$j]['fechaInicio']<$tabla[$i]['fechaInicio']){
+                if ($tabla[$j]<$tabla[$i]){
                     $temp=$tabla[$i];
                     $tabla[$i]=$tabla[$j];
                     $tabla[$j]=$temp;
                 }
             }
-            
         }
     return $tabla;
     }

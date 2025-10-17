@@ -55,8 +55,8 @@
                             </a>
                             <a href="<?= DIRECTORIO ?>borrar_vehiculo/<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este vehículo?');"> 
                               <i class="bi bi-trash"></i>
-                            </a>
-                            <a href="<?= DIRECTORIO ?>detalles_vehiculo/<?=$vehiculo->getId()?>" class= "btn btn-sm btn-outline-primary"> 
+                            </a><!--se abre en niva ventana con  target="_blank" rel="noopener noreferrer"-->
+                            <a href="<?= DIRECTORIO ?>detalles_vehiculo/<?=$vehiculo->getId()?>" target="_blank" rel="noopener noreferrer" class= "btn btn-sm btn-outline-primary"> 
                               <i class="bi bi-eye"></i>
                             </a>    
                         </div>

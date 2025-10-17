@@ -34,6 +34,8 @@ Router::add('GET', '/nuevo_vehiculo/:id', function($id_vehiculo) {return (new Ve
 Router::add('POST', '/nuevo_vehiculo', function () {return (new VehiculoController())->save();});
 Router::add('GET', '/nuevo_vehiculo', function() {return (new VehiculoController())->add();});
 Router::add('GET', '/vehiculos', function () {return (new VehiculoController())->list();});
+Router::add('GET', '/gastos_cuota_vehiculo', function () {return (new VehiculoController())->gastosCuotasVehiculo();});
+
 //Rutas de fotos vehiculo
 Router::add('GET', '/borrar_foto_vehiculo/:id', function($id_foto){return (new FotoController())->delete($id_foto);});
 Router::add('GET', '/editar_foto/:id', function($id_foto) {return (new FotoController())->edit($id_foto);}); 
@@ -46,6 +48,7 @@ Router::add('POST', '/nuevo_gasto_vehiculo', function () {return (new GastoVehic
 Router::add('GET', '/borrar_cuota_vehiculo/:id', function($id_cuota){return (new CuotaVehiculoController())->delete($id_cuota);});
 Router::add('GET', '/editar_cuota_vehiculo/:id', function($id_cuota) {return (new CuotaVehiculoController())->edit($id_cuota);});
 Router::add('POST', '/nueva_cuota_vehiculo', function () {return (new CuotaVehiculoController())->save();});
+
 //movimientos dinero
 Router::add('GET', '/movimientos', function () {return (new MovimientoController())->list();});
 Router::add('GET', '/nuevo_movimiento', function() {return (new MovimientoController())->add();});

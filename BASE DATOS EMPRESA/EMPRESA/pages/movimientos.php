@@ -32,6 +32,8 @@
                 <th class="etiqueta" scope="col">Envia</th>
                 <th class="etiqueta" scope="col">Recibe</th>
                 <th class="etiqueta" scope="col">Concepto</th>
+                <th class="etiqueta" scope="col">Envia</th>
+                <th class="etiqueta" scope="col">Devuelve</th>
                 <th class="etiqueta" scope="col">Debe</th>
                 <th class="etiqueta" scope="col">Vehiculo</th>
                 <th class="etiqueta" scope="col">Propietario</th>
@@ -48,11 +50,13 @@
                     <td><?=formatea_fecha($movimiento->getfecha())?></td>
                     <td><?=$movimiento->getenviaInfo()->getNombre()?></td>
                     <td><?=$movimiento->getrecibeInfo()->getNombre()?></td>
-                    <td><?=$movimiento->getconcepto()?></td>
+                    <td title="<?=$movimiento->getconcepto()?>"><?=$movimiento->getconcepto()?></td>
+                    <td><?=number_format($movimiento->gettotalEntrega(), 2, ',', '.')?>€</td>
+                    <td><?=number_format($movimiento->gettotalDevolucion(), 2, ',', ',')?>€</td>
                     <td><?=number_format($movimiento->getdiferencia(), 2, ',', '.')?>€</td>
                     <td><?=$movimiento->getvehiculoInfo()?->getMarca_modelo() ?? ''?></td> <!-- si getvehiculoInfo() es null se va al ?? y devuelve ''-->
                     <td><?=$movimiento->getvehiculoInfo()?->getdatos_propietario()?->getNombre() ?? ''?></td><!-- si getvehiculoInfo() o getdatos_propietario() es null se va al ?? y devuelve ''-->
-                    <td><?=$movimiento->getobservaciones()?></td>
+                    <td title="<?=$movimiento->getobservaciones()?>"><?=$movimiento->getobservaciones()?></td><!--con title aparece el texto completo al poner el raton encima del campo observaciones-->
                     <td><?=$movimiento->getterminado() ? 'SI' : 'NO'?></td>
                     <td>
                         <div class="btn-group" role="group">
@@ -61,8 +65,8 @@
                             </a>
                             <a href="<?= DIRECTORIO ?>borrar_movimiento/<?=$movimiento->getidMovimiento()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este movimiento?');"> 
                               <i class="bi bi-trash"></i>
-                            </a>
-                            <a href="<?= DIRECTORIO ?>detalles_movimiento/<?=$movimiento->getidMovimiento()?>" class= "btn btn-sm btn-outline-primary"> 
+                            </a><!--se abre en niva ventana con  target="_blank" rel="noopener noreferrer"-->
+                            <a href="<?= DIRECTORIO ?>detalles_movimiento/<?=$movimiento->getidMovimiento()?>"  target="_blank" rel="noopener noreferrer" class= "btn btn-sm btn-outline-primary"> 
                               <i class="bi bi-eye"></i>
                             </a>    
                         </div>

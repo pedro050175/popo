@@ -2,7 +2,7 @@
 header("Content-Type: text/plain; charset=UTF-8");
 ?>
 <div class = "bloque-movimiento">  
-    <table class = "tabla_resumen">
+    <table class = "tabla_resumen noultima">
         <caption>Alquileres (Ganancia) de los coches seleccionados entre las fechas <?=formatea_fecha($desde)?> y <?=formatea_fecha($hasta)?></caption>
         <thead>
             <tr>
@@ -26,10 +26,10 @@ header("Content-Type: text/plain; charset=UTF-8");
             <?php 
                 foreach ($mesesAñoGananciaVehiculos as $coche){ 
                     echo "<tr>";
-                    echo "<th>".current($coche)."</th>";
+                    echo "<td>".current($coche)."</td>";
                     while (next($coche)!==false){//OJO hay que usar la compraracion fuerte !== porque si uso != falla. next devuelve el siguiente valor de la tabla y mueve el indice para que current devuelva el valor actual
                         //pero next tmb devuelve un valor de la tabla, si en la tabla hay un 0 con while next($coche)o while (next(..)!=false) se sale porque devuelve el 0 y dice que 0 no es true. usando !== comprara valor y tipo y como el 0 no es del mismo tipo que el false no falla con valores cero
-                        echo "<th>".number_format(intval(current($coche)),2, ',', '.')."€</th>";
+                        echo "<td>".number_format(intval(current($coche)),2, ',', '.')."€</td>";
                     }
                     echo "</tr>";
                 }

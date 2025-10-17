@@ -45,4 +45,20 @@ function ordenar(array $tabla):array{
         }
     return $tabla;
     }
-?>
+function parametrosIn(array &$in, array &$parametros, array $datosConvertir){//el array $datosConvertir lo convierte en dos array: uno con los datos para poner en un IN y otro con los parametros de la consulta 
+    $placeholders = [];
+    foreach ($datosConvertir as $i => $id) {
+        $key = ':id' . $i;              // Ejemplo: :id0, :id1, :id2...
+        $placeholders[] = $key; //aqui se crea una tabla [:id1,:id5,:id9] que es la que ira dentro del IN
+        $parametros[$key] = (int)$id;  //[':id0' => 1, ':id1' => 5, ':id2' => 9] array asociativo       Forzamos a entero por seguridad
+    }
+    $in = implode(',', $placeholders); //la tabla del IN la convierte a string separado por ,
+}
+function diferenciaMeses (? string $fecha):int{
+    $hoy = new DateTime();
+    $fechaAnterior = new DateTime($fecha);
+    $diferencia = $hoy->diff($fechaAnterior);
+    // Diferencia total en meses (años convertidos a meses)
+    $meses = ($diferencia->y * 12) + $diferencia->m;
+    return $meses;
+}

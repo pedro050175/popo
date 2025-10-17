@@ -144,7 +144,7 @@ class VehiculoRepository {
         }
         return $relacionada;
     }    
-    public function nombreCoche(string $id): mixed { //devuelver Marca_modelo del coche id
+    public function nombreCoche(string $id): mixed { //devuelve Marca_modelo del coche id
          $parametros = [
         ':id' => $id 
         ]; 

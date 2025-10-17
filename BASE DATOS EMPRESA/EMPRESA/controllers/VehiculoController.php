@@ -75,5 +75,13 @@ class VehiculoController {
         header('Location: '.DIRECTORIO.'vehiculos?num_pagina=1');
         exit; 
     }
+    public function gastosCuotasVehiculo(){
+        $idVehiculo = $_GET['coche'];
+        $nombreCoche = $this->vehiculo_repository->nombreCoche($idVehiculo);
+        /*saco el nombre del coche, prque de los gastos o cuota no lo puedo sacar porque el coche podria no tener gastos o cuota */
+        $gastos = $this->gasto_repository->gastos_vehiculo($idVehiculo);
+        $cuotas = $this->cuota_repository->cuotas_vehiculo($idVehiculo);
+        $this->pages->renderNoHeader('gastos_cuota_vehiculo', ['gastos' => $gastos, 'cuotas' => $cuotas, 'nombreCoche' => $nombreCoche]);
+    }
 }
 ?>

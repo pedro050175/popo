@@ -67,7 +67,8 @@
                 </td>
                 <td style="color:blueviolet"><?=$alquiler->getclienteInfo()->getNombre()?></td>
                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
-                <td style="color: red"><?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
+        <!--tooltip-cell clase para poner borde verde al pasar con el raton-->
+                <td class="borde" style="color: red" title="KM: <?= $alquiler->getkilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()?>">                                    <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
                 <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
                 <!--<td><?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€</td>-->
                 <td><?=number_format($alquiler->getfianza(), 2, ',', '.')?>€</td>
@@ -75,8 +76,9 @@
                 <!--<td><?=$alquiler->getcomercial()?></td>-->
                 <td><?=$alquiler->getempresaInfo()->getNombre()?></td>
                 <td><?=$alquiler->getestado()?></td> 
-                <td><?=$alquiler->getobservaciones()?></td>
-                
+                <td class="tooltip-cell"  data-tooltip="<?= htmlspecialchars($alquiler->getobservaciones()) ?>">
+                        <?= htmlspecialchars($alquiler->getobservaciones()) ?>              
+                </td>
                 <td>
                 <div class="btn-group" role="group">
                     <a href="<?= DIRECTORIO ?>nuevo_alquiler/<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
@@ -123,5 +125,41 @@ $(document).ready(function() {
     if (document.getElementById("buscar").value!=""){
         document.getElementById("buscar").focus();
     }
+/* para el texto flotante en observaciones */
+  const tooltip = document.createElement('div');
+  tooltip.className = 'tooltip-popup';
+  document.body.appendChild(tooltip);
+
+  document.querySelectorAll('.tooltip-cell').forEach(cell => {
+    cell.addEventListener('mouseenter', e => {
+      const text = cell.dataset.tooltip;
+      if (!text) return;
+
+      tooltip.textContent = text;
+      tooltip.classList.add('show');
+
+      const rect = cell.getBoundingClientRect();
+      const tooltipHeight = tooltip.offsetHeight;
+
+      // Colocación automática: si no cabe arriba, se muestra abajo
+      const top = rect.top - tooltipHeight - 8 < 0
+        ? rect.bottom + 8 + window.scrollY
+        : rect.top + window.scrollY - tooltipHeight - 8;
+
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${rect.left + window.scrollX}px`;
+    });
+
+    cell.addEventListener('mousemove', e => {
+      // Siguiendo el cursor (opcional)
+      tooltip.style.left = `${e.pageX + 12}px`;
+      tooltip.style.top = `${e.pageY - tooltip.offsetHeight - 10}px`;
+    });
+
+    cell.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('show');
+    });
+  });
 });
+
 </script>
