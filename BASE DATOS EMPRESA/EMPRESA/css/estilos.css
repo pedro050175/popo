@@ -4,9 +4,9 @@
     text-decoration:underline;
 }
 .cuadro_text{
-    padding: 7px;
+    padding: 6px;
     font-size: 12px;
-    margin: 4px 2px;
+    margin: 2px 2px;
     box-shadow: 0 4px 8px 0 rgba(95, 95, 95, 0.822);
     border-radius: 8px;
 }
@@ -123,15 +123,36 @@
 .titulo_prin{
     font-size: 24px; 
     color: rgb(223, 94, 3);
-    text-shadow: 1px 2px 5px  grey;
+    text-shadow: 1px 2px 1px  grey;
     font-weight: bold;/*negrita*/
 }
 .titulo_sec{
-    font-size: 22px; 
-    color: rgb(223, 94, 3);
-    text-shadow: 1px 2px 5px  grey;
+    font-size: 22px;
+    text-shadow: 1px 2px 1px  grey;
     font-weight: bold;/*negrita*/
     text-align: center;
+    color: rgb(223, 94, 3);
+}
+.titulo_marco{/*se usa en nueva compraventa, en el titulo compra y venta*/
+    font-size: 18px; 
+    color: rgb(223, 94, 3);
+    font-weight: bold;/*negrita*/
+    text-align: center;
+    border: 0px solid #ccc;   /* elimino borde*/
+    border-top-width:thin; /* le pongo borde solo arriba, izq y derecha */
+    border-left-width:thin; 
+    border-right-width:thin; 
+    padding: 5px;            /* Espacio interior */
+    border-radius: 8px 8px 0 0; /* borde redondeado sup izq y sup dere */
+    margin: 0px;          
+}
+.contenido_titulo_marco{/*se usa en nueva compraventa*/
+    border: 0px solid #ccc; /* elimino borde*/
+    border-bottom-width:thin; /* le pongo borde solo abajo, izq y derecha */
+    border-left-width:thin; 
+    border-right-width:thin; 
+    border-radius: 0px 0px 8px 8px;/* borde redondeado inf izq y inf dere */
+    padding: 0px 0px 5px 5px;
 }
 /* Ajustes generales de subtablas */
 .mi_tabla {
@@ -200,8 +221,7 @@
     gap: 20px;          /* espacio entre tablas */
     flex-wrap: wrap;    /* permite que bajen en pantallas pequeñas */
 }
-.fina td,  /*lo uso para tablas de bootstrap que son muy anchas tabla movimientos de analisis*/
-.fina th { /*th que esten dentro de la clase fina. Es como poner div .popo, seria clase popo que este dentro de un div*/
+.fina td{  /*lo uso para tablas de bootstrap que son muy anchas tabla movimientos de analisis. th que esten dentro de la clase fina. Es como poner div .popo, seria clase popo que este dentro de un div*/
     padding: 0.30rem 0.15rem 0.25rem 0.15rem; /* sup, derec, inf, izq    menos altura */
     font-size: 14px;         /* opcional */
     line-height: 15px;        /* separacion entre lineas */
@@ -212,8 +232,19 @@
     overflow: hidden; /* oculta el exceso de texto */
     text-overflow: ellipsis; /* añade los puntos suspensivos */
 }
-.medio td,  /*lo uso para tablas de bootstrap que son muy anchas, listado de entidades, vehiculos y movimientos*/
-.medio th {
+.fina th { /*th que esten dentro de la clase fina. Es como poner div .popo, seria clase popo que este dentro de un div*/
+    padding: 0.30rem 0.15rem 0.25rem 0.15rem; /* sup, derec, inf, izq    menos altura */
+    font-size: 14px;         /* opcional */
+    line-height: 15px;        /* separacion entre lineas */
+    text-align: center;
+    /* con esto evito que en la tabla hayan textos que ocupan dos lineas o mas */
+    max-width: 100px; /* ancho máximo */
+    white-space: nowrap; /* evita saltos de línea */
+    overflow: hidden; /* oculta el exceso de texto */
+    text-overflow: ellipsis; /* añade los puntos suspensivos */
+}
+
+.medio td{  /*lo uso para tablas de bootstrap que son muy anchas, listado de entidades, vehiculos y movimientos*/ 
     padding: 0.25rem 0.5rem; /* menos altura */
     font-size: 15px;         /* opcional */
     line-height: 1.5;        /* compacta más */
@@ -222,6 +253,17 @@
     overflow: hidden; /* oculta el exceso de texto */
     text-overflow: ellipsis; /* añade los puntos suspensivos */        
 }
+.medio th {
+    padding: 0.25rem 0.5rem; /* menos altura */
+    font-size: 15px;         /* opcional */
+    line-height: 1.5;        /* compacta más */
+    max-width: 100px; /* ancho máximo */
+    white-space: nowrap; /* evita saltos de línea */
+    overflow: hidden; /* oculta el exceso de texto */
+    text-overflow: ellipsis; /* añade los puntos suspensivos */ 
+    text-align: center;       
+}
+
 /* Tabla resumen más sobria */
 /* Tabla resumen con paleta azul-gris */
 .tabla_resumen {
@@ -330,7 +372,7 @@
   z-index: 999999;
   white-space: normal;
   opacity: 0;
-  pointer-events: none;
+  pointer-events: none;/* esto evita que se pueda seleccionar con el rato el texto y copiar */
   transition: opacity 0.5s ease, transform 0.5s ease;
   transform: translateY(-5px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -352,4 +394,46 @@
     position: fixed;
     top: 420px;
     right: 20px; */
+    
+    /* se inicia oculto */
+.mensajeGuardar {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    max-width: 320px;
+    text-align: center;
+    color: #000;
+    opacity: 0;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    z-index: 999999;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.mensajeGuardar.mostrar {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* 🔹 Tipos de mensaje */
+.mensajeGuardar.exito {
+    background-color: rgba(72, 201, 176, 0.95); /* verde */
+    border: 1px solid #28b78d;
+}
+.mensajeGuardar.error {
+    background-color: rgba(231, 76, 60, 0.95); /* rojo */
+    border: 1px solid #c0392b;
+    color: #fff;
+}
+.mensajeGuardar.info {
+    background-color: rgba(52, 152, 219, 0.95); /* azul */
+    border: 1px solid #2980b9;
+    color: #fff;
+}
+.mensajeGuardar.advertencia {
+    background-color: rgba(255, 172, 49, 0.95); /* naranja */
+    border: 1px solid #e67e22;
+    color: #000;
+}
 

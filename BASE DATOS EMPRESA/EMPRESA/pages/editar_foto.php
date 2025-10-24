@@ -1,4 +1,4 @@
-<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspFoto</label>
+<label class="titulo_prin">Foto</label>
 <form action="<?= DIRECTORIO ?>nueva_foto" method="post">
     <fieldset class="mi-fieldset">
     <legend class="mi-legend">Editar Foto</legend>

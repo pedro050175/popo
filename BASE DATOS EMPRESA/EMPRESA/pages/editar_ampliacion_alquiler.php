@@ -1,4 +1,4 @@
-<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspAmpliacion</label>
+<label class="titulo_prin">Ampliacion</label>
 <div>
     <form action="<?= DIRECTORIO ?>nueva_ampliacion_alquiler" method="post">
         <fieldset class="mi-fieldset">

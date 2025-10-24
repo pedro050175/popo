@@ -255,6 +255,10 @@
                     cell.addEventListener('mousemove', e => {/* e es el nombre de la variable que representa al evento que ha disparado el mousemove
                          e.pageX es una propiedad del evento= posicion X del puntero respecto a toda la pagina*/
                         tooltip.style.left = `${e.pageX + 12}px`;
+                        /* las {} sirve para insertar el valor de una variable (o incluso una expresión completa) dentro de un texto
+                        solo funciona dentro de las llamadas template literals, que son las cadenas encerradas con backticks (`), no con comillas simples ' ni dobles "
+                        Las comillas invertidas `...` permiten escribir una plantilla. ${nombre} se reemplaza automáticamente por el valor de la variable 
+                        ejem: console.log(`Hola, ${nombre}!`); console.log(`La suma de ${a} + ${b} es ${a + b}`);*/
                         tooltip.style.top = `${e.pageY - tooltip.offsetHeight - 10}px`;
                     });
                     /* cuando sale de la celda lo oculta */

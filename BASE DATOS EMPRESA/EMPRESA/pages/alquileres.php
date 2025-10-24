@@ -68,12 +68,10 @@
                 <td style="color:blueviolet"><?=$alquiler->getclienteInfo()->getNombre()?></td>
                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
         <!--tooltip-cell clase para poner borde verde al pasar con el raton-->
-                <td class="borde" style="color: red" title="KM: <?= $alquiler->getkilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()?>">                                    <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
+                <td class="borde" style="color: red" title="KM: <?= $alquiler->getkilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()?>; Comision comercial: <?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€">                                    <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
                 <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
-                <!--<td><?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€</td>-->
                 <td><?=number_format($alquiler->getfianza(), 2, ',', '.')?>€</td>
                 <td><?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€</td>
-                <!--<td><?=$alquiler->getcomercial()?></td>-->
                 <td><?=$alquiler->getempresaInfo()->getNombre()?></td>
                 <td><?=$alquiler->getestado()?></td> 
                 <td class="tooltip-cell"  data-tooltip="<?= htmlspecialchars($alquiler->getobservaciones()) ?>">
@@ -106,12 +104,11 @@
         <div class="col-md-6"> <em class="etiqueta">Pagina: <?=$_GET['num_pagina']?> de: <?= $numPaginas?></em></div>    
         <?php $_GET['num_pagina'] < $numPaginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
         <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
-        <?php $ordenar = $_GET['ordenar'] ?? '' ?>  <!--si existe $_GET['ord..'] el listado esta ordenado, el enlace siguiente y atras debe llevar tmb variable ordenar para que siga ordenado-->
 
-        <div class="col-md-4"><a href="/mis_pruebas/movimientos?num_pagina=<?=$num_pagina_atras?>&ordenar=<?=$ordenar?>">[Atras</a>
-        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$num_pagina_sig?>&ordenar=<?=$ordenar?>">Siguiente]</a>
-        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=1&ordenar=<?=$ordenar?>">[Inicio</a>
-        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$numPaginas?>&ordenar=<?=$ordenar?>">Fin]</a></div>
+        <div class="col-md-4"><a href="/mis_pruebas/movimientos?num_pagina=<?=$num_pagina_atras?>">[Atras</a>
+        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$num_pagina_sig?>">Siguiente]</a>
+        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=1">[Inicio</a>
+        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$numPaginas?>">Fin]</a></div>
     <?php endif ;?>
 </div>  
 <script>
@@ -126,40 +123,8 @@ $(document).ready(function() {
         document.getElementById("buscar").focus();
     }
 /* para el texto flotante en observaciones */
-  const tooltip = document.createElement('div');
-  tooltip.className = 'tooltip-popup';
-  document.body.appendChild(tooltip);
-
-  document.querySelectorAll('.tooltip-cell').forEach(cell => {
-    cell.addEventListener('mouseenter', e => {
-      const text = cell.dataset.tooltip;
-      if (!text) return;
-
-      tooltip.textContent = text;
-      tooltip.classList.add('show');
-
-      const rect = cell.getBoundingClientRect();
-      const tooltipHeight = tooltip.offsetHeight;
-
-      // Colocación automática: si no cabe arriba, se muestra abajo
-      const top = rect.top - tooltipHeight - 8 < 0
-        ? rect.bottom + 8 + window.scrollY
-        : rect.top + window.scrollY - tooltipHeight - 8;
-
-      tooltip.style.top = `${top}px`;
-      tooltip.style.left = `${rect.left + window.scrollX}px`;
-    });
-
-    cell.addEventListener('mousemove', e => {
-      // Siguiendo el cursor (opcional)
-      tooltip.style.left = `${e.pageX + 12}px`;
-      tooltip.style.top = `${e.pageY - tooltip.offsetHeight - 10}px`;
-    });
-
-    cell.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('show');
-    });
-  });
+  tooltip();
+ 
 });
 
 </script>

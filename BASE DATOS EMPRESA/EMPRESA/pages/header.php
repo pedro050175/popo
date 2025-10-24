@@ -32,6 +32,8 @@ controller como he hecho en los metodos save y delete, pero el metodo edit, a di
     <script src="<?=DIRECTORIO?>/js/nuevo_vehiculo.js" type="text/javascript"></script>
     <script src="<?=DIRECTORIO?>/js/movimientos.js" type="text/javascript"></script>
     <script src="<?=DIRECTORIO?>/js/alquileres.js" type="text/javascript"></script>
+    <script src="<?=DIRECTORIO?>/js/compraventa.js" type="text/javascript"></script>
+    <script src="<?=DIRECTORIO?>/js/general.js" type="text/javascript"></script>
     
 </head>
 <body>
@@ -58,6 +60,9 @@ controller como he hecho en los metodos save y delete, pero el metodo edit, a di
                 </li>
                 <li class="nav-item">
                     <a class="nav-link<?= str_contains($currentPath, 'alquiler') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>alquileres?num_pagina=1" aria-current="page">Alquileres</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link<?= str_contains($currentPath, 'compraventa') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>compraventas?num_pagina=1" aria-current="page">Compra-Ventas</a>
                 </li>
             </ul>
         </div>

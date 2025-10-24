@@ -79,9 +79,5 @@ class CobroAlquilerRepository{
         $sql = "DELETE FROM cobrosalquiler WHERE idCobro=:id"; 
         $this->conexionPDO->consulta($sql, $parametros);
     }
-
-
-
-
 }
 ?>

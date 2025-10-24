@@ -56,36 +56,6 @@ function validarCuotas(formulario){
     };
     return true;    
 }
-function validar_campo(campo){
-    if (campo.type === "text")
-        return validar_entero_campo_text(campo);
-    else if (campo.type === "number") return validar_entero_campo_number(campo); 
-}
-function validar_entero_campo_text (campo) { //valida campos de formulario tipo text
-    var cadena = campo.value;
-    cadena = cadena.replace(',', '.');//cambio la coma por un punto ya que en sql el decimal es el punto
-    if ((cadena<0) || (isNaN(cadena)) ){//compruebo que no sea negativo y que no tenga letras o simbolos
-        alert ("Valor erroneo");
-        campo.value="";
-        return false;
-    }
-    campo.value=cadena;
-    return true;
-}
-function validar_entero_campo_number (campo) { //valida campos de formulariotipo number
-    let valor = Number(campo.value);
-    if (!Number.isInteger(valor)) {// Verifica si es un número entero válido
-        alert("No escriba letras, punto, coma, o simbolos");
-        campo.value = ""; // limpiar campo
-        return false;
-    } // Verifica si es negativo
-    if (valor < 0) {
-        alert("No puede ser negativo");
-        campo.value = 0;
-        return false;
-    }
-    return true;
-}
 function mostrarMenuVehiculo(menu){//muestro el menu correspondi y pongo en azul su boton
     //oculto todos y luego solo activo el que se llame menu
     for (let opcion of opciones_menu){
@@ -111,6 +81,7 @@ function color_boton_menu(){//compruebo que MENU se muestra para saber que boton
     }
 }
 function mostrar(id){
+    /* esta funcion se puede llamar desde cualquiera de mis paginas y document tiene el nombre de la pagina que la llama */
     if (document.getElementById(id).hidden == true) {
         document.getElementById(id).hidden=false;
     }else {

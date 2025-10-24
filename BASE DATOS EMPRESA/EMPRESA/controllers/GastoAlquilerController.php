@@ -36,6 +36,5 @@ public function delete(int $id): void {
     header('Location: '.DIRECTORIO.'nuevo_alquiler/'.$alquiler);//cargo el mismo vehiculo que estaba editando    
     exit; 
 }
-
 }
 ?>

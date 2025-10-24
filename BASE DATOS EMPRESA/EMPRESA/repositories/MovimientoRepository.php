@@ -19,14 +19,6 @@ class MovimientoRepository{
     public function getnumpaginas():int{
         return $this->numPaginas;
     }
-    public function numeroPaginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
-        $this->conexionPDO->consulta ($consulta);
-        $registro = $this->conexionPDO->extraer_registro();
-        $numFilas = $registro['num_filas'];
-        intval($numFilas%FILAS_PAGINA)==0 ? $numeroPaginas = intval($numFilas/FILAS_PAGINA) : $numeroPaginas = intval(($numFilas/FILAS_PAGINA)+1);
-        
-        return $numeroPaginas;
-    }
     public function findAnalisis ($invertir){
         if ($invertir) {
             $recibe = $_GET['envia'] ?? null;
@@ -63,8 +55,8 @@ class MovimientoRepository{
     }
     public function findAll(): ?array {
         
-        $envia = $_GET['envia'] ?? null;
-        $recibe = $_GET['recibe'] ?? null;
+        $envia = $_GET['envia'] ?? '';
+        $recibe = $_GET['recibe'] ?? '';
         if (($envia) or ($recibe)) {//listado para buscar se muestran terminados y no terminados
                 $this->conexionPDO->consulta ("SELECT M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
@@ -117,7 +109,7 @@ class MovimientoRepository{
                                             ORDER  BY m.fecha DESC");
                             } else {//por defecto, se muestran terminados y no terminados
                                     $desplazamiento = 0;
-                                    $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM movimientos");
+                                    $this->numPaginas = numeroPaginas("SELECT COUNT(*) as num_filas FROM movimientos");
                                     $num_pagina = $_GET['num_pagina'] ?? 1;
                                     if (($num_pagina) <= $this->numPaginas) {
                                         $numPagina = intval($num_pagina);

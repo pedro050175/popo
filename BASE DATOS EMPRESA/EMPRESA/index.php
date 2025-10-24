@@ -16,6 +16,10 @@ use controllers\AlquilerController;
 use controllers\AmpliacionAlquilerController;
 use controllers\CobroAlquilerController;
 use controllers\GastoAlquilerController;
+use controllers\CompraventaController;
+use controllers\CobroCompraventaController;
+use controllers\PagoCompraventaController;
+use controllers\GastoCompraventaController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -92,6 +96,24 @@ Router::add('GET', '/borrar_cobro_alquiler/:id', function($id){return (new Cobro
 Router::add('POST', '/nuevo_gasto_alquiler', function () {return (new GastoAlquilerController())->save();});
 Router::add('GET', '/editar_gasto_alquiler/:id', function($id) {return (new GastoAlquilerController())->edit($id);});
 Router::add('GET', '/borrar_gasto_alquiler/:id', function($id){return (new GastoAlquilerController())->delete($id);});
+//Compra Venta
+Router::add('GET', '/compraventas', function () {return (new CompraventaController())->list();});
+Router::add('GET', '/nueva_compraventa', function () {return (new CompraventaController())->add();});
+Router::add('POST', '/nueva_compraventa', function () {return (new CompraventaController())->save();});
+Router::add('GET', '/nueva_compraventa/:id', function($id) {return (new CompraventaController())->edit($id);});
+Router::add('GET', '/borrar_compraventa/:id', function($id){return (new CompraventaController())->delete($id);});
+//pagos compraventa
+Router::add('POST', '/nuevo_cobro_compraventa', function () {return (new CobroCompraventaController())->save();});
+Router::add('GET', '/editar_cobro_compraventa/:id', function($id) {return (new CobroCompraventaController())->edit($id);});
+Router::add('GET', '/borrar_cobro_compraventa/:id', function($id){return (new CobroCompraventaController())->delete($id);});
+//Cobros compraventa
+Router::add('POST', '/nuevo_pago_compraventa', function () {return (new PagoCompraventaController())->save();});
+Router::add('GET', '/editar_pago_compraventa/:id', function($id) {return (new PagoCompraventaController())->edit($id);});
+Router::add('GET', '/borrar_pago_compraventa/:id', function($id){return (new PagoCompraventaController())->delete($id);});
+//Gastos compraventa
+Router::add('POST', '/nuevo_gasto_compraventa', function () {return (new GastoCompraventaController())->save();});
+Router::add('GET', '/editar_gasto_compraventa/:id', function($id) {return (new GastoCompraventaController())->edit($id);});
+Router::add('GET', '/borrar_gasto_compraventa/:id', function($id){return (new GastoCompraventaController())->delete($id);});
 
 
 Router::dispatch();

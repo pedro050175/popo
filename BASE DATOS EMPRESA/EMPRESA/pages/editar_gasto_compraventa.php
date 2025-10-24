@@ -1,6 +1,6 @@
 <label class="titulo_prin">Gasto</label>
 <div>
-    <form action="<?= DIRECTORIO ?>nuevo_gasto_alquiler" method="post">
+    <form action="<?= DIRECTORIO ?>nuevo_gasto_compraventa" method="post">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Editar Gasto</legend>
             <div class="row">
@@ -32,10 +32,10 @@
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="boton_submit" onclick="return validar_entero_campo_text(form.importe)">Guardar</button>
-                    <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>nuevo_alquiler/<?=$gasto->getalquiler()?>';"><!--regreso al vehiculo que estaba con DIRECTORIO/nuevo_vehiculo/$foto->getid_vehiculo()-->
+                    <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>nueva_compraventa/<?=$gasto->getcompraventa()?>';"><!--regreso al vehiculo que estaba con DIRECTORIO/nuevo_vehiculo/$foto->getid_vehiculo()-->
                 </div>
             </div>
-            <input type="hidden" name="gasto[alquiler]"  id="alquiler" value="<?=$gasto->getalquiler()?>">
+            <input type="hidden" name="gasto[compraventa]"  id="compraventa" value="<?=$gasto->getcompraventa()?>">
             <input type="hidden" name="gasto[idGasto]" id="idGasto" value="<?=$gasto->getidGasto()?>">
         </fieldset>
     </form>

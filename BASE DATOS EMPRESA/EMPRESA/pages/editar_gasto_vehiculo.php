@@ -1,4 +1,4 @@
-<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspGasto</label>
+<label class="titulo_prin">Gasto</label>
 <div>
     <form action="<?= DIRECTORIO ?>nuevo_gasto_vehiculo" method="post">
         <fieldset class="mi-fieldset">

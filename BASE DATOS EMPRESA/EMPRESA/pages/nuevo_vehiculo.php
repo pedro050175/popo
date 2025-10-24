@@ -289,7 +289,7 @@
     <!--listado Gastos-->
     <p class="titulo_sec">Gastos</p>
     <div>
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped fina">
             <thead>
                 <tr>
                     <th class="etiqueta" scope="col">Tipo</th>
@@ -417,7 +417,7 @@
     <p class="titulo_sec">Cuotas</p>
     
     <div>
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped fina">
             <thead>
                 <tr>
                     <th class="etiqueta" scope="col">Tipo</th>

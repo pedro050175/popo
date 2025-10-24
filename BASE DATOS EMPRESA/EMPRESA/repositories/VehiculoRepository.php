@@ -22,19 +22,13 @@ class VehiculoRepository {
     public function getnumpaginas():int{
         return $this->num_paginas;
     }
-    public function numero_paginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
-        $num_filas = $this->conexion->contar_filas ($consulta);
-        intval($num_filas%FILAS_PAGINA)==0 ? $numero_paginas = intval($num_filas/FILAS_PAGINA) : $numero_paginas = intval(($num_filas/FILAS_PAGINA)+1);
-        
-        return $numero_paginas;
-    }
     public function findAll(?bool $paginar=true): ?array {
         if (!$paginar){//$paginar=false no pagina, se usa para campo de lista desplegable en formularios relacionados donde deben cargarse todos los vehiculos
             $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo, Matricula, Bastidor FROM vehiculos ORDER BY Marca_modelo");
             return $this->extraer_todos();
         }
         $desplazamiento = 0;
-        $this->num_paginas = $this->numero_paginas("SELECT COUNT(*) FROM vehiculos");
+        $this->num_paginas = numeroPaginas("SELECT COUNT(*) AS num_filas FROM vehiculos");
         $num_pagina = $_GET['num_pagina'] ?? 1;
         if (($num_pagina) <= $this->num_paginas) {
             $num_pagina = intval($num_pagina);

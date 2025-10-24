@@ -15,11 +15,6 @@
         </div>
         
         <div class="row">
-            <div class="col-md-1">    
-                <div class="form-floating mb-1">
-                    <strong>Id: <?=(isset($alquiler)) ? $alquiler->getid():''?></strong> 
-                </div>
-            </div>
             <div class="col-md-3">    
                 <div class="form-floating mb-1">
                     <input type="date" name="data[fechaInicio]" class="form-control" id="fechaInicio" placeholder="Fecha inicio" value="<?=(isset($alquiler))?$alquiler->getfechaInicio():''?>" required> 
@@ -141,21 +136,20 @@
             ?>
             <div class="col-md-3">
                 <label for="select_cliente" class="form-label">Cliente</label>
-                    <select name="data[cliente]" class="form-select" id="select_cliente" 
-                            required
-                            oninvalid="document.getElementById('clienteError').style.display='block';"
-                            oninput="document.getElementById('clienteError').style.display='none';"><!--esto es por si no elige un cliente, oninvalid es evento de no elegido (clienteError esta definido abajo) y oninput es evento de que se ha eligido para quitar el error-->
-                        <option value = "" disabled <?= $clienteActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($lista as $id => $entidad): ?>
-                            <option value="<?= $id?>" <?= $id == $clienteActual ? 'selected' : '' ?>><?= $entidad ?></option>
-                        <?php endforeach; ?>
-                    </select> 
-                    <div id="clienteError" style="color: red; display: none; font-size: 0.9em;">
-                        Por favor selecciona un cliente.
-                    </div>
-                    
-                </div>
+                <select name="data[cliente]" class="form-select" id="select_cliente" 
+                        required
+                        oninvalid="document.getElementById('clienteError').style.display='block';"
+                        oninput="document.getElementById('clienteError').style.display='none';"><!--esto es por si no elige un cliente, oninvalid es evento de no elegido (clienteError esta definido abajo) y oninput es evento de que se ha eligido para quitar el error-->
+                    <option value = "" disabled <?= $clienteActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
+                    <?php foreach ($lista as $id => $entidad): ?>
+                        <option value="<?= $id?>" <?= $id == $clienteActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                    <?php endforeach; ?>
+                </select> 
+                <div id="clienteError" style="color: red; display: none; font-size: 0.9em;">
+                    Por favor selecciona un cliente.
+                </div>   
             </div>
+        </div>
         </div>
             <?php
                 $empresaActual = isset($alquiler) ? $alquiler->getempresa() : '';//estoy editando un alquiler
@@ -236,15 +230,15 @@
                     <input class="cuadro_text" type="number" name="ampliacion[kilometros]" id="kilometros" placeholder="kilometros">
                 </div>        
                 <div class="col-md-3">
-                    <label class="etiqueta" for="precio" >Precio:</label>&nbsp
+                    <label class="etiqueta" for="precio" >Precio:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[precio]" id="precio" placeholder="precio" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="etiqueta" for="ganancia" >Ganancia:</label>&nbsp
+                    <label class="etiqueta" for="ganancia" >Ganancia:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[ganancia]" id="ganancia" placeholder="ganancia">
                 </div>
                 <div class="col-md-4">
-                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>&nbsp
+                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[comisionComercial]" id="comisionComercial" placeholder="Comision Comercial" >
                 </div>
                 <div class="col-md-6">
@@ -263,7 +257,7 @@
     <!--listado ampliaciones-->
     <p class="titulo_sec">Ampliaciones</p>
     <div>
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped fina">
         <thead>
             <tr>
                 <th class="etiqueta" scope="col">Comision</th>
@@ -303,10 +297,10 @@
     <p class='etiqueta_desplazada'> Suma: <?=number_format($total, 2, ',', '.')?>€</p>   
     </div>
     <!--Formulario nuevo cobro-->
-    <button type="button" class="boton_link small" id="boton_form_ampliacion" onclick="mostrar('cobro')">+</button>
+    <button type="button" class="boton_link small" id="boton_form_cobro" onclick="mostrar('cobro')">+</button>
     <form action="<?= DIRECTORIO ?>nuevo_cobro_alquiler" method="post" id = "cobro" hidden>
         <fieldset class="mi-fieldset">
-            <legend class="mi-legend">Editar cobro</legend>
+            <legend class="mi-legend">Crear cobro</legend>
             <div class="row">
                 <div class="col-md-3">
                     <label for="fecha" class="etiqueta">Fecha:</label> 
@@ -356,7 +350,7 @@
     <!--listado cobros-->
     <p class="titulo_sec">Cobros</p>
     <div>
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped fina">
             <thead>
                 <tr>
                     <th class="etiqueta" scope="col">Fecha</th>
@@ -400,14 +394,14 @@
         <p class='etiqueta_desplazada'> Suma: <?=number_format($totalCobros, 2, ',', '.')?>€</p>
     </div>
     <!--Formulario nuevo gasto-->
-    <button type="button" class="boton_link small" id="boton_form_ampliacion" onclick="mostrar('gasto')">+</button>
+    <button type="button" class="boton_link small" id="boton_form_gasto" onclick="mostrar('gasto')">+</button>
     <form action="<?= DIRECTORIO ?>nuevo_gasto_alquiler" method="post" id = "gasto" hidden>
         <fieldset class="mi-fieldset">
-            <legend class="mi-legend">Editar Gasto</legend>
+            <legend class="mi-legend">Crear Gasto</legend>
             <div class="row">
                 <div class="col-md-6">
                     <label class="etiqueta" for="tipo" >Tipo:</label>
-                    <input size = "80" class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" placeholder="Tipo" required>
+                    <input size = "70" class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" placeholder="Tipo" required>
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="importe" >Importe:</label>&nbsp
@@ -416,7 +410,9 @@
                 <div class="col-md-3">
                     <label for="fecha" class="etiqueta">Fecha:</label> 
                     <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" required>
-                </div>        
+                </div>   
+            </div>
+            <div class="row">     
                 <div class="col-md-2">
                     <label class="etiqueta" for="pagaOtro" >Paga Otro:</label>&nbsp
                     <input class="cuadro_text" type="checkbox" name="gasto[pagaOtro]" id="pagaOtro">
@@ -440,7 +436,7 @@
     <!--listado gastos-->
     <p class="titulo_sec">Gastos</p>
     <div>
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped fina">
         <thead>
             <tr>
                 <th class="etiqueta" scope="col">Fecha</th>

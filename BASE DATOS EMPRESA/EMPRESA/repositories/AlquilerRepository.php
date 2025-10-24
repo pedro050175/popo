@@ -19,14 +19,6 @@ class AlquilerRepository {
     public function getnumpaginas():int{
         return $this->numPaginas;
     }
-    public function numeroPaginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
-        $this->conexionPDO->consulta ($consulta);
-        $registro = $this->conexionPDO->extraer_registro();
-        $numFilas = $registro['num_filas'];
-        intval($numFilas%FILAS_PAGINA)==0 ? $numeroPaginas = intval($numFilas/FILAS_PAGINA) : $numeroPaginas = intval(($numFilas/FILAS_PAGINA)+1);
-        
-        return $numeroPaginas;
-    }
     public function alquileresVehiculo(){
         if (!empty($_GET['cocheId'])){//listado para analisis, se usa el id del coche para buscar alquileres en lugar del nombre
                     $desde = $_GET['desde'];
@@ -101,7 +93,7 @@ class AlquilerRepository {
 
                 }else {//listado por defecto
                         $desplazamiento = 0;
-                        $this->numPaginas = $this->numeroPaginas("SELECT COUNT(*) as num_filas FROM alquileres");
+                        $this->numPaginas = numeroPaginas("SELECT COUNT(*) as num_filas FROM alquileres");
                         $num_pagina = $_GET['num_pagina'] ?? 1;
                         if (($num_pagina) <= $this->numPaginas) {
                             $numPagina = intval($num_pagina);

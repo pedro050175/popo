@@ -91,6 +91,11 @@
                 </select> 
             </div>
         </div>
+        <!-- esto es para mostrar un cuadro de texto con el nombre, matricula, bastidor del coche para poder seleccionarlo y Copiar Pegar, ya que en la lista despleg no me deja seleccionar y copiar.
+         Lo cargo con el coche que hay seleccionado en la lista desplegable, tengo que comprobar que haya un vehiculo en la lista despleg -->
+        <div class="col-md-4">
+            <input size = 40 type="text" id="copiaVehiculo" value = "<?=isset($movimiento) ? ($vehiculoActual!='' ? $listaVehiculos[$vehiculoActual] : '') : '' ?>"><!--si existe movimiento=>($vehiculoActual!='' ? $listaVehiculos[$vehiculoActual] : '') compuebo si $vehiculoActual no es '' porque puede ser que el movimiento no tenga vehiculo-->
+        </div>         
         <div class="col-md-2">
             <label class="etiqueta" for="terminado" >Finalizado:</label>
             <input class="cuadro_text" type="checkbox" name="data[movimiento][terminado]" id="terminado" <?=isset($movimiento) ? (($movimiento->getterminado()==1) ? 'checked' : '') : '' ?>><!--si estoy editando existe movimiento evalua esto ($movimiento->getterminado()==1) ? 'checked' : '', por eso esta todo entre () y si no estoy editando pone '' que son los : '' del final-->
@@ -321,7 +326,7 @@
     document.getElementById("eliminar").addEventListener("click", function (event) {
         if (confirm('Estas seguro que quieres borrar este movimiento?')){
             window.location.href='<?= DIRECTORIO ?>borrar_movimiento/<?= $movimiento->getidMovimiento() ?? ''?>'; 
-            //var a = <?= $movimiento->getidMovimiento() ?? ''?>; esto se puede hacer porque en servidor de PHP se poner el valor de $movimeinto->get..., es un literal que se escribe igual que se escribe en el HTML
+            //var a = '<?= $movimiento->getidMovimiento() ?? ''?>'; (OJO va entre comillas)esto se puede hacer porque en servidor de PHP se poner el valor de $movimeinto->get..., es un literal que se escribe igual que se escribe en el HTML
         } else {
             event.preventDefault();
             }

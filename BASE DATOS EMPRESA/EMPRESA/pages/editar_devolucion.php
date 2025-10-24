@@ -1,4 +1,4 @@
-<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspDevolucion</label>
+<label class="titulo_prin">Devolucion</label>
     <form action="<?= DIRECTORIO ?>nueva_devolucion" method="post">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Editar devolución</legend>

@@ -1,7 +1,18 @@
 <?php
 
+use lib\BaseDatosPDO;
+
+function numeroPaginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consulta
+        $conexionPDO = new BaseDatosPDO();
+        $conexionPDO->consulta ($consulta);
+        $registro = $conexionPDO->extraer_registro();
+        $numFilas = $registro['num_filas'];
+        intval($numFilas%FILAS_PAGINA)==0 ? $numeroPaginas = intval($numFilas/FILAS_PAGINA) : $numeroPaginas = intval(($numFilas/FILAS_PAGINA)+1);
+        
+        return $numeroPaginas;
+}
 function formatea_fecha($fecha) {
-    return $fecha ? date('d-m-Y', strtotime($fecha)) : '';
+    return $fecha ? date('d-m-y', strtotime($fecha)) : '';
 }
 function Limpiar_parametros (array $datos): array {//Cambia los '' por NULL
     $limpios = [];

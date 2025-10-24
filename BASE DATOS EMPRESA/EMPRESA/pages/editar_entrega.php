@@ -1,4 +1,4 @@
-<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspEntrega</label>
+<label class="titulo_prin">Entrega</label>
     <form action="<?= DIRECTORIO ?>nueva_entrega" method="post">
         <fieldset class="mi-fieldset">
             <legend class="mi-legend">Editar entrega</legend>

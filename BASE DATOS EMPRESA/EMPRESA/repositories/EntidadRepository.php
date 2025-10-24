@@ -20,15 +20,9 @@ class EntidadRepository {
     public function getnumpaginas():int{
         return $this->num_paginas;
     }
-    public function numero_paginas(string $consulta) : int { //cuenta el numpero de paginas de 5 filas que tiene una $consultada
-        $num_filas = $this->conexion->contar_filas ($consulta);
-        intval($num_filas%FILAS_PAGINA)==0 ? $numero_paginas = intval($num_filas/FILAS_PAGINA) : $numero_paginas = intval(($num_filas/FILAS_PAGINA)+1);
-    
-        return $numero_paginas;
-    }
     public function findAll(): ?array { 
         $desplazamiento = 0;
-        $this->num_paginas = $this->numero_paginas("SELECT COUNT(*) FROM entidad");
+        $this->num_paginas = numeroPaginas("SELECT COUNT(*) AS num_filas FROM entidad");
         $num_pagina = $_GET['num_pagina'] ?? 1;
         if (($num_pagina) <= $this->num_paginas) {
             $num_pagina = intval($num_pagina);
@@ -78,10 +72,8 @@ class EntidadRepository {
             $valor_escapado = addslashes($valor);//esto es por si el valor que inserta el usuario en el formulario lleva 'xxx' le pone \'xxx\' lo escapa, si no lo escapara no se insertaria correctamente porque confundiria las 'xxx' con los delimitadores de campo de la consulta sql
             $entidad['entidad'][$indice] = $valor_escapado;
         }
-
         $values = implode("', '", $entidad['entidad']);$fields = implode(',', array_keys($entidad['entidad']));
         $this->conexion->consulta ("INSERT INTO entidad ($fields) VALUES ('$values')");
-
     }
     public function update (array $entidad): void{
         $updates=[];
@@ -102,7 +94,7 @@ class EntidadRepository {
     }
     public function relacionados(int $id): string {
         $relacionada = ""; //he definido una constante de tipo array asociativo que contiene   
-        foreach (TABLAS as $tabla => $campos){
+        foreach (TABLAS_ENTIDAD as $tabla => $campos){
             foreach ($campos as $campo){
                 $consulta = "SELECT COUNT(*) as total FROM $tabla WHERE $campo = $id";
                 $this->conexion->consulta($consulta);

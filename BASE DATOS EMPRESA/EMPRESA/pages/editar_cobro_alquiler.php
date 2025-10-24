@@ -1,4 +1,4 @@
-<label class="titulo_prin">&nbsp&nbsp&nbsp&nbspCobro</label>
+<label class="titulo_prin">Cobro</label>
 <div>
     <form action="<?= DIRECTORIO ?>nuevo_cobro_alquiler" method="post">
         <fieldset class="mi-fieldset">
