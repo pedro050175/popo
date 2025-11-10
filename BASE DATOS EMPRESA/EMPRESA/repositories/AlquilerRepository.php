@@ -68,8 +68,8 @@ class AlquilerRepository {
                                             WHERE AL.contrato LIKE '%$buscar%' OR A.Nombre LIKE '%$buscar%'
                                             ORDER BY AL.fechaInicio");
         }else if (!empty($_GET['desde']) | !empty($_GET['hasta']) | !empty($_GET['coche'])){//para buscar por nombre coche o fechas
-                                $desde = $_GET['desde'] != '' ? $_GET['desde'] : '1900-01-01'; // si no escribe en la fecha de inicio tomo la fecha 1900-01-01 como inicial
-                                $hasta = $_GET['hasta'] != '' ? $_GET['hasta'] : date("Y-m-d");
+                                $desde = $_GET['desde'] != '' ? $_GET['desde'] : INICIO; // si no escribe en la fecha de inicio tomo la fecha 1900-01-01 como inicial
+                                $hasta = $_GET['hasta'] != '' ? $_GET['hasta'] : FIN;
                                 $coche = $_GET['coche'] ?? '';
                                 $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
                                                     COALESCE(AM.sumaPrecio, 0) AS sumaPrecio,
@@ -116,7 +116,7 @@ class AlquilerRepository {
                                                                                 SUM(comisionComercial) AS sumaComisionComercial
                                                                 FROM ampliaciones
                                                                 GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
-                                                ORDER BY AL.fechaInicio desc LIMIT $desplazamiento, ".FILAS_PAGINA);
+                                                ORDER BY AL.fechaInicio desc, AL.contrato desc LIMIT $desplazamiento, ".FILAS_PAGINA);
     }
 //con esto se consigue el total de precio, dias, ganacia, es decir, la suma de todas las ampliaciones mas la del alquiler para no tener que sumarlo luego en la pagina
 /* SELECT   AL.vehiculo, AL.fechaInicio, V.Marca_modelo, 
@@ -233,7 +233,7 @@ class AlquilerRepository {
        $this->conexionPDO->consulta("DELETE FROM alquileres WHERE (id_alquiler=$id)");
     }  
     public function totalAlquileresVehiculo($desde, $hasta, $idCoche): array{//en esta funcion devuelvo la tabla leida del SELECT no lo meto en objetos
-        /*leo los alquileres de un vehiculo entre fechas*/
+        /*leo los alquileres de un vehiculo entre fechas, se usa en analisis para ver los alquileres de un vehiculo en fechas*/
         $parametros = [
         ':desde' => $desde,
         ':hasta' => $hasta,
@@ -243,9 +243,9 @@ class AlquilerRepository {
                         WHERE fechaInicio BETWEEN :desde AND :hasta AND vehiculo = :cocheId";
         $this->conexionPDO->consulta($sql, $parametros); 
         return $this->conexionPDO->extraer_todos();       
-        
     }
-    public function totalAlquileresVehiculosGastos($cocheIds, $desde = null, $hasta = null): array{
+    public function totalAlquileresVehiculosGastos($cocheIds, $desde = null, $hasta = null): array{ /* se usa en la pagina total_alquileres_vehiculo_fecha y total_alquileres_vehiculo,
+        es llamado por  Controller/totalAlquileresVehiculosFecha y totalAlquileresVehiculos*/
     //leo todos los alquileres de todos los vehiculos que me pasan en parametro $cocheIds
     //para poder hacer la consulta con varios ids voy a esponer un ejemplo para que se entienda como hay que formar el array de $parametros
     //ya que $cocheIds no se puede poner directamente en los parametros de la consulta, hay que crear un :id por cada id del array $cochesIds
@@ -254,25 +254,25 @@ class AlquilerRepository {
     //                                  FROM alquileres
     //                                  WHERE vehiculo IN (:id0, :id1, :id2) tengo que crear tantos paramentros como :idx hay en la consulta
     //                                  AND fechaInicio BETWEEN :desde AND :hasta
-    //                                 $parametros = [
-    //                                                    ':id0' => 1,
+    //                                 $parametros = [    ':id0' => 1,
     //                                                    ':id1' => 5,
     //                                                    ':id2' => 9,
     //                                                    ':desde' => '2025-09-01',
     //                                                    ':hasta' => '2025-09-30'
+    //                                                  ]
     //  
         $parametros = [];//los parametros tiene que ser un array asociativo
-        $in = [];
+        $in = [];//:id0, :id1, :id2
         parametrosIn($in, $parametros, $cocheIds);//$in y $parametros se pasan por referencia a la funcion, alli seran modificados, $in lleva los ids para el IN y $parametros los parametros para la consulta  
             
-        if (!empty($desde) && !empty($hasta)){  //alquileres de vehiculos por fechas para formar la tabla de meses del año    
+        if (!empty($desde) && !empty($hasta)){  //usada por totalAlquileresVehiculosFecha para formar la tabla de meses del año, no se incluyen gastos de alquileres  
             $parametros[':desde'] = $desde;//añade los dos parametros de fechas
-            $parametros[':hasta'] = $hasta;
+            $parametros[':hasta'] = $hasta;//como necesito los alquileres por separado no hace falta cruzar tablas
             $sql = "SELECT vehiculo, ganancia, fechaInicio FROM alquileres
                             WHERE vehiculo IN ($in) 
                             AND fechaInicio BETWEEN :desde AND :hasta" ;
-        }else {//todos los alquileres de vehiculos, para forma la tabla del todos los alquileres mas gastos mas cuota
-            $sql = "SELECT TAL.*, TG.totalGastos, C.cuota, C.inicio AS fechaInicioCuota, C.entrada /* todos los campos de TAL (total ampliaciones), el total de gastos de TG, y la cuota de C.aqui esta lo que se va a mandar a la pagina*/
+        }else {//todos los alquileres de vehiculos, usada por totalAlquileresVehiculosFecha para forma la tabla del todos los alquileres mas gastos mas cuota
+            $sql = "SELECT TAL.*, TG.totalGastos, C.cuota, C.inicio AS fechaInicioCuota, C.entrada  /*todos los campos de TAL (total ampliaciones), el total de gastos de TG, y la cuota de C.aqui esta lo que se va a mandar a la pagina*/
                         FROM /* SELECT de la tabla que nos da este SELECT de abajo */
                             (SELECT ALS.vehiculo, ALS.Marca_modelo, MIN(ALS.fechaInicio) AS primerAlquiler,/*SELECT de alquileres y agrupa los vehiculos por la suma (SUM) de Precio, Ganancia, Dias y la fecha menor MIN */
                                     SUM(ALS.TotalGananciaAlquiler) AS totalGananciaAlquileres,SUM(ALS.TotalPrecioAlquiler) AS totalPrecioAlquileres,SUM(ALS.TotalDiasAlquiler) AS totalDiasAlquileres 
@@ -300,8 +300,17 @@ class AlquilerRepository {
                         (SELECT id_vehiculo, cuota, inicio, entrada 
                             FROM cuotasvehiculo/* leo la cuota */
                                 WHERE id_vehiculo IN ($in)) C 
-                    ON C.id_vehiculo = TAL.vehiculo";
-        /*inicialmente saco las alquileres y ampliaciones de loscoches con una estructura de 3 SELECT anidados. de los 3 SELECT, 
+                    ON C.id_vehiculo = TAL.vehiculo"; 
+                    /*añadiendo esto al final de la consulta se saca el total de gastos de las compreaventas de cada vehiculo 
+                    LEFT JOIN (SELECT vehiculo, GCV.sumaGastosCompraventa FROM compraventas
+                                LEFT JOIN 
+                                    (SELECT compraventa, SUM(importe) AS sumaGastosCompraventa FROM gastoscompraventa 
+                                GROUP BY compraventa) GCV 
+                                    ON id_compraventa = GCV.compraventa
+                        WHERE vehiculo IN ($in)) VGCV ON VGCV.vehiculo = TAL.vehiculo"
+                        arriba del todo hay que añadir esto: VGCV.sumaGastosCompraventa que es el campo que se ve en la tabla resultado
+                         */
+        /*inicialmente saco las alquileres y ampliaciones de los coches con una estructura de 3 SELECT anidados. de los 3 SELECT, 
         el 2º select me da este resultado, todos los alquileres de los dos coches del IN, con el total del precio, ganancia y dias (suma del alquliles mas todas las amplia):
                 1	JEEP GRANGLER V6	2025-09-24	8550.00	13	8950.00
                 1	JEEP GRANGLER V6	2025-09-25	5000.00	15	5555.00
@@ -314,7 +323,7 @@ class AlquilerRepository {
                 1	JEEP GRANGLER V6	2025-09-24	18350.00	19705.00	32
                 82	FERRARI 296GTS 	    2025-10-03	5400.00	    6000.00	    2
         y como colofon con MIN(ALS.fechaInicio) agrupo por la menor fechaInicio y asi obntengo la fecha del 1º alquiler para luego saber desde cuando se alquila ese coche
-        Despues tengo que sacar los gastos de los vehiculos, tengo un select individuial, que me los da en una tabla asi:
+        Despues tengo que sacar los gastos de los vehiculos, tengo un select individual, que me los da en una tabla asi:
         LEFT JOIN (SELECT G.id_vehiculo, SUM(Importe) AS totalGastos FROM gastosvehiculo G
 									WHERE G.id_vehiculo IN(82, 1)
 									GROUP BY G.id_vehiculo) TG ON TG.id_vehiculo = TAL.vehiculo
@@ -333,10 +342,15 @@ class AlquilerRepository {
             82	FERRARI 296GTS 	    2025-10-03	5400.00	    6000.00	    2	3000.00	5300.00
         
         */            
-
         } 
         $this->conexionPDO->consulta($sql, $parametros); 
         return $this->conexionPDO->extraer_todos();   
+    }
+    public function estadoAlquiler(string $id, string $estado){
+        $parametros = [$estado, $id,]; 
+        $sql = "UPDATE alquileres SET estado = ?
+                    WHERE id_alquiler = ?";
+        $this->conexionPDO->consulta($sql, $parametros);
     }
 }
 ?>

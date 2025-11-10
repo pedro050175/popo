@@ -1,35 +1,49 @@
 <?php
 header("Content-Type: text/plain; charset=UTF-8");
 ?>
- 
-<table class = "mi_tabla w400">
+<!-- ventana flotante en la pagina analisis_aquileres-->
+<!-- OJO!! no puede haber lineas en blanco antes del headers, ni un espacio en blanco ni siquiera comentarios, daria error warning: Cannot modify header information - headers already sent by
+ como cuando hago un echo antes de cargar la pagina con render-->
+<table class = "mi_tabla">
     <caption>Gatos y Cuotas del vehiculo: <?=$nombreCoche['Marca_modelo']?></caption>
     <thead>
         <tr>
             <th>Tipo</th>
             <th>Importe</th>
             <th>Fecha</th>
-            <th>Paga otro</th>
         </tr>
     </thead>
     <tbody>
-        <?php $totalGastos = 0; ?>
+        <?php $totalGastos = 0; ?><!-- gastos del vehiculo -->
         <?php foreach ($gastos as $gasto) :?>
             <?php $totalGastos += $gasto->getImporte();?>
             <tr>
-                <td class="tooltip-cell" data-tooltip="Observaciones: <?=quitaEspecialChar($gasto->getComentarios())?>">
+                <td class="tooltip-cell info" data-tooltip="Observaciones: <?=quitaEspecialChar($gasto->getComentarios())?>">
                         <?=$gasto->getTipo()?>
                 </td>
                 <td><?=number_format($gasto->getImporte(), 2, ',', '.');?>€</td>
                 <td><?=formatea_fecha($gasto->getFecha())?></td>
-                <td><?=$gasto->getPaga_otro() ? 'SI' : 'NO'?></td>
             </tr>
+        <?php endforeach ;?>
+        <tr>
+            <td colspan="3">Gastos Compra-Ventas</td>
+        </tr>   
+        <?php foreach($gastosCompraventa as $gasto) :?>
+            <tr><!-- gastos de las compraventas del vehiculo -->
+                <?php $totalGastos += $gasto->getimporte();?> 
+                <td class="tooltip-cell info" data-tooltip="Observaciones: <?=quitaEspecialChar($gasto->getobservaciones())?>">
+                    <?=$gasto->gettipo()?>
+                </td>
+                <td><?=number_format($gasto->getimporte(), 2, ',', '.');?>€</td>         
+                <td><?=formatea_fecha($gasto->getfecha())?></td>         
+                <td><?=$gasto->getobservaciones()?></td>        
+            </tr>    
         <?php endforeach ;?>
         <tr>
             <td>Total</td>
             <td><?=number_format($totalGastos, 2, ',', '.');?>€</td>
         </tr>
-        <?php if (!empty($cuotas)) :?>
+        <?php if (!empty($cuotas)) :?><!-- cuotas del renting o financiacion -->
             <tr>
                     <th colspan="4">Cuota</th>
             </tr>

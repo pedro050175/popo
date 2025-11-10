@@ -24,7 +24,7 @@ class VehiculoRepository {
     }
     public function findAll(?bool $paginar=true): ?array {
         if (!$paginar){//$paginar=false no pagina, se usa para campo de lista desplegable en formularios relacionados donde deben cargarse todos los vehiculos
-            $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo, Matricula, Bastidor FROM vehiculos ORDER BY Marca_modelo");
+            $this->conexion->consulta ("SELECT id_vehiculo, Marca_modelo, Matricula, Bastidor FROM vehiculos ORDER BY id_vehiculo DESC");
             return $this->extraer_todos();
         }
         $desplazamiento = 0;
@@ -40,11 +40,12 @@ class VehiculoRepository {
         } else {
             $busca = $_GET['buscar_marca'] ?? null;
             if ($busca) {
-                $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Marca_modelo LIKE '%$busca%'");
+                $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad 
+                                            WHERE Marca_modelo LIKE '%$busca%' OR Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
             } else {
-                $busca = $_GET['buscar_matr_bast'] ?? null;
+                $busca = $_GET['buscar_propietario'] ?? null;
                 if ($busca) {
-                    $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE Matricula LIKE '%$busca%' OR Bastidor LIKE '%$busca%'");
+                    $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad WHERE entidad.Nombre LIKE '%$busca%'");
                 } else $this->conexion->consulta ("SELECT vehiculos.*, Nombre FROM vehiculos LEFT JOIN entidad ON propietario=id_entidad ORDER BY id_vehiculo desc LIMIT $desplazamiento, ".FILAS_PAGINA); //ojo con los nombres de los campos si se hace un SELECT de ciertos campos, hay que poner el nombre tal y como esta en la base de datos
             }
         }    

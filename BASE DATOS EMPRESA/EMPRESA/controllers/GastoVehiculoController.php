@@ -14,7 +14,6 @@ class GastoVehiculoController {
         $this->gasto_repository = new GastoVehiculoRepository();
 
     }  
-    
     public function save(): void { //se usa para guardar una nuevo o uno editado, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         setcookie('menuVehiculo', 'gastos', time()+600, "/");//para que despues de guardar los cambios vuelva al menu gastos
         $gasto=$_POST['gasto']; //coge los datos del metodo POST, los graba y salta al listado entidades

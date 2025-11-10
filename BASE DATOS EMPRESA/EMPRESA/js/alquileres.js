@@ -26,3 +26,19 @@ function validaFechas(desde, hasta){
     }
     return true;
 }
+function actualizaGanancia(form){
+    form.ganancia.value = form.precio.value - form.comisionComercial.value;
+}
+function actualizaFechaFin(formulario){
+    let fecha = new Date(formulario.fechaInicio.value);
+    let fechaMili = fecha.getTime();/* paso a milisegundos para poder dumarle o restarle tiempo, tiene que ser en milisegundos */
+    let diasAlquiler = formulario.dias.value;
+    let diasMili = diasAlquiler*24*60*60*1000; /* dias en milisegundos */
+    let fechaFin = new Date(fechaMili + diasMili); /* sumo las dos fechas en milis y lo convierto en una fecha formato "fecha+hora". Tengo que pasarlo a formato yyyy-m-dd */ 
+    let fechaVencimientoString = ''; 
+    /* voy extrayendo partes de la fecha y concatenando hasta obtener el formato yyyy-mm-dd */
+    fechaVencimientoString += fechaFin.getFullYear() + '-';
+    fechaVencimientoString += fechaFin.getMonth()+1 + '-';
+    fechaVencimientoString += diaMesConCero(fechaFin.getDate());
+    formulario.fechaFin.value = fechaVencimientoString;  
+}

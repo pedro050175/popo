@@ -16,6 +16,7 @@ controller como he hecho en los metodos save y delete, pero el metodo edit, a di
 <head>
     <title>Entidad</title>   
     <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script> 
@@ -29,11 +30,13 @@ controller como he hecho en los metodos save y delete, pero el metodo edit, a di
     <!-- JS de jQuery (requerido por Select2) y Select2 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?=DIRECTORIO?>/js/nuevo_vehiculo.js" type="text/javascript"></script>
     <script src="<?=DIRECTORIO?>/js/movimientos.js" type="text/javascript"></script>
     <script src="<?=DIRECTORIO?>/js/alquileres.js" type="text/javascript"></script>
     <script src="<?=DIRECTORIO?>/js/compraventa.js" type="text/javascript"></script>
     <script src="<?=DIRECTORIO?>/js/general.js" type="text/javascript"></script>
+    <script src="<?=DIRECTORIO?>/js/multa.js" type="text/javascript"></script>
     
 </head>
 <body>
@@ -42,29 +45,32 @@ controller como he hecho en los metodos save y delete, pero el metodo edit, a di
     $currentPath = $_SERVER['REQUEST_URI'];
     ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand">MENU</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link<?= str_contains($currentPath, 'vehiculos') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>vehiculos?num_pagina=1" aria-current="page">Vehiculos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link<?= str_contains($currentPath, 'entidad') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>entidades?num_pagina=1" aria-current="page">Entidades</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link<?= str_contains($currentPath, 'movimiento') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>movimientos?num_pagina=1" aria-current="page">Movimientos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link<?= str_contains($currentPath, 'alquiler') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>alquileres?num_pagina=1" aria-current="page">Alquileres</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link<?= str_contains($currentPath, 'compraventa') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>compraventas?num_pagina=1" aria-current="page">Compra-Ventas</a>
-                </li>
-            </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand">MENU</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link<?= str_contains($currentPath, 'vehiculos') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>vehiculos?num_pagina=1" aria-current="page">Vehiculos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?= str_contains($currentPath, 'entidad') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>entidades?num_pagina=1" aria-current="page">Entidades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?= str_contains($currentPath, 'movimiento') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>movimientos?num_pagina=1" aria-current="page">Movimientos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?= str_contains($currentPath, 'alquiler') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>alquileres?num_pagina=1" aria-current="page">Alquileres</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?= str_contains($currentPath, 'compraventa') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>compraventas?num_pagina=1" aria-current="page">Compra-Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?= str_contains($currentPath, 'multa') ? 'active' : '' ?>" href="<?= DIRECTORIO ?>multas?num_pagina=1" aria-current="page">Multas</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
     </nav> <!--no cierra el body porque el body lo completa el codigo de fichero php que se carga a continuacion del header en la clase Pages -->

@@ -37,4 +37,5 @@
             <input type="hidden" name="gasto[id_gasto]" id="id_gasto" value="<?=$gasto->getId_gasto()?>">
         </fieldset>
     </form>
+    <p class = "etiqueta" style = "color: red">"Recuerde revisar si este gasto tambien está en los gastos de la compra venta del vehiculo"</p>
 </div>

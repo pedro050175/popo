@@ -23,7 +23,7 @@
 }
 .green{/*etiqueta en verde*/
     color: green; 
-    font-size: 14px;
+    font-size: 16px;
 }
 .blue{ /*etiqueta en morado*/
     color: rgb(190, 14, 190); 
@@ -121,17 +121,17 @@
     color: rgb(223, 94, 3);
 }
 .titulo_prin{
-    font-size: 24px; 
+    font-size: 22px; 
     color: rgb(223, 94, 3);
-    text-shadow: 1px 2px 1px  grey;
+    text-shadow: 1px 1px 1px  rgb(184, 184, 184);
     font-weight: bold;/*negrita*/
 }
 .titulo_sec{
-    font-size: 22px;
-    text-shadow: 1px 2px 1px  grey;
+    font-size: 18px;
+    text-shadow: 1px 1px 1px  rgb(194, 192, 192);
     font-weight: bold;/*negrita*/
     text-align: center;
-    color: rgb(223, 94, 3);
+    color: rgb(0, 0, 0);
 }
 .titulo_marco{/*se usa en nueva compraventa, en el titulo compra y venta*/
     font-size: 18px; 
@@ -162,6 +162,10 @@
     border-collapse: separate; /* importante: permite ver el redondeo */
     border-spacing: 0;     /* evita que se separen las celdas */
     overflow: hidden;      /* fuerza que las esquinas internas se recorten */
+    margin: 5px;
+}
+.mi_tabla.azul {
+    border: 1px solid #070beb;/*si no le pongo borde en la parte inferior en la zona de las esquinas no sale linea*/
 }
 /* Caption más vistoso */
 .mi_tabla caption {
@@ -173,12 +177,21 @@
     background-color: #fa883c;     /* fondo naranja */
     border-radius: 8px 8px 0 0;    /* redondeado solo arriba izq y arriba derecha*/
 }
+.mi_tabla.azul caption {
+    background-color: #070beb81;     /* fondo naranja */
+}
+.mi_tabla.verde caption {
+    background-color: #07eb1a91;     /* fondo naranja */
+}
 .mi_tabla th{/*para la 1º fila */
     border: 1px solid rgb(235, 98, 7);  
     padding: 1px;             
     text-align: center;  
     font-size: 14px;  
     background-color: #f8f4e6;        
+}  
+.mi_tabla.azul th{/*para la 1º fila */
+    border: 1px solid #0b07eb;  
 }  
 .mi_tabla td {/*resto de filas*/
     /*width: 150px; se define en HTML y asi le puedo poner un ancho diferrente a cada columna */
@@ -190,22 +203,33 @@
     text-align: left;
     font-size: 14px;  
 }
+.mi_tabla.azul td {/*resto de filas*/
+    border: 1px solid  #0b07eb;  
+}
 /* Ultima Fila total dentro de entregas/devoluciones */
 .mi_tabla tr:last-child {/*esto es como :hover es una especie de evento*/
     background-color: #bff3ec; /* fondo suave */
     font-weight: bold;
 }
-.w400 td {
+.mi_tabla tr:first-child {/*esto es como :hover es una especie de evento*/
+    background-color: #bff3ec; /* fondo suave */
+    font-weight: normal;
+}
+.mi_tabla.w400 td {
     font-size: 12px !important;/* hay que poner !important para que sobre escriba el tamaño que impone la clase mi_tabla, ya que la tabla es de clase mi_tabla w400 */
 }
 /* Contenedor de cada movimiento analisis*/
 .bloque-movimiento {
     border: 2px solid #eb6207;   /* borde naranja */
     border-radius: 12px;         /* esquinas redondeadas */
-    padding: 15px;               /* espacio interior */
+    padding: 5px;               /* espacio interior */
     margin-bottom: 5px;         /* separación entre bloques */
     background-color: #fffaf5;   /* fondo suave */
     box-shadow: 0 2px 6px rgba(0,0,0,0.08); /* sombra ligera */
+    display: flex;
+    flex-direction: row; /* se alinean en la misma fila */
+    gap: 10px;          /* espacio entre tablas */
+    flex-wrap: wrap;
 }
 .bloque-alquiler {
     padding: 5px !important;               /* espacio interior */
@@ -213,12 +237,13 @@
 }
 /* Tabla principal de cada movimiento en analisis*/
 .bloque-movimiento > .table {/*table que hay justo despues de bloque-movimiento*/
-    margin-bottom: 15px; /* espacio debajo de la tabla principal */
+    margin-bottom: 5px; /* espacio debajo de la tabla principal */
 }
 /* Subtablas (Entregas y Devoluciones) en analisis*/
 .contenedor-tablas {
     display: flex;
-    gap: 20px;          /* espacio entre tablas */
+    flex-direction: row;
+    gap: 10px;          /* espacio entre tablas */
     flex-wrap: wrap;    /* permite que bajen en pantallas pequeñas */
 }
 .fina td{  /*lo uso para tablas de bootstrap que son muy anchas tabla movimientos de analisis. th que esten dentro de la clase fina. Es como poner div .popo, seria clase popo que este dentro de un div*/
@@ -238,7 +263,7 @@
     line-height: 15px;        /* separacion entre lineas */
     text-align: center;
     /* con esto evito que en la tabla hayan textos que ocupan dos lineas o mas */
-    max-width: 100px; /* ancho máximo */
+    max-width: 110px; /* ancho máximo */
     white-space: nowrap; /* evita saltos de línea */
     overflow: hidden; /* oculta el exceso de texto */
     text-overflow: ellipsis; /* añade los puntos suspensivos */
@@ -263,8 +288,6 @@
     text-overflow: ellipsis; /* añade los puntos suspensivos */ 
     text-align: center;       
 }
-
-/* Tabla resumen más sobria */
 /* Tabla resumen con paleta azul-gris */
 .tabla_resumen {
     width: 100%;
@@ -272,8 +295,7 @@
     font-size: 14px;
     background: #fff;
     border: 1px solid #c5d1e0; /* borde exterior gris-azulado */
-    border-radius: 6px;
-    overflow: hidden;
+    border-radius: 6px; 
 }
 /* Encabezado */
 .tabla_resumen caption {
@@ -381,8 +403,11 @@
   opacity: 1;
   transform: translateY(0);
 }
-.borde:hover {
+.borde:hover { /* usada en los tooltip  */
   outline: 1px solid lime;
+}
+.tooltip-cell.info{/* usada en los tooltip */
+    font-style: italic;
 }
 .bloque-flotante{
     float: right;
@@ -390,11 +415,11 @@
     position: relative;
     right: 20px;
 }
-/* PARA FLOTAR
+.flota{
     position: fixed;
-    top: 420px;
-    right: 20px; */
-    
+    top: 200px;
+    right: 20px; 
+}    
     /* se inicia oculto */
 .mensajeGuardar {
     position: fixed;
@@ -407,13 +432,15 @@
     max-width: 320px;
     text-align: center;
     color: #000;
-    opacity: 0;
+    opacity: 0; /* oculto */
     transition: opacity 1.2s ease, transform 1.2s ease;
     z-index: 999999;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+/* selector de elementos de la clase mesajeGuardar que tmb tengan la clase mostrar
+pe. class="mensanjeGuardar mostrar" es como decir div.popo selecciona los <div> de la clase popo*/
 .mensajeGuardar.mostrar {
-    opacity: 1;
+    opacity: 1; /* se muestra */
     transform: translateY(0);
 }
 /* 🔹 Tipos de mensaje */
@@ -436,4 +463,42 @@
     border: 1px solid #e67e22;
     color: #000;
 }
-
+/* esto me lo dijop la IA para hacer un bloque div para mostrar contenido co fetch y con un boton X de cierre del contenido */
+/* Fondo del modal es un div oculto */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+ /*  width: 100%;
+  height: 100%; */
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
+}
+/* contenido del modal */
+.modal-contenido {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border-radius: 8px;
+/*   width: 60%;*/ 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  animation: aparecer 0.3s ease-out;
+}
+/* Botón de cierre del modal*/
+.cerrar {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  cursor: pointer;
+}
+.cerrar:hover {
+  color: black;
+}
+/* Animación suave del modal*/
+@keyframes aparecer {
+  from {transform: translateY(-20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}

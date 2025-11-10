@@ -9,7 +9,7 @@ class GastoCompraventaController {
     private Pages $pages;
     
     function __construct(){
-        $this->gastoCompraventaRepository = new GastoCompraventaRepository();
+        $this->gastoCompraventaRepository = new GastoCompraventaRepository();        
         $this->pages = new Pages();
     }
 
@@ -23,7 +23,7 @@ public function save(){
             $this->gastoCompraventaRepository->update($gasto);
             header('Location: /mis_pruebas/nueva_compraventa/'.$gasto['compraventa'].'?mensaje=Gasto guardado correctamente&tipo=exito');//cargo el mismo alquiler que estaba editando 
             exit;
-    } else { 
+    } else {
         $this->gastoCompraventaRepository->create($gasto);
         header('Location: '.DIRECTORIO.'nueva_compraventa/'.$gasto['compraventa'].'?mensaje=Gasto creado correctamente&tipo=exito');//cargo el mismo alquiler que estaba editando   
         exit;

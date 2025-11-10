@@ -168,14 +168,14 @@
                     <em class="etiqueta_mini">Foto menor de 2MB</em>
                 </div>        
                 <div class="col-md-4">
-                    <label class="etiqueta" for="destacada">Destacada:</label>&nbsp&nbsp&nbsp&nbsp<input class="cuadro_text" type="checkbox" name="foto[destacada]" id="destacada">
+                    <label class="etiqueta" for="destacada">Destacada:</label><input class="cuadro_text" type="checkbox" name="foto[destacada]" id="destacada">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="boton_submit">Guardar Foto</button>
                 </div>
             </div>
             <input type="hidden" name="foto[id_vehiculo]" value="<?=$vehiculo->getId()?>" id="id_veviculo">
-            <label class="etiqueta" for="descripcion">Descripcion:&nbsp</label>
+            <label class="etiqueta" for="descripcion">Descripcion: </label>
             <input size=100 class="cuadro_text" type="text" name="foto[descripcion]" id="descripcion" placeholder="Descripción"><br/>
         </fieldset>
     </form>
@@ -235,23 +235,23 @@
                     <input size=40 class="cuadro_text" type="text" name="gasto[tipo]" id="tipo" placeholder="Tipo" required>
                 </div>        
                 <div class="col-md-3">
-                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Importe:</label>
                     <input class="cuadro_text" type="text" name="gasto[importe]" id="importe" placeholder="Importe" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="etiqueta" for="fecha" >Fecha:</label>&nbsp
+                    <label class="etiqueta" for="fecha" >Fecha:</label>
                     <input class="cuadro_text" type="date" name="gasto[fecha]" id="fecha" placeholder="Fecha" required>
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="paga_otro" >Paga otro:</label>&nbsp
+                    <label class="etiqueta" for="paga_otro" >Paga otro:</label>
                     <input class="cuadro_text" type="checkbox" name="gasto[paga_otro]" id="paga_otro">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="pagado" >Pagado:</label>&nbsp
+                    <label class="etiqueta" for="pagado" >Pagado:</label>
                     <input class="cuadro_text" type="checkbox" name="gasto[pagado]" id="pagado">
                 </div>
                 <div class="col-md-6">
-                    <label class="etiqueta" for="comentarios" >Comentarios:</label>&nbsp
+                    <label class="etiqueta" for="comentarios" >Comentarios:</label>
                     <input size=60 class="cuadro_text" type="text" name="gasto[comentarios]" id="comentarios" placeholder="Comentarios">
                 </div>
                 <div class="col-md-4">
@@ -303,12 +303,12 @@
             <tbody>
                 <?php $totalGastos = 0; ?>
                 <?php foreach($gastos as $gasto) :?>
-                    <tr>
+                    <tr><!-- gastos del vehiculo -->
                         <?php $totalGastos += $gasto->getImporte();?> 
                         <td><?=$gasto->getTipo()?></td>
                         <td><?=number_format($gasto->getImporte(), 2, ',', '.');?>€</td>         
                         <td><?=formatea_fecha($gasto->getFecha())?></td>         
-                        <td><?=$gasto->getPaga_otro() ? 'SI' : 'NO'?></td>         
+                        <td><?=$gasto->getpaga_otro() ? 'SI' : 'NO'?></td>         
                         <td><?=$gasto->getPagado() ? 'SI' : 'NO'?></td>         
                         <td><?=$gasto->getComentarios()?></td>         
                         <td><div class="btn-group" role="group">
@@ -322,7 +322,22 @@
                             </div>
                         </td>
                 </tr>    
-                <?php endforeach ;?>   
+                <?php endforeach ;?>
+                <tr>
+                    <td colspan="6">Gastos Compra-Ventas(para editar o borrar vaya al menu compraventa correspondiente)</td>
+                </tr>
+                <?php foreach($gastosCompraventa as $gasto) :?>
+                    <tr><!-- gastos de las compraventas del vehiculo -->
+                        <?php $totalGastos += $gasto->getimporte();?> 
+                        <td><?=$gasto->gettipo()?></td>
+                        <td><?=number_format($gasto->getimporte(), 2, ',', '.');?>€</td>         
+                        <td><?=formatea_fecha($gasto->getfecha())?></td>         
+                        <td><?=$gasto->getpagaOtro() ? 'SI' : 'NO'?></td>         
+                        <td><?=$gasto->getpagado() ? 'SI' : 'NO'?></td> 
+                        <td><?=$gasto->getobservaciones()?></td>   
+                        <td></td>     
+                    </tr>    
+                <?php endforeach ;?>
             </tbody>
         </table>            
         <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>

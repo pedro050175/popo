@@ -1,14 +1,7 @@
 <?php
 
-$hoy = new DateTime();
-$inicio = new DateTime("2023-10-01");
-
-$diferencia = $hoy->diff($inicio);
-
-// Diferencia total en meses (años convertidos a meses)
-$meses = ($diferencia->y * 12) + $diferencia->m;
-echo $diferencia;
-
-
+$valor = 500;
+    $clave = (21/100)+1; /*de la constante IVA=21 saco el 1,21 */
+    echo ($valor-($valor/$clave));/* calculo el iva */
 
 ?>

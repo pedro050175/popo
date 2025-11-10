@@ -4,7 +4,7 @@ function validarCompraventa (formulario){//para acceder a elmentos del formulari
     }
     let precioCompra = Number(formulario.precioCompraDeclarado.value); 
     let precioVenta = Number(formulario.precioVentaDeclarado.value); 
-    if (precioCompra>precioVenta){
+    if (precioCompra>precioVenta && precioVenta != 0){
         return confirm("Precio de venta inferior al de compra,  desea mantenerlo asi?");
     }
     if (!validarTablaEnteros([formulario.precioCompraReal, formulario.precioCompraDeclarado, formulario.precioVentaReal, formulario.precioVentaDeclarado])){
@@ -23,7 +23,7 @@ function validarCompraventa (formulario){//para acceder a elmentos del formulari
     let compraA = formulario.select_compraA.value; 
     let vendeA = formulario.select_vendeA.value; 
     let empresa = formulario.select_empresa.value; 
-    if (compraA == vendeA){
+    if (compraA == vendeA && compraA!=''){
         alert ("\"Compra\" a y \"vende a\" no pueden ser iguales");
         return false;
     }

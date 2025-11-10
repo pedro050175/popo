@@ -50,6 +50,11 @@ class EntidadRepository {
         $this->conexion->consulta ("SELECT id_entidad, Nombre FROM entidad ORDER BY Nombre");
         return $this->extraer_todos();
     }
+    public function empresasGrupo(): ?array{  
+        $empresas = EMPRESAS_GRUPO;  
+        $this->conexion->consulta ("SELECT id_entidad, Nombre FROM entidad WHERE Nombre REGEXP '$empresas' ORDER BY Nombre");
+        return $this->extraer_todos();
+    }
     public function extraer_registro(): ?Entidad {
         return ($entidad = $this->conexion->extraer_registro()) ? Entidad::fromArray($entidad):null;
     }
@@ -105,6 +110,12 @@ class EntidadRepository {
             } 
         }
         return $relacionada;
-    }    
+    }  
+    public function entidadesMovimientos(): ?array{/* solo leo las que intervienen en algun movimiento */
+        $this->conexion->consulta("SELECT id_entidad, Nombre FROM entidad
+                                    WHERE id_entidad IN (SELECT envia FROM movimientos)
+                                    OR id_entidad IN (SELECT recibe FROM movimientos)");
+        return $this->extraer_todos();
+    }  
 }
 ?>

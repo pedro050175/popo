@@ -45,8 +45,8 @@ en JS tmb se usa algo parecido
         <?php
             $empresaActual = isset($compraventa) ? $compraventa->getempresa() : '';//estoy editando
             //$clienteActual = $clienteActual!=0 ? $clienteActual : ''; si el campo no es obligatorio hay que poner esto
-            foreach ($entidades as $entidad){
-                $listaEntidades[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
+            foreach ($empresas as $empresa){
+                $listaEmpresas[$empresa->getId()] = $empresa->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
             }
         ?>
         <div class="row">
@@ -55,8 +55,8 @@ en JS tmb se usa algo parecido
                 <select name="data[empresa]" class="form-select" id="select_empresa" 
                         required>
                     <option value = "" disabled <?= $empresaActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                    <?php foreach ($listaEntidades as $id => $entidad): ?>
-                        <option value="<?= $id?>" <?= $id == $empresaActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                    <?php foreach ($listaEmpresas as $id => $empresa): ?>
+                        <option value="<?= $id?>" <?= $id == $empresaActual ? 'selected' : '' ?>><?= $empresa ?></option>
                     <?php endforeach; ?>
                 </select>     
             </div>
@@ -97,6 +97,9 @@ en JS tmb se usa algo parecido
                 <?php
                     $compraActual = isset($compraventa) ? $compraventa->getcompraA() : '';//estoy editando
                     $compraActual = $compraActual!=0 ? $compraActual : ''; //si el campo no es obligatorio hay que poner esto
+                    foreach ($entidades as $entidad){
+                        $listaEntidades[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
+                    }
                 ?>   
                 <div class="col-md-3">
                     <label for="select_compraA" class="form-label">Compra a:</label>
@@ -230,6 +233,11 @@ en JS tmb se usa algo parecido
     </div>
 </form>
 <?php if (isset($compraventa)) :?>
+    <div class = "bloque-movimiento">
+        <p class = "etiqueta green">Beneficio: <?=number_format($compraventa->beneficio(), 2, ',', '.')?>€*</p>
+        <p class = "etiqueta green">IVA: <?=number_format($compraventa->IVA(), 2, ',', '.')?>€</p>                        
+        <p class = "etiqueta green">Beneficion-IVA: <?=number_format($compraventa->beneficioMenosIVA(), 2, ',', '.')?>€* <span class = "etiqueta_mini">*Se restan los gastos</span></p>
+    </div>
  <!--Formulario nuevo cobro-->
     <button type="button" class="boton_link small" id="boton_form_cobro" onclick="mostrar('cobro')">+</button>
     <form action="<?= DIRECTORIO ?>nuevo_cobro_compraventa" method="post" id = "cobro" hidden>
@@ -261,7 +269,7 @@ en JS tmb se usa algo parecido
         </fieldset>
     </form>
     <!--listado cobros-->
-    <p class="titulo_sec">Cobros</p>
+    <p class="titulo_sec">Cobros Venta</p>
     <div>
         <table class="table table-hover table-striped fina">
             <thead>
@@ -291,10 +299,14 @@ en JS tmb se usa algo parecido
                             </div>
                         </td>
                     </tr>    
-                <?php endforeach ;?>   
+                <?php endforeach ;?>
+                    <tr>
+                        <td>Suma cobros</td>
+                        <td><?=number_format($totalCobros, 2, ',', '.')?>€</td>
+                    </tr>
             </tbody>
         </table>            
-        <p class='etiqueta_desplazada'> Suma: <?=number_format($totalCobros, 2, ',', '.')?>€</p>
+        <p class='etiqueta_desplazada'> Falta por cobrar: <?=number_format($compraventa->getprecioVentaReal()-$totalCobros, 2, ',', '.')?>€</p>
     </div>
     <!--Formulario nuevo pago-->
     <button type="button" class="boton_link small" id="boton_form_pago" onclick="mostrar('pago')">+</button>
@@ -327,7 +339,7 @@ en JS tmb se usa algo parecido
         </fieldset>
     </form>
     <!--listado cobros-->
-    <p class="titulo_sec">Pagos</p>
+    <p class="titulo_sec">Pagos Compra</p>
     <div>
         <table class="table table-hover table-striped fina">
             <thead>
@@ -342,7 +354,7 @@ en JS tmb se usa algo parecido
                 <?php $totalPagos = 0; ?>
                 <?php foreach($pagos as $pago) :?>
                     <tr>
-                        <?php $totalCobros += $pago->getimporte();?> 
+                        <?php $totalPagos += $pago->getimporte();?> 
                         <td><?=formatea_fecha($pago->getfecha())?></td>         
                         <td><?=number_format($pago->getimporte(), 2, ',', '.');?>€</td>                  
                         <td><?=$pago->getbanco()?></td>         
@@ -357,10 +369,14 @@ en JS tmb se usa algo parecido
                             </div>
                         </td>
                     </tr>    
-                <?php endforeach ;?>   
+                <?php endforeach ;?>
+                <tr>
+                    <td>Suma pagos</td>
+                    <td><?=number_format($totalPagos, 2, ',', '.')?>€</td>
+                </tr>   
             </tbody>
         </table>            
-        <p class='etiqueta_desplazada'> Suma: <?=number_format($totalPagos, 2, ',', '.')?>€</p>
+        <p class='etiqueta_desplazada'> Falta por pagar: <?=number_format($compraventa->getprecioCompraReal()-$totalPagos, 2, ',', '.')?>€</p>
     </div>
      <!--Formulario nuevo gasto-->
     <button type="button" class="boton_link small" id="boton_form_gasto" onclick="mostrar('gasto')">+</button>
@@ -395,7 +411,7 @@ en JS tmb se usa algo parecido
                     <input size=60 class="cuadro_text" type="text" name="gasto[observaciones]" id="observaciones" placeholder="Observaciones">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="boton_submit" onclick="return validarTablaEnteros([form.importe])">Guardar</button>
+                    <button type="submit" class="boton_submit" id = "botonGuardarGasto">Guardar</button>
                     <button type="reset" class="boton_submit">Limpiar</button>
                 </div>
             </div>
@@ -403,7 +419,7 @@ en JS tmb se usa algo parecido
         </fieldset>
     </form>
     <!--listado gastos-->
-    <p class="titulo_sec">Gastos</p>
+    <p class="titulo_sec">Gastos Compra-Venta</p>
     <div>
     <table class="table table-hover table-striped fina">
         <thead>
@@ -417,10 +433,8 @@ en JS tmb se usa algo parecido
             </tr>
         </thead>
         <tbody>
-            <?php $totalGastos = 0; ?>
             <?php foreach($gastos as $gasto) :?>
                 <tr>
-                    <?php $totalGastos += $gasto->getimporte();?> 
                     <td><?=formatea_fecha($gasto->getfecha())?></td>         
                     <td><?=number_format($gasto->getimporte(), 2, ',', '.');?>€</td>         
                     <td><?=$gasto->gettipo()?></td>
@@ -437,15 +451,17 @@ en JS tmb se usa algo parecido
                         </div>
                     </td>
                 </tr>    
-            <?php endforeach ;?>   
+            <?php endforeach ;?>
+            <tr>
+                <td>Suma gastos</td>
+                <td><?=number_format($compraventa->getsumaGastos(), 2, ',', '.')?>€<td>
+            </tr> 
         </tbody>
     </table>            
-    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
-    </div> 
+    </div>
 <?php endif ;?>
 
 <script>
-
     $(document).ready(function() {
         $('#select_vehiculo').select2({
             placeholder: "Buscar vehiculo",
@@ -467,28 +483,26 @@ en JS tmb se usa algo parecido
             allowClear: true,
             width: '100%'
         });
-              
-        let zonaMensaje = document.getElementById("mensaje");
-        if (zonaMensaje){ /* si no existe es porque la pagina no ha mostrado el mensaje */
-            zonaMensaje.classList.add("mostrar");
-            //con zonaMensaje.style.opacity = 1; tmb se podria haber modificado directamente el atributo opacity del div en lugar de modificar la clase del div, pero modificando la clase hay mas posibilidades de cambiar otros atributos
-            setTimeout(()=>{
-                //y aqui tmb directamente se modifica el atributo zonaMensaje.style.opacity = 0;
-                zonaMensaje.classList.remove("mostrar");// Espera 2.5s y luego inicia la animación de desvanecimiento
-            }, 2500);/* OJo que setTimeOut es asincrono, mientras espera los 2500 sigue ejecutando y carga el evento de transitioned, y al terminar la transicion de 0 a 1
-            opacity ya se dispara el evento transitionend por eso hay que poner el if dentro para que no ejecute zonaMensaje.style.display = "none" al pasar de 0 a 1*/
-            // Evento final de transicion= ocultar. Podria haber puesto en la regla .mesnajeGuardar (display: "none") y asi se oculta despues de quitarle .mostrar a la clase
-            zonaMensaje.addEventListener("transitionend", () => {
-                /* sino se pone el if el evento se dispara tmb al hacer zonaMensaje.classList.add("mostrar"); y al terminar esa transcion lo oculta
-                con el if, solo se oculta si antes se ha mostrado. Tmb se podira haber puesto asi:
-                    if (getComputedStyle(zonaMensaje).opacity === "0") {
-                       zonaMensaje.style.display = "none";
-                    } se consulta el style en lugar de la clase*/
-                if (!zonaMensaje.classList.contains("mostrar")) {
-                    zonaMensaje.style.display = "none";
-                }
-            });        
+        formulario = document.getElementById("gasto");
+        let botonGuardar = document.getElementById("botonGuardarGasto");
+        if (botonGuardar){/* cuando la pagina es para una nueva compraventa no se cargan el boton de nuevo gasto con lo que no existe"botonGuardarGasto" */
+            botonGuardar.addEventListener("click", (evento) => {/* capturo evento boton submit */
+                if (!validarTablaEnteros([formulario.importe])){
+                    evento.preventDefault();
+                    return false;
+                }   /* como el evento un submit, despues de aqui continua con el evento submit y se va a la funcion de abajo que captura el evento submit formulario*/ 
+            });
         }
+        /* esto era para preguntar al usuario si queria guardar el gasto en gastosVehiculo pero al final no se hace para no duplicar datos, en gastosVehiculo se muestran tmb los gastos de la compraventa pero sin duplicar
+            formulario.addEventListener("submit", (evento) => { capturo submit del formulario 
+             if (confirm ("Desea guardar este gasto como gasto del vehiculo?")){
+                aqui se igualan campos en el formulario de la compra venta con los del vehiculo porque tiene otro nombre diferente
+                document.getElementById("comentariosGastoVehiculo").value = document.getElementById("observaciones").value;
+                document.getElementById("guardarEnVehiculo").value = "si"; campo para indiecar al controller que tiene que guardar tmb en gastovehiculo
+            }
+        }); */
+        /* para mostrar el mensaje de guardado correctamente de arriba */
+        mensaje("mensaje");
     });
 </script>
 <!-- lo mismo que he hecho con PHP al principio del documento lo puedo hacer con JS asi:

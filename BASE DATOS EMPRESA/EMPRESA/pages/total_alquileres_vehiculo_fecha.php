@@ -1,9 +1,15 @@
 <?php
-header("Content-Type: text/plain; charset=UTF-8");
+    header("Content-Type: text/plain; charset=UTF-8");
 ?>
+<!-- OJO!! no puede haber lineas en blanco antes del headers, ni un espacio en blanco ni siquiera comentarios, daria error warning: Cannot modify header information - headers already sent by
+ como cuando hago un echo antes de cargar la pagina con render-->
+
+<!-- aqui se muestran 3 tablas, 1º los alquileres de los coches elegidos con los gastos de los coches y resumen de beneficio (no van gastos de alquiler)
+ 2º las compra ventas de los vehiculos selecionados con los gastos de la compraventa
+ 3º resumen final alquileres y compraventas -->
 <div class = "bloque-movimiento">  
     <table class = "tabla_resumen noultima">
-        <caption>Alquileres (Ganancia) de los coches seleccionados entre las fechas <?=formatea_fecha($desde)?> y <?=formatea_fecha($hasta)?></caption>
+        <caption>Alquileres por meses (Ganancia) de los coches seleccionados entre las fechas <?=formatea_fecha($desde)?> y <?=formatea_fecha($hasta)?></caption>
         <thead>
             <tr>
                 <th>Vehículo</th>

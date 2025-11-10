@@ -58,6 +58,7 @@ class CuotaVehiculo {
     }
     public static function fromArray(array $data): CuotaVehiculo {
 //solo se crean objetos para meter dentro de cuota si en el SELECT se lee algun campo que pertenece a una tabla diferente de cuota
+        $propietario = null;
         if (isset($data['Nombre'])){
             $propietario = new Entidad ($data['id_entidad']??null, $data['CIF_DNI']??null, $data['Nombre']??null, $data['Observaciones']??null, 
             $data['Direccion']??null, $data['Telefono']??null, $data['Email']??null);

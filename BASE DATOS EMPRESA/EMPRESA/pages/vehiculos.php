@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-md-6">
             <form action="<?= DIRECTORIO ?>vehiculos" method="get" class="d-flex">
-                <input type="search" name="buscar_marca" class="form-control me-1" id="floatingInput" placeholder="Buscar vehiculo" value="<?= $_GET['buscar_marca'] ?? ''?>">
-                <input type="search" name="buscar_matr_bast" class="form-control me-1" id="floatingInput" placeholder="Buscar matrícula o bastidor" value="<?= $_GET['buscar_matr_bast'] ?? ''?>">
+                <input type="search" name="buscar_marca" class="form-control me-1" id="buscar_marca" placeholder="Buscar vehiculo/matr/bast" value="<?= $_GET['buscar_marca'] ?? ''?>">
+                <input type="search" name="buscar_propietario" class="form-control me-1" id="buscar_propietario" placeholder="Buscar propietario" value="<?= $_GET['buscar_propietario'] ?? ''?>">
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>
@@ -21,7 +21,6 @@
         <table class="table table-hover table-striped medio">
             <thead>
                 <tr>
-                <th class="etiqueta" scope="col">#</th>
                 <th class="etiqueta" scope="col">
                     <a href="<?= DIRECTORIO ?>vehiculos?ordenar=Marca_modelo&num_pagina=1">Vehiculo</a>
                 </th>
@@ -38,8 +37,9 @@
             <tbody>
                 <?php foreach($vehiculos as $vehiculo):?>
                 <tr>
-                    <th scope="row"><?=$vehiculo->getId()?></th>
-                    <td><?=$vehiculo->getMarca_modelo()?></td>
+                    <td class="tooltip-cell info" data-tooltip="<?=$vehiculo->getMarca_modelo()?>">
+                        <?=$vehiculo->getMarca_modelo()?>
+                    </td>
                     <td><?=$vehiculo->getMatricula()?></td>
                     <td><?=$vehiculo->getBastidor()?></td>
                     <td><?=$vehiculo->getKm()?></td>
@@ -82,3 +82,6 @@
         </div>  
     </div>
 </div>
+<script>
+    tooltip();
+</script>

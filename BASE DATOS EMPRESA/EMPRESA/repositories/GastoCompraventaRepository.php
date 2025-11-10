@@ -33,6 +33,15 @@ class GastoCompraventaRepository{
         $this->conexionPDO->consulta($sql, $parametros);
         return $this->extraer_registro();
     }
+    public function gastosVehiculoCompraventa(int $id){
+        $parametros = [':id' => $id];
+        $sql = "SELECT * FROM gastoscompraventa
+                WHERE compraventa IN (SELECT id_compraventa FROM compraventas
+                            WHERE vehiculo =:id)";
+        
+        $this->conexionPDO->consulta ($sql, $parametros);
+        return $this->extraer_todos();
+    }
     public function create (array $gasto):void{
         
         $parametros = [

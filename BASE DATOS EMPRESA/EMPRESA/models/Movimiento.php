@@ -66,6 +66,14 @@ class Movimiento {
             $recibe = new Entidad ($data['id_entidad']??null, $data['CIF_DNI']??null, $data['nombreRecibe']??null, $data['Observaciones']??null, $data['Direccion']??null, 
                                 $data['Telefono']??null, $data['Email']??null);
         }
+        /* OJO con array_key_exists, en cuanto exista el campo Marca_modelo en la consulta se crea el objeto vehiculo, da igual que el valor en la BBDD sea null, 
+        si $data[Marca_modelo]=null se crea el vehiculo con lo que en la pagina HTML no necesito poner el ? en $movimiento->getvehiculoInfo()?->getMarca_modelo() por si
+        getvehiculoInfo es null, nunca lo sera si en el SELECT esta el campo MArca_modelo. De esta forma siempre crea objetos enteros de vehiculo con todas las lineas leidas en el SELECT
+        aunque los movimeintos no tengan un coche
+        Totalmente diferente es si pongo isset($data[Marca_modelo]), evalua si existe y no es null, de esta forma si el valor de $data[Marca_modelo] es null no creara el objeto vehiculo
+        pero entonces $movimiento->getvehiculoInfo() sera null para los movimientos que no tienen coche, y si que hay que poner el ? $movimiento->getvehiculoInfo()?->getMarca_modelo().
+        En resumen es mas eficiente poner isset pero obliga a poner el ? en la pagina HTML.
+        Claro esta que solo ocurre en campos que no son required en la pagina, en campos required siempre va a existir y siempres se crea la entidad*/
         if (array_key_exists('Marca_modelo', $data)){//compruebo si existe el campo Marca_modelo porque en el SELECT no leo envia (vehiculo), solo leo Marca_modelo
             $propietario = null;
             if (array_key_exists('nombrePropietario', $data)){//si existe el propietario creo una entidad para el vehiculo

@@ -1,3 +1,5 @@
+<!-- los gastos del vehiculo y los gastos de las compraventas del vehiculo se tienen en cuenta para calcular el beneficio del vehiculo, los gastos del alquiler
+ no se tienen en cuenta porque asi se ha hecho desde siempre ya que hay se menten gastos que no son para el analisis total sino para los inversores -->
 <?php if (!empty($error)): ?>
         <div class="alert alert-danger" role="alert">
             <?= htmlspecialchars($error) ?>
@@ -41,16 +43,16 @@
         <div class="row">
             <div class="col-md-12">
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">
-                <button type="button" class="boton_link" id = "ocultarAnalisis">Ocultar Analisis</button>
-                <button type="submit" class="boton_link" id = "botonAnalisis">Alquileres fecha</button>
+                <button type="button" id = "ocultarAnalisis">Ocultar =></button>
+                <button type="submit" class="boton_link" id = "botonAnalisis">Alquileres</button>
                 <spam class="etiqueta_mini">Muestra alquileres entre fechas del 1º vehiculo seleccionado en la lista</spam>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="boton_link" id = "botonMeses">Total alquileres</button>
-                <spam class="etiqueta_mini">"Total" analiza todos los vehiculos seleccionados en la lista (la lista solo muestra vehiculos que tienen alquileres)</spam>
-                <button type="button" class="boton_link" id = "botonGastosVehiculo">Gastos vehiculo</button>
+                <button type="button" class="boton_link" id = "botonMeses">Total alquileres On/Off</button>
+                <spam class="etiqueta_mini">Muestra todos los vehiculos seleccionados en la lista (la lista solo muestra vehiculos que tienen alquileres)</spam>
+                <button type="button" class="boton_link" id = "botonGastosVehiculo">Gastos vehiculo(todas fechas)On/Off</button>
             </div>
         </div>
     </div>
@@ -81,104 +83,101 @@
                     </tr>
                 </thead>
                 <tbody>
-                        <tr><!--muestro un alquiler-->
-                            <td><?=$alquiler->getclienteInfo()->getNombre()?></td>
+                    <tr><!--muestro un alquiler-->
+                        <td><?=$alquiler->getclienteInfo()->getNombre()?></td>
+                        <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
+                        <td><?=number_format($alquiler->getganancia(), 2, ',', '.')?>€</td>
+                        <td><?=$alquiler->getdias()?></td> 
+                    </tr>
+                </tbody>
+            </table>
+            <!--Ampliaciones-->
+            <?php $totalAmpliacionesMasAlquiler = $alquiler->getganancia(); //ampliaciones se inicia con el precio del alquiler y va sumando precio de ampliaciones
+                $totalDias = $alquiler->getdias();  //dias se inicia con los dias del alquiler y va sumando dias de ampliaciones
+                //IMPORTANTE inicializar aqui estos contadores porque si los pongo dentro del if y no existen ampliaciones, no se incian y mas abajo en la resta de importe - gastos para calcular el benicio del alquiler daria error 
+            ?>
+            <?php if (!empty($ampliaciones[$alquilerActual])) :?>
+                <table class = "mi_tabla azul w400" >
+                    <caption>Alquiler+Ampliaciones</caption>
+                    <colgroup>
+                        <col style="width: 100px;">
+                        <col style="width: 100px;">
+                        <col style="width: 100px;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Ganancia</th>
+                            <th>Dias</th>
+                        </tr>
+                        <tr><!--esto es para que los datos del alquiler salgan en la tabla ampliaciones en la 1º fila-->
                             <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
                             <td><?=number_format($alquiler->getganancia(), 2, ',', '.')?>€</td>
                             <td><?=$alquiler->getdias()?></td> 
                         </tr>
-                </tbody>
-            </table>
-            <p></p>
-            <!--Ampliaciones-->
-            <div class = "contenedor-tablas">
-                <?php $totalAmpliacionesMasAlquiler = $alquiler->getganancia(); //ampliaciones se inicia con el precio del alquiler y va sumando precio de ampliaciones
-                    $totalDias = $alquiler->getdias();  //dias se inicia con los dias del alquiler y va sumando dias de ampliaciones
-                    //IMPORTANTE inicializar aqui estos contadores porque si los pongo dentro del if y no existen ampliaciones, no se incian y mas abajo en la resta de importe - gastos para calcular el benicio del alquiler daria error 
-                ?>
-                <?php if (!empty($ampliaciones[$alquilerActual])) :?>
-                    <table class = "mi_tabla w400" >
-                        <caption>Alquiler+Ampliaciones</caption>
-                        <colgroup>
-                            <col style="width: 100px;">
-                            <col style="width: 100px;">
-                            <col style="width: 100px;">
-                        </colgroup>
-                        <thead>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($ampliaciones[$alquilerActual] as $ampliacion) :?>
                             <tr>
-                                <th>Fecha</th>
-                                <th>Ganancia</th>
-                                <th>Dias</th>
+                                <?php $totalAmpliacionesMasAlquiler += $ampliacion->getganancia();
+                                        $totalDias += $ampliacion->getdias()
+                                ?>
+                                <td><?= formatea_fecha($ampliacion->getfechaInicio())?></td>
+                                <td><?= number_format($ampliacion->getganancia(), 2, ',', '.');?>€</td>
+                                <td><?= $ampliacion->getdias()?></td>
                             </tr>
-                            <tr><!--esto es para que los datos del alquiler salgan en la tabla ampliaciones en la 1º fila-->
-                                <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
-                                <td><?=number_format($alquiler->getganancia(), 2, ',', '.')?>€</td>
-                                <td><?=$alquiler->getdias()?></td> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($ampliaciones[$alquilerActual] as $ampliacion) :?>
-                                <tr>
-                                    <?php $totalAmpliacionesMasAlquiler += $ampliacion->getganancia();
-                                            $totalDias += $ampliacion->getdias()
-                                    ?>
-                                    <td><?= formatea_fecha($ampliacion->getfechaInicio())?></td>
-                                    <td><?= number_format($ampliacion->getganancia(), 2, ',', '.');?>€</td>
-                                    <td><?= $ampliacion->getdias()?></td>
-                                </tr>
-                            <?php endforeach ;?>
+                        <?php endforeach ;?>
+                        <tr>
+                            <td>Total</td>
+                            <td><?=number_format($totalAmpliacionesMasAlquiler, 2, ',', '.')?>€</td>
+                            <td><?=$totalDias?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php endif ;?>
+                <!--Gastos-->
+            <?php $totalGastos = 0; ?> <!--//IMPORTANTE inicializar aqui el contador, si no hay gastos no entra y no existiria el contador y daria error -->   
+            <?php if (!empty($gastos[$alquilerActual])) :?>
+                <table class = "mi_tabla verde" >
+                    <caption>Gastos del alquiler</caption>
+                    <colgroup>
+                        <col style="width: 100px;">
+                        <col style="width: 100px;">
+                        <col style="width: 200px;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Importe</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($gastos[$alquilerActual] as $gasto) :?>
                             <tr>
-                                <td>Total</td>
-                                <td><?=number_format($totalAmpliacionesMasAlquiler, 2, ',', '.')?>€</td>
-                                <td><?=$totalDias?></td>
+                                <?php $totalGastos += $gasto->getimporte();?>
+                                <td><?= formatea_fecha($gasto->getfecha())?></td>
+                                <td><?= number_format($gasto->getimporte(), 2, ',', '.');?>€</td>
+                                <td><?= $gasto->gettipo()?></td>
                             </tr>
-                        </tbody>
-                    </table>
-                <?php endif ;?>
-                    <!--Gastos-->
-                <?php $totalGastos = 0; ?> <!--//IMPORTANTE inicializar aqui el contador, si no hay gastos no entra y no existiria el contador y daria error -->   
-                <?php if (!empty($gastos[$alquilerActual])) :?>
-                    <table class = "mi_tabla" >
-                        <caption>Gastos del alquiler</caption>
-                        <colgroup>
-                            <col style="width: 100px;">
-                            <col style="width: 100px;">
-                            <col style="width: 200px;">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Importe</th>
-                                <th>Tipo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($gastos[$alquilerActual] as $gasto) :?>
-                                <tr>
-                                    <?php $totalGastos += $gasto->getimporte();?>
-                                    <td><?= formatea_fecha($gasto->getfecha())?></td>
-                                    <td><?= number_format($gasto->getimporte(), 2, ',', '.');?>€</td>
-                                    <td><?= $gasto->gettipo()?></td>
-                                </tr>
-                            <?php endforeach ;?>
-                            <?php $totalGastosAlquileres += $totalGastos; ?>
-                            <tr>
-                                <td>Total</td>
-                                <td><?=number_format($totalGastos, 2, ',', '.')?>€</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <?php endif ;?>
-            </div>
-            <p>Beneficio (Ganancia) de este alquiler: <?=number_format($totalAmpliacionesMasAlquiler-$totalGastos, 2, ',', '.')?>€</p>                
+                        <?php endforeach ;?>
+                        <?php $totalGastosAlquileres += $totalGastos; ?>
+                        <tr>
+                            <td>Total</td>
+                            <td><?=number_format($totalGastos, 2, ',', '.')?>€</td>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php endif ;?>
+            <p>Ganancia de este alquiler: <?=number_format($totalAmpliacionesMasAlquiler-$totalGastos, 2, ',', '.')?>€</p>                
         </div>
     <?php endforeach ;?>
     <table class = "tabla_resumen" >
-        <caption>Resumen <?= $alquileres[0]->getvehiculoInfo()->getMarca_modelo()?></caption>
+        <caption>Resumen alquileres de las fechas<?= $alquileres[0]->getvehiculoInfo()->getMarca_modelo()?></caption>
         <thead>
             <tr>
                 <th>Total Alquileres</th>
-                <th>Total Gastos</th>
+                <th>Total Gastos alquileres</th>
                 <th>Total Beneficio</th>
             </tr>
         </thead>
@@ -275,7 +274,9 @@
             window.initTooltips();
         });
     })();
-    /* evento para el boton que muestra los totales y ganancia por meses. Ahora mismo solo muestra totales de todo el año que se ha elegido con las fechas, para que lo haga de 
+    /* aqui hay 2 fetch uno muestra 1 tabla los totales y ganancia por meses entre dos fechas (sin gastos, solo se descuenta la comision por eso se muestra ganancia)
+     y el otro muestra 3 tablas: totales alquileres (sin fechas) y gastos del coche (no gastos de alquileres) + compraventas (con gastos compraventa)+resumen alqui/compraventas. 
+    Ahora mismo solo muestra totales de todo el año que se ha elegido con las fechas, para que lo haga de 
     todos los años habria que hacer lo siguiente, no usar las fechas del formulario y hacer un for (i=2025 i<añoActual i++) y ejecutar el fetch tantas veces como años hay desde 2025 
     hasta el año actual, en cada pasada se mostraria un año entero, logicamente habria que comproner dos fechas para poder hacer la llamada, la composicion se hace con asi
     desde = i+-01-01 (2025-01-01) hasta = i+-12-31 (2025-12-31) siguiente pasada desde = i+-01-01 (2026-01-01) .... */
@@ -293,9 +294,8 @@
                 }
             }
             let okFechas = validaFechas(desde, hasta);
-            if (desde && hasta && cocheIds.length > 0 && okFechas){//compruebo que hayan datos if (desde) equivale a (desde!="")
-                //fetch('/mis_pruebas/total_alquileres_vehiculo?desde=' + desde + '&hasta=' + hasta + '&coche= ' + coche) para un solo coche metodo GET, paso datos en la URL 
-                //me traigo total de ganancia por meses, entre 2 fechas, de los vehiculos elegidos
+            if (desde && hasta && cocheIds.length > 0 && okFechas){//compruebo que hayan datos if (desde) equivale a (desde!="") 
+                //me traigo total de ganancia por meses, entre 2 fechas, de los vehiculos elegidos. no se incluyen gastos de alquileres 
                 fetch('/mis_pruebas/total_alquileres_vehiculo_fecha', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -307,7 +307,7 @@
                 })
                 .then(response => {
                         console.log("Respuesta HTTP:", response.status);
-                        return response.text()
+                        return response.text();/* respuesta en texto plano, Si el servidor devolviera JSON, usaría response.json()*/
                 })
                 .then(data => {
                     console.log("Contenido recibido:", data);
@@ -318,8 +318,9 @@
                     console.error("Error en fetch:", error);
                     cont.innerHTML = "Error: " + error;
                 });
-                /* me traigo los totales */
-                fetch('/mis_pruebas/total_alquileres_vehiculos', {//muestro el total de ganacia de todos los alquileres+ampli de los vehiculos 
+                /* ........................................................... */
+                /* muestro 3 tablas, total de ganacia de todos los alquileres de los vehiculos (sin fechas) con gastos del coche no van de alquiler +compraventas del los vehiculos con gastos compraventas+resumen final alqu/compraventas*/
+                fetch('/mis_pruebas/total_alquileres_vehiculos', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -347,7 +348,7 @@
             }
             /* SI SE PONE AQUI LO DE LAS FLOTANTES NO FUNCIONA PORQUE Los datos PHP aun no han llegado del servidor y no estan cargados en las etiquetas  <div id="contenidoMeses"></div><div id="contenidoTotal"></div> solo funciona se le pone un retarde y despues se ejecuta settimeout()*/
     });
-    /* para cargar los gastos del vehiculo */
+    /* para cargar los gastos del vehiculo, tmb muestra gastos de la compraventa, se usa en la pagina gastos_cuota_vehiculo*/
     document.getElementById("botonGastosVehiculo").addEventListener("click", function(){
         const cont = document.getElementById("contenidoGastosVehiculo");
         if (cont.style.display === "none" || cont.style.display === "") {//si no esta visible hace la llamada AJAX y muestra datos, si ya esta visible los oculta, cada vez que muestra datos refresca haciendo una nueva llamada AJAX
@@ -400,10 +401,10 @@
             //devuelve el valor real de display aunque nose haya hecho ninguna vez style = "algo"
             if (displayActual==="none"){//si no esta visible lo muestro
                 contenedor.style.display = "block";
-                this.innerText = "Ocultar analisis";
+                this.innerText = "Ocultar =>";
             } else {//lo oculto
                 contenedor.style.display = "none";
-                this.innerText = "Mostrar analisis"
+                this.innerText = "Mostrar =>"
             }
         }
     });

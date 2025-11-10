@@ -21,7 +21,6 @@
         <table class="table table-hover table-striped medio">
             <thead>
                 <tr>
-                <th class="etiqueta" scope="col">#</th>
                 <th class="etiqueta" scope="col">DNI/CIF</th>
                 <th class="etiqueta" scope="col">
                     <a href="<?= DIRECTORIO ?>entidades?ordenar=nombre&num_pagina=1">Nombre</a>
@@ -35,7 +34,6 @@
             <tbody>
                 <?php foreach($entidades as $entidad):?>
                 <tr>
-                    <th scope="row"><?=$entidad->getId()?></th>
                     <td><?=$entidad->getCIF_DNI()?></td>
                     <td><?=$entidad->getNombre()?></td>
                     <td><?=$entidad->getDireccion()?></td>

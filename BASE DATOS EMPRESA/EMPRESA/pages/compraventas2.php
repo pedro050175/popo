@@ -1,24 +1,14 @@
-<?php if (!empty($_GET['mensaje'])): ?>
-    <div class = "mensajeGuardar <?=htmlspecialchars($_GET['tipo'] ?? '')?>" id = "mensaje">
-        <?= htmlspecialchars($_GET['mensaje']) ?>
-    </div>
-<?php endif; ?>
 <div>    
     <form action = "<?=DIRECTORIO?>compraventas" method="GET">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <button type="submit" class="boton_submit">Buscar</button>   
             </div>  
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <input type="button"  class="boton_link" value = "Nuevo" onclick="window.location.href='<?= DIRECTORIO ?>nueva_compraventa';"> 
                 <button type="button" class="boton_submit" id = "analizar">Analizar Trim.</button>
-            </div>
-            <div class="col-md-4">    
-                <select name = "acciones" id = "acciones" class="cuadro_text">
-                    <option value = "">Acciones</option>
-                    <option value = "añadirTri">Añadir a Trimestre</option>
-                    <option value = "quitarTri">Quitar de Trimestre</option>
-                </select>
+                <button type="button" class="boton_submit" id = "añadir">Añadir a Trim.</button>
+                <button type="button" class="boton_submit" id = "sacar">Sacar de Trim.</button>
             </div>
         </div>
         <div class = "botones">
@@ -85,7 +75,7 @@
         <tbody>
             <?php foreach ($compraventas as $compraventa):?>
                 <tr>
-                    <td><input type = "checkbox" name = "actualiza[<?=$compraventa->getid_compraventa()?>]"></td>
+                    <td><input type = "checkbox" name = "actualiza[<?=$compraventa->getid_compraventa()?>]" id = <?=$compraventa->getid_compraventa()?>></td>
                     <td style="color: blue"><?=$compraventa->getempresaInfo()->getNombre()?></td>
                     <td class="tooltip-cell info" data-tooltip="<?=$compraventa->getvehiculoInfo()->getMarca_modelo()?> Km:<?=$compraventa->getvehiculoInfo()->getKm()?> Fecha:<?=$compraventa->getvehiculoInfo()->getFecha_matricula()?>">
                         <?=$compraventa->getvehiculoInfo()->getMarca_modelo()?>
@@ -188,48 +178,11 @@ $(document).ready(function() {
             cont.innerHTML = "Error: " + error;
         }); 
     });
-    mensaje("mensaje");
-    document.getElementById("acciones").addEventListener("change", function(){
-        let seleccionados = document.querySelectorAll('input[name^="actualiza["]');/* casillas checkbox seleccionadas para modificar*/
-        let algunoSeleccionado = false;
-        var accionSeleccionada = document.getElementById("acciones");/* lista desplegable */
-        const accionEjecutar = document.getElementById("accion"); /* campo oculto del formulario para indicar al controler que tiene que hacer */
-        for (var seleccionado of seleccionados){/* compruebo si hay alguna seleccionada */
-            if (seleccionado.checked) {
-                algunoSeleccionado = true;
-                break;
-            }
-        }
-        /* otra forma de hacer lo anterior: Array.from(document.querySelectorAll('input[name^="actualiza["]')).some(chk => chk.checked); querySlector devuelve un NodeList es parecido a un array
-        pero no se le pueden aplicar metodos de array, con Array.from() se convierte en array, al resultado le aplica el metodo some() que dice si hay alguno que cumpla la condicion, la condicion 
-        es chk.checked que significa “el checkbox está marcado”. chk es cada una de las casillas de verificacion de la tabla */
-        if (!algunoSeleccionado) {
-            accionSeleccionada.value = ""; // para que se quede sin seleccion la lista despl. y tenga que volver a seleccionar y poder lanzar el evento chage de la lista
-            Swal.fire({ /* mensaje tipo alert con SweetAlert se ha importado en el header, es una librria de npm */
-            icon: 'warning',
-            title: 'Atención',
-            text: 'Debes seleccionar al menos una compraventa antes de elegir una acción.',
-            confirmButtonText: 'Entendido',
-            });
-            return;
-        }
-        /* mesanje de confirmacion para ejecutar. Aquí, SweetAlert devuelve una promesa (then), y dentro de ella decides si continuar o no. */
-        Swal.fire({
-        title: '¿Confirmar acción?',
-        text: 'Se aplicará la acción seleccionada a las compraventas marcadas.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, continuar',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                accionEjecutar.value = accionSeleccionada.value;
-                document.getElementById("formActualiza").submit();
-            } else {
-        // Si cancela, volvemos al valor vacío
-            accionSeleccionada.selectedIndex = 0;// otra forma de dejar sin seleccion la lista despl.
-            }
-        });
+    document.getElementById("añadir").addEventListener("click", function(){
+        let accion = document.getElementById("accion");
+        accion.value = "añadirTri";
+        let formulario = document.getElementById("formActualiza");
+        formulario.submit();
     });
 });
 </script>

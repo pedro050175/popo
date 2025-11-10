@@ -2,9 +2,28 @@
     <div class="row">
         <div class="col-md-7">
             <form action="<?= DIRECTORIO ?>movimientos" method="get" class="d-flex">
-                <input type="search" name="envia" class="form-control me-1" id="floatingInput" placeholder="Buscar envia" value="<?= $_GET['envia'] ?? ''?>">
-                <input type="search" name="recibe" class="form-control me-1" id="floatingInput" placeholder="Buscar recibe" value="<?= $_GET['recibe'] ?? ''?>">
-                <input type="search" name="vehiculo_id" class="form-control me-1" id="floatingInput" placeholder="vehiculo/id/concepto" value="<?= $_GET['vehiculo_id'] ?? ''?>">
+                <?php
+                    $enviaActual = $_GET['envia'] ?? '';
+                    foreach ($entidades as $entidad){
+                        $listaEntidades[$entidad->getId()] = $entidad->getNombre();
+                    }
+                ?>
+                <select name="envia" class="form-select" id="selectEnvia">
+                    <option disabled value = "" <?= $enviaActual == '' ? 'selected' : '' ?>></option>
+                    <?php foreach ($listaEntidades as $id => $entidad): ?> 
+                        <option value="<?= $id?>" <?= $id == $enviaActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <?php
+                    $recibeActual = $_GET['recibe'] ?? '';
+                ?>
+                <select name="recibe" class="form-select" id="selectRecibe">
+                    <option disabled value = "" <?= $recibeActual == '' ? 'selected' : '' ?>></option>
+                    <?php foreach ($listaEntidades as $id => $entidad): ?> 
+                        <option value="<?= $id?>" <?= $id == $recibeActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                    <?php endforeach; ?>
+                </select>                
+                <input type="search" name="vehiculo_id" class="form-control me-1" id="floatingInput" placeholder="vehiculo/concepto" value="<?= $_GET['vehiculo_id'] ?? ''?>">
                 <button type="submit" class="boton_submit">Buscar</button>  
             </form>
         </div>
@@ -27,7 +46,6 @@
         <table class="table table-hover table-striped medio">
             <thead>
                 <tr>
-                <th class="etiqueta" scope="col">#</th>
                 <th class="etiqueta" scope="col">Fecha</th>
                 <th class="etiqueta" scope="col">Envia</th>
                 <th class="etiqueta" scope="col">Recibe</th>
@@ -46,17 +64,16 @@
                 <?php foreach($movimientos as $movimiento) :?>
                 <tr>
                     <?php $total += $movimiento->getdiferencia(); ?>
-                    <th scope="row"><?=$movimiento->getidMovimiento()?></th>
                     <td><?=formatea_fecha($movimiento->getfecha())?></td>
                     <td><?=$movimiento->getenviaInfo()->getNombre()?></td>
                     <td><?=$movimiento->getrecibeInfo()->getNombre()?></td>
-                    <td title="<?=$movimiento->getconcepto()?>"><?=$movimiento->getconcepto()?></td>
+                    <td class = "info" title="<?=$movimiento->getconcepto()?>"><?=$movimiento->getconcepto()?></td>
                     <td><?=number_format($movimiento->gettotalEntrega(), 2, ',', '.')?>€</td>
                     <td><?=number_format($movimiento->gettotalDevolucion(), 2, ',', ',')?>€</td>
                     <td><?=number_format($movimiento->getdiferencia(), 2, ',', '.')?>€</td>
                     <td><?=$movimiento->getvehiculoInfo()?->getMarca_modelo() ?? ''?></td> <!-- si getvehiculoInfo() es null se va al ?? y devuelve ''-->
                     <td><?=$movimiento->getvehiculoInfo()?->getdatos_propietario()?->getNombre() ?? ''?></td><!-- si getvehiculoInfo() o getdatos_propietario() es null se va al ?? y devuelve ''-->
-                    <td title="<?=$movimiento->getobservaciones()?>"><?=$movimiento->getobservaciones()?></td><!--con title aparece el texto completo al poner el raton encima del campo observaciones-->
+                    <td class = "info" title="<?=$movimiento->getobservaciones()?>"><?=$movimiento->getobservaciones()?></td><!--con title aparece el texto completo al poner el raton encima del campo observaciones-->
                     <td><?=$movimiento->getterminado() ? 'SI' : 'NO'?></td>
                     <td>
                         <div class="btn-group" role="group">
@@ -84,7 +101,7 @@
         <div class="row mb-3">       
             <div class="col-md-2"> <em class="etiqueta">Movimientos: <?=count($movimientos)?></em></div>
             <!--todo esto que sigue es para la paginacion-->
-            <?php if (isset($_GET['num_pagina'])) :?>
+             <?php if (isset($_GET['num_pagina'])) :?>
                 <div class="col-md-6"> <em class="etiqueta">Pagina: <?=$_GET['num_pagina']?> de: <?= $numPaginas?></em></div>    
                 <?php $_GET['num_pagina'] < $numPaginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
                 <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
@@ -96,3 +113,93 @@
         </div>  
     </div>
 </div>
+<!-- los numeros despues de las letras son los id de cada empresa para poner ese id en el name de la lista desplegable -->
+<div>
+    <table class="table table-hover table-striped fino">
+        <thead>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=2&recibe=1" id = "2_1">World a Stelar</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=2&recibe=3" id = "2_3">World a Universo</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=2&recibe=33" id = "2_33">World a Martin</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=2&recibe=32" id = "2_32">World a Magna</a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=3&recibe=1" id = "3_1">Universo a Stelar</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=3&recibe=2" id = "3_2">Universo a World</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=3&recibe=33" id = "3_33">Universo a Martin</a>
+                            </li>
+                        </ul>    
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=1&recibe=3" id = "1_3">Stelar a Universo</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=1&recibe=2" id = "1_2">Stelar a World</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=1&recibe=33" id = "1_33">Stelar a Martin</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=1&recibe=32" id = "1_32">Stelar a Magna</a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=32&recibe=1" id = "32_1">Magna a Stelar</a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=33&recibe=1" id = "33_1">Martin a Stelar</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=33&recibe=2" id = "33_2">Martin a World</a>
+                            </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=33&recibe=3" id = "33_3">Martin a Universo</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+$(document).ready(function() {
+        $('#selectEnvia').select2({
+            placeholder: "Buscar envia",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#selectRecibe').select2({
+            placeholder: "Buscar recibe",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>

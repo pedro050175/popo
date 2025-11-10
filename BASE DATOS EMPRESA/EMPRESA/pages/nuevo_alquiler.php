@@ -15,19 +15,19 @@
         </div>
         
         <div class="row">
-            <div class="col-md-3">    
+            <div class="col-md-2">    
                 <div class="form-floating mb-1">
                     <input type="date" name="data[fechaInicio]" class="form-control" id="fechaInicio" placeholder="Fecha inicio" value="<?=(isset($alquiler))?$alquiler->getfechaInicio():''?>" required> 
                     <label for="fechaIncio">Fecha inicio</label>
                 </div>
             </div>
-            <div class="col-md-3"> 
+            <div class="col-md-2"> 
                 <div class="form-floating mb-1">
-                    <input class="form-control" type="number" name="data[dias]" id="dias" placeholder="Dias" value = "<?= (isset($alquiler))?$alquiler->getdias():''?>">
+                    <input class="form-control" type="number" name="data[dias]" id="dias" placeholder="Dias" onchange = "actualizaFechaFin(this.form)" value = "<?= (isset($alquiler))?$alquiler->getdias():''?>">
                     <label for="dias">Dias:</label>
                 </div>
             </div>
-            <div class="col-md-3"> 
+            <div class="col-md-2"> 
                 <div class="form-floating mb-1">
                     <input type="text" name="data[contrato]" class="form-control" id="contrato" placeholder="Contrato" value="<?=(isset($alquiler))?quitaEspecialChar($alquiler->getcontrato()):''?>" required>
                     <label for="contrato">Contrato</label>
@@ -69,13 +69,13 @@
                     <label for="kilometros">Kilometros:</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-floating mb-1">
                     <input class="form-control" type="number" name="data[kmInicio]" id="kmInicio" placeholder="Km inicio" value = "<?= (isset($alquiler))?$alquiler->getkmInicio():''?>">
                     <label for="kmInicio">Km inicio:</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-floating mb-1">
                     <input class="form-control" type="number" name="data[kmFin]" id="kmFin" placeholder="Km fin" value = "<?= (isset($alquiler))?$alquiler->getkmFin():''?>">
                     <label for="kmFin">Km fin:</label>
@@ -111,13 +111,14 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-floating mb-1">
-                    <input type="text" name="data[comercial]" class="form-control" id="comercial" placeholder="Comercial" value="<?=(isset($alquiler))?quitaEspecialChar($alquiler->getcomercial()):''?>">
+                    <input type="text" name="data[comercial]" class="form-control" id="comercial" placeholder="Comercial" value="<?=(isset($alquiler))?quitaEspecialChar($alquiler->getcomercial()):'CRISTIAN'?>">
                     <label for="comercial">Comercial</label>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-floating mb-1">
-                    <input class="form-control" type="text" name="data[comisionComercial]" id="comisionComercial" placeholder="Comision €:" value = "<?= (isset($alquiler))?$alquiler->getcomisionComercial():''?>">
+                    <input class="form-control" type="text" name="data[comisionComercial]" 
+                        id="comisionComercial" placeholder="Comision €:" onchange="actualizaGanancia(this.form)" value = "<?= (isset($alquiler))?$alquiler->getcomisionComercial():''?>">
                     <label for="comisionComercial">Comision €:</label>
                 </div>
             </div>
@@ -154,6 +155,9 @@
             <?php
                 $empresaActual = isset($alquiler) ? $alquiler->getempresa() : '';//estoy editando un alquiler
                 $empresaActual = $empresaActual!=0 ? $empresaActual : '';
+                foreach ($empresas as $empresa){
+                    $listaEmpresas[$empresa->getId()] = $empresa->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
+                }
             ?>
         <div class="row">
             <div class="col-md-3">
@@ -161,8 +165,8 @@
                 <div class="form-floating mb-1">
                     <select name="data[empresa]" class="form-select" id="select_empresa" required>
                         <option value = "" disabled <?= $empresaActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($lista as $id => $entidad): ?>
-                            <option value="<?= $id?>" <?= $id == $empresaActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                        <?php foreach ($listaEmpresas as $id => $empresa): ?>
+                            <option value="<?= $id?>" <?= $id == $empresaActual ? 'selected' : '' ?>><?= $empresa ?></option>
                         <?php endforeach; ?>
                     </select> 
                 </div>
@@ -182,13 +186,12 @@
             <?php
                 $estadoActual = isset($alquiler) ? $alquiler->getestado() : '';
                 $estadoActual = $estadoActual ?? '';
-                $estados = ['Sin entregar', 'Entregado', 'Terminado', 'Cancelado', ''];
             ?>    
             <div class="col-md-2">
                 <div class="form-floating mb-1">
                     <select name="data[estado]" class="form-select" id="estado">
                         <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($estados as $opcion): ?>
+                        <?php foreach (ESTADOS_ALQUILER as $opcion): ?>
                             <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : '' ?>><?= $opcion ?></option>
                         <?php endforeach; ?>
                     </select> 
@@ -233,13 +236,13 @@
                     <label class="etiqueta" for="precio" >Precio:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[precio]" id="precio" placeholder="precio" required>
                 </div>
+                <div class="col-md-4">
+                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>
+                    <input class="cuadro_text" type="texto" name="ampliacion[comisionComercial]" id="comisionComercial" placeholder="Comision Comercial" onchange="actualizaGanancia(this.form)">
+                </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="ganancia" >Ganancia:</label>
                     <input class="cuadro_text" type="texto" name="ampliacion[ganancia]" id="ganancia" placeholder="ganancia">
-                </div>
-                <div class="col-md-4">
-                    <label class="etiqueta" for="comisionComercial" >Comision Comercial:</label>
-                    <input class="cuadro_text" type="texto" name="ampliacion[comisionComercial]" id="comisionComercial" placeholder="Comision Comercial" >
                 </div>
                 <div class="col-md-6">
                     <label class="etiqueta" for="Observaciones" >Observaciones:</label>
@@ -307,11 +310,11 @@
                     <input class="cuadro_text" type="date" name="cobro[fecha]" id="fecha" required>
                 </div>        
                 <div class="col-md-3">
-                    <label class="etiqueta" for="importe" >Importe:</label>&nbsp
+                    <label class="etiqueta" for="importe" >Importe:</label>
                     <input class="cuadro_text" type="texto" name="cobro[importe]" id="importe" placeholder="Importe" required>
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="facturado" >Facturado:</label>&nbsp
+                    <label class="etiqueta" for="facturado" >Facturado:</label>
                     <input class="cuadro_text" type="checkbox" name="cobro[facturado]" id="facturado">
                 </div>
                 <div class="col-md-3">
@@ -323,12 +326,12 @@
                     <input class="cuadro_text" type="text" name="cobro[contratoHacienda]" id="contratoHacienda" placeholder="Contrato Hacienda">
                 </div>
                 <div class="col-md-2">
-                    <label class="etiqueta" for="fianza" >Fianza:</label>&nbsp
+                    <label class="etiqueta" for="fianza" >Fianza:</label>
                     <input class="cuadro_text" type="checkbox" name="cobro[fianza]" id="fianza">
                 </div>
                 <div class="col-md-3">
-                    <label class="etiqueta" for="parteImporteFianza" >Parte Importe fianza:</label>&nbsp
-                    <input class="cuadro_text" type="texto" name="cobro[parteImporteFianza]" id="parteImporteFianza" placeholder="parteImporteFianza" required>
+                    <label class="etiqueta" for="parteImporteFianza" >Parte Importe fianza:</label>
+                    <input class="cuadro_text" type="texto" name="cobro[parteImporteFianza]" id="parteImporteFianza" placeholder="parteImporteFianza">
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="banco" >Banco:</label>

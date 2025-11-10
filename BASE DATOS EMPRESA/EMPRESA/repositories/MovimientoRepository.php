@@ -54,17 +54,18 @@ class MovimientoRepository{
         return $this->extraer_todos(); 
     }
     public function findAll(): ?array {
-        
-        $envia = $_GET['envia'] ?? '';
-        $recibe = $_GET['recibe'] ?? '';
-        if (($envia) or ($recibe)) {//listado para buscar se muestran terminados y no terminados
-                $this->conexionPDO->consulta ("SELECT M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
+        /* envia y recibe son numeros, son los id */
+        $envia = $_GET['envia'] ?? 0;
+        $recibe = $_GET['recibe'] ?? 0;
+        if ((!empty($envia)) || (!empty($recibe))) {//listado para buscar se muestran terminados y no terminados
+
+            $sql = "SELECT M.idMovimiento, M.fecha, M.concepto, M.observaciones, M.terminado, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario, 
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
                                             FROM movimientos M
-                                                LEFT JOIN entidad A ON M.envia = A.id_entidad
-                                                LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                                                JOIN entidad A ON M.envia = A.id_entidad
+                                                JOIN entidad B ON M.recibe = B.id_entidad
                                                 LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
                                                 LEFT JOIN entidad C ON V.propietario = C.id_entidad
 
@@ -78,9 +79,19 @@ class MovimientoRepository{
                                                     SELECT movimiento, SUM(importe) AS totalImporte
                                                     FROM devoluciones
                                                     GROUP BY movimiento
-                                                ) D ON M.idMovimiento = D.movimiento
-                                            WHERE A.Nombre LIKE '%$envia%' and B.Nombre LIKE '%$recibe%'
-                                            ORDER BY M.fecha desc");
+                                                ) D ON M.idMovimiento = D.movimiento ";
+
+                                           /*  WHERE A.id_entidad >= '$envia' AND B.id_entidad >= '$recibe'
+                                            ORDER BY M.fecha desc"; */
+            if (($envia != 0) && ($recibe == 0)){
+                $sql .= " WHERE A.id_entidad = {$envia} ";
+            } elseif (($envia == 0) && ($recibe != 0)){
+                $sql .= " WHERE B.id_entidad = {$recibe} ";
+                }else {
+                    $sql .= " WHERE A.id_entidad = {$envia} AND B.id_entidad = {$recibe} ";
+                }
+            $sql .= "ORDER BY M.fecha desc";
+            $this->conexionPDO->consulta($sql);    
             } else {  //listado buscar se muestran terminados y no terminados
                 $buscar = $_GET['vehiculo_id'] ?? null;
                 if ($buscar){
@@ -88,26 +99,26 @@ class MovimientoRepository{
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
-                                            FROM movimientos M
-                                                LEFT JOIN entidad A ON M.envia = A.id_entidad
-                                                LEFT JOIN entidad B ON M.recibe = B.id_entidad
-                                                LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
-                                                LEFT JOIN entidad C ON V.propietario = C.id_entidad
+                                                    FROM movimientos M
+                                                        LEFT JOIN entidad A ON M.envia = A.id_entidad
+                                                        LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                                                        LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
+                                                        LEFT JOIN entidad C ON V.propietario = C.id_entidad
 
-                                                LEFT JOIN (
-                                                    SELECT movimiento, SUM(importe) AS totalImporte
-                                                    FROM entregas
-                                                    GROUP BY movimiento
-                                                ) E ON M.idMovimiento = E.movimiento
+                                                        LEFT JOIN (
+                                                            SELECT movimiento, SUM(importe) AS totalImporte
+                                                            FROM entregas
+                                                            GROUP BY movimiento
+                                                        ) E ON M.idMovimiento = E.movimiento
 
-                                                LEFT JOIN (
-                                                    SELECT movimiento, SUM(importe) AS totalImporte
-                                                    FROM devoluciones
-                                                    GROUP BY movimiento
-                                                ) D ON M.idMovimiento = D.movimiento
-                                                WHERE M.idMovimiento LIKE '%$buscar%' OR V.Marca_modelo LIKE '%$buscar%' OR M.concepto LIKE '%$buscar%'               
-                                            ORDER  BY m.fecha DESC");
-                            } else {//por defecto, se muestran terminados y no terminados
+                                                        LEFT JOIN (
+                                                            SELECT movimiento, SUM(importe) AS totalImporte
+                                                            FROM devoluciones
+                                                            GROUP BY movimiento
+                                                        ) D ON M.idMovimiento = D.movimiento
+                                                    WHERE V.Marca_modelo LIKE '%$buscar%' OR M.concepto LIKE '%$buscar%'               
+                                                    ORDER  BY m.fecha DESC");
+                            } else {//por defecto, se muestran terminados y no terminados, ordenada por el ultimo modificado
                                     $desplazamiento = 0;
                                     $this->numPaginas = numeroPaginas("SELECT COUNT(*) as num_filas FROM movimientos");
                                     $num_pagina = $_GET['num_pagina'] ?? 1;
@@ -119,24 +130,24 @@ class MovimientoRepository{
                                                     COALESCE(E.totalImporte, 0) AS totalEntregas,
                                                     COALESCE(D.totalImporte, 0) AS totalDevoluciones,
                                                     COALESCE(E.totalImporte, 0) - COALESCE(D.totalImporte, 0) AS diferencia
-                                            FROM movimientos M
-                                                LEFT JOIN entidad A ON M.envia = A.id_entidad
-                                                LEFT JOIN entidad B ON M.recibe = B.id_entidad
-                                                LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
-                                                LEFT JOIN entidad C ON V.propietario = C.id_entidad
+                                                    FROM movimientos M
+                                                        LEFT JOIN entidad A ON M.envia = A.id_entidad
+                                                        LEFT JOIN entidad B ON M.recibe = B.id_entidad
+                                                        LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
+                                                        LEFT JOIN entidad C ON V.propietario = C.id_entidad
 
-                                                LEFT JOIN (
-                                                    SELECT movimiento, SUM(importe) AS totalImporte
-                                                    FROM entregas
-                                                    GROUP BY movimiento
-                                                ) E ON M.idMovimiento = E.movimiento
+                                                        LEFT JOIN (
+                                                            SELECT movimiento, SUM(importe) AS totalImporte
+                                                            FROM entregas
+                                                            GROUP BY movimiento
+                                                        ) E ON M.idMovimiento = E.movimiento
 
-                                                LEFT JOIN (
-                                                    SELECT movimiento, SUM(importe) AS totalImporte
-                                                    FROM devoluciones
-                                                    GROUP BY movimiento
-                                                ) D ON M.idMovimiento = D.movimiento                
-                                                ORDER BY m.fecha DESC LIMIT $desplazamiento, ".FILAS_PAGINA);            
+                                                        LEFT JOIN (
+                                                            SELECT movimiento, SUM(importe) AS totalImporte
+                                                            FROM devoluciones
+                                                            GROUP BY movimiento
+                                                        ) D ON M.idMovimiento = D.movimiento                
+                                                        ORDER BY m.ultimoCambio DESC, m.fecha DESC LIMIT $desplazamiento, ".FILAS_PAGINA);            
                                     }
             }
         return $this->extraer_todos();    

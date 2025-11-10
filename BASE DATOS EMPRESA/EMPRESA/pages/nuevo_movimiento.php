@@ -28,8 +28,8 @@
         </div>
         <?php
             $enviaActual = isset($movimiento) ? $movimiento->getenvia() : '';//estoy editando un movimiento
-            foreach ($entidades as $entidad){
-                $lista[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
+            foreach ($empresas as $empresa){
+                $listaEmpresas[$empresa->getId()] = $empresa->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
             }
         ?>
         <div class="col-md-3">
@@ -37,8 +37,8 @@
             <div class="form-floating mb-1">
                 <select  name="data[movimiento][envia]" class="form-select" id="select_envia" required>
                     <option value="" disabled <?= $enviaActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
-                    <?php foreach ($lista as $id => $entidad): ?>
-                        <option value="<?= $id?>" <?= $id == $enviaActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                    <?php foreach ($listaEmpresas as $id => $empresa): ?>
+                        <option value="<?= $id?>" <?= $id == $enviaActual ? 'selected' : '' ?>><?= $empresa ?></option>
                     <?php endforeach; ?>
                 </select> 
             </div>
@@ -51,8 +51,8 @@
             <div class="form-floating mb-1">
                 <select name="data[movimiento][recibe]" class="form-select" id="select_recibe" required>
                     <option value="" disabled <?= $recibeActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                    <?php foreach ($lista as $id => $entidad): ?>
-                        <option value="<?= $id?>" <?= $id == $recibeActual ? 'selected' : '' ?>><?= $entidad ?></option>
+                    <?php foreach ($listaEmpresas as $id => $empresa): ?>
+                        <option value="<?= $id?>" <?= $id == $recibeActual ? 'selected' : '' ?>><?= $empresa ?></option>
                     <?php endforeach; ?>
                 </select> 
             </div>
@@ -149,8 +149,8 @@
             <table class = "mi_tabla w400" >
                 <caption>Entregas</caption>
                 <colgroup>
-                    <col style="width: 100px;">
-                    <col style="width: 120px;">
+                    <col style="width: 80px;">
+                    <col style="width: 90px;">
                     <col style="width: 120px;">
                     <col style="width: 120px;">
                     <col style="width: 140px;">
@@ -239,8 +239,8 @@
             <table class = "mi_tabla w400" >
                 <caption>Devoluciones</caption>
                 <colgroup>
-                    <col style="width: 100px;">
-                    <col style="width: 120px;">
+                    <col style="width: 80px;">
+                    <col style="width: 90px;">
                     <col style="width: 120px;">
                     <col style="width: 120px;">
                     <col style="width: 140px;">
@@ -325,8 +325,7 @@
 //aunque se puede hacer eso eliminar.addEventListener("click", ... no es una buena practica, hay navegadores que no lo soportan, o si este script estuviera en el HEAD no reconoceria eliminar porque aun no se ha cargado el HTML 
     document.getElementById("eliminar").addEventListener("click", function (event) {
         if (confirm('Estas seguro que quieres borrar este movimiento?')){
-            window.location.href='<?= DIRECTORIO ?>borrar_movimiento/<?= $movimiento->getidMovimiento() ?? ''?>'; 
-            //var a = '<?= $movimiento->getidMovimiento() ?? ''?>'; (OJO va entre comillas)esto se puede hacer porque en servidor de PHP se poner el valor de $movimeinto->get..., es un literal que se escribe igual que se escribe en el HTML
+            window.location.href='<?= DIRECTORIO ?>borrar_movimiento/<?= isset($movimiento) ? $movimiento->getidMovimiento() : ''?>'; 
         } else {
             event.preventDefault();
             }

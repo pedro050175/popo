@@ -30,13 +30,14 @@
         </div>
     </form>
 </div>
-
-<?php if (!empty($error)): ?>
-    <div class="alert alert-danger" role="alert">
-        <?= htmlspecialchars($error) ?>
+<!-- este mensaje se usa al cargar la pagina, se le envia con $_GET en la URL  -->
+<?php if (!empty($_GET['mensaje'])): ?>
+    <div class = "mensajeGuardar <?=htmlspecialchars($_GET['tipo'] ?? '')?>" id = "mensaje">
+        <?= htmlspecialchars($_GET['mensaje']) ?>
     </div>
-<?php endif; ?>    
-
+<?php endif; ?>  
+<!-- este mensaje se usa para mostrar avisos locales, como llamadas AJAX que cambian datos. El texto del mensaje se lo envia por JS --> 
+<div class="mensajeGuardar" id = "mensajeAJAX"></div>
 <table class="table table-hover table-striped fina">
     <thead>
         <tr>
@@ -58,9 +59,8 @@
         <?php foreach ($alquileres as $alquiler):?>
             <tr>
                 <?php $total += $alquiler->getprecio()+$alquiler->getsumaPrecio(); ?>
-    
                 <td><?=$alquiler->getcontrato()?></td>
-                <td>
+                <td><!-- (para evitar que la página abierta pueda acceder a la ventana original con window.opener), rel="noopener noreferrer" -->
                     <a href="<?= DIRECTORIO ?>detalles_alquiler/<?=$alquiler->getid()?>" target="_blank" rel="noopener noreferrer">
                         <?=$alquiler->getvehiculoInfo()->getMarca_modelo()?>
                     </a>
@@ -68,13 +68,23 @@
                 <td style="color:blueviolet"><?=$alquiler->getclienteInfo()->getNombre()?></td>
                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
         <!--tooltip-cell clase para poner borde verde al pasar con el raton-->
-                <td class="borde" style="color: red" title="KM: <?= $alquiler->getkilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()?>; Comision comercial: <?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€">                                    <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€</td>
+                <td class="tooltip-cell info borde" data-tooltip="KM: <?= $alquiler->getkilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()+$alquiler->getsumaGanancia()?>; Comision comercial: <?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€">                                    
+                    <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€
+                </td>
                 <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
                 <td><?=number_format($alquiler->getfianza(), 2, ',', '.')?>€</td>
                 <td><?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€</td>
                 <td><?=$alquiler->getempresaInfo()->getNombre()?></td>
-                <td><?=$alquiler->getestado()?></td> 
-                <td class="tooltip-cell"  data-tooltip="<?= htmlspecialchars($alquiler->getobservaciones()) ?>">
+                <td>
+                    <?php $estadoActual = $alquiler->getestado();?>
+                    <select class="selectEstado" id = "<?=$alquiler->getid()?>" data-contrato = "<?=$alquiler->getcontrato()?>"><!-- con data-contrato guardo el nº de contrato para luego mostrarlo en el mensaje -->
+                        <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc--</option>
+                        <?php foreach (ESTADOS_ALQUILER as $opcion): ?>
+                            <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : '' ?>><?= $opcion ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td> 
+                <td class="tooltip-cell info" data-tooltip="<?= htmlspecialchars($alquiler->getobservaciones()) ?>">
                         <?= htmlspecialchars($alquiler->getobservaciones()) ?>              
                 </td>
                 <td>
@@ -105,10 +115,10 @@
         <?php $_GET['num_pagina'] < $numPaginas ? $num_pagina_sig = strval(intval($_GET['num_pagina']+1)) : $num_pagina_sig = 1;?><!--calculo numero de pagina siguiente-->
         <?php $_GET['num_pagina'] > 1 ? $num_pagina_atras = strval(intval($_GET['num_pagina'])-1) : $num_pagina_atras = 1;?><!--calculo numero de pagina atras-->
 
-        <div class="col-md-4"><a href="/mis_pruebas/movimientos?num_pagina=<?=$num_pagina_atras?>">[Atras</a>
-        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$num_pagina_sig?>">Siguiente]</a>
-        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=1">[Inicio</a>
-        <a href="<?= DIRECTORIO ?>movimientos?num_pagina=<?=$numPaginas?>">Fin]</a></div>
+        <div class="col-md-4"><a href="/mis_pruebas/alquileres?num_pagina=<?=$num_pagina_atras?>">[Atras</a>
+        <a href="<?= DIRECTORIO ?>alquileres?num_pagina=<?=$num_pagina_sig?>">Siguiente]</a>
+        <a href="<?= DIRECTORIO ?>alquileres?num_pagina=1">[Inicio</a>
+        <a href="<?= DIRECTORIO ?>alquileres?num_pagina=<?=$numPaginas?>">Fin]</a></div>
     <?php endif ;?>
 </div>  
 <script>
@@ -123,7 +133,27 @@ $(document).ready(function() {
         document.getElementById("buscar").focus();
     }
 /* para el texto flotante en observaciones */
-  tooltip();
+    tooltip();
+    document.querySelectorAll('.selectEstado').forEach(select => {
+        select.addEventListener('change', evento => {
+            let idAlquiler = select.id; /* id del alquiler que es el mismo que el id del select */
+            let nuevoEstado = select.value; /* opcion seleccionada en el select */
+            let zonaMensaje = document.getElementById("mensajeAJAX"); /* div para mostrar el mensaje de que se ha ejecutado correctamente */
+            let contrato = select.dataset.contrato; /* nº de contrato guardado con una propiedad data-contrato en el select, para mostrar en el  mensaje */
+            fetch('/mis_pruebas/estadoAlquiler?id=' + idAlquiler + '&estado=' + nuevoEstado)
+                .then(response => {
+                        return response.text();
+                })
+                .then(data => {
+                    zonaMensaje.classList.add("exito");
+                    zonaMensaje.innerHTML = data + ' al estado: ' + '<strong>' + nuevoEstado + '</strong> del contrato; ' + contrato;
+                    mensaje("mensajeAJAX");
+                })
+                .catch(error => {
+                    zonaMensaje.innerHTML = "Error: " + error;
+                });
+        });
+    });
  
 });
 

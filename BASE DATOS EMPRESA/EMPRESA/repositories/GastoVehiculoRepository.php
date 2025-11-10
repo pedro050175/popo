@@ -75,7 +75,7 @@ class GastoVehiculoRepository {
             ':pagado' => (isset($gasto['pagado'])) ? 1 : 0
         ];
         $parametros = Limpiar_parametros($parametros);
-        $sql = "UPDATE gastosvehiculo SET tipo = :tipo, importe = :importe, fecha = :fecha, paga_otro = :paga_otro, comentarios = :comentarios, id_vehiculo = :id_vehiculo, pagado = :pagado WHERE id_gasto = :id_gasto";
+        $sql = "UPDATE gastosvehiculo SET tipo = :tipo, importe = :importe, fecha = :fecha, paga_otro = :paga_otro, Comentarios = :comentarios, id_vehiculo = :id_vehiculo, pagado = :pagado WHERE id_gasto = :id_gasto";
         $this->conexionPDO->consulta($sql, $parametros);
     }
     public function read (int $id): ?GastoVehiculo {

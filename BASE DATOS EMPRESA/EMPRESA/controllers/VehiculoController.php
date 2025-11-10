@@ -6,8 +6,9 @@ use repositories\VehiculoRepository;
 use repositories\FotoRepository;
 use repositories\GastoVehiculoRepository;
 use repositories\CuotaVehiculoRepository;
-
+use repositories\GastoCompraventaRepository;
 use lib\Pages;
+
 //las llamadas a metodo reder es para cargar una nueva pagina y las llamadas a service es para acceder a datos de la base de datos
 class VehiculoController {
 
@@ -16,6 +17,7 @@ class VehiculoController {
     private FotoRepository $foto_repository;
     private GastoVehiculoRepository $gasto_repository;
     private CuotaVehiculoRepository $cuota_repository;
+    private GastoCompraventaRepository $gastosCompraventaRepository;
     private Pages $pages;
 
     function __construct(){
@@ -24,7 +26,8 @@ class VehiculoController {
         $this->vehiculo_repository = new VehiculoRepository();
         $this->foto_repository = new FotoRepository();
         $this->gasto_repository = new GastoVehiculoRepository();
-        $this->cuota_repository = new cuotaVehiculoRepository();
+        $this->cuota_repository = new CuotaVehiculoRepository();
+        $this->gastosCompraventaRepository = new GastoCompraventaRepository();
     }  
     public function detalles_vehiculo(int $id) {
         $gastos = $this->gasto_repository->gastos_vehiculo($id); 
@@ -55,9 +58,10 @@ class VehiculoController {
         $entidades = $this->entidad_repository->listReducida();//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $fotos = $this->foto_repository->fotos_vehiculo($id);
         $gastos = $this->gasto_repository->gastos_vehiculo($id);
+        $gastosCompraventa = $this->gastosCompraventaRepository->gastosVehiculoCompraventa($id);
+        //var_dump($gastosCompraventa);
         $cuotas = $this->cuota_repository->cuotas_vehiculo($id);
-        //var_dump($cuotas);
-        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos, 'gastos' => $gastos, 'cuotas' => $cuotas]);
+        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos, 'gastos' => $gastos, 'cuotas' => $cuotas, 'gastosCompraventa' => $gastosCompraventa]);
     }
     public function delete(int $id): void {
         $relacionados=$this->vehiculo_repository->relacionados($id);
@@ -75,13 +79,14 @@ class VehiculoController {
         header('Location: '.DIRECTORIO.'vehiculos?num_pagina=1');
         exit; 
     }
-    public function gastosCuotasVehiculo(){
+    public function gastosCuotasVehiculo(){ /* se usa en la pagina gastos_cuota_vehiculo */
         $idVehiculo = $_GET['coche'];
         $nombreCoche = $this->vehiculo_repository->nombreCoche($idVehiculo);
         /*saco el nombre del coche, prque de los gastos o cuota no lo puedo sacar porque el coche podria no tener gastos o cuota */
         $gastos = $this->gasto_repository->gastos_vehiculo($idVehiculo);
         $cuotas = $this->cuota_repository->cuotas_vehiculo($idVehiculo);
-        $this->pages->renderNoHeader('gastos_cuota_vehiculo', ['gastos' => $gastos, 'cuotas' => $cuotas, 'nombreCoche' => $nombreCoche]);
+        $gastosCompraventa = $this->gastosCompraventaRepository->gastosVehiculoCompraventa($idVehiculo);
+        $this->pages->renderNoHeader('gastos_cuota_vehiculo', ['gastos' => $gastos, 'cuotas' => $cuotas, 'nombreCoche' => $nombreCoche, 'gastosCompraventa' => $gastosCompraventa]);
     }
 }
 ?>

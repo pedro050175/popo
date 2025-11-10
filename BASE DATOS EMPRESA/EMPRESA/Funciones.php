@@ -73,3 +73,13 @@ function diferenciaMeses (? string $fecha):int{
     $meses = ($diferencia->y * 12) + $diferencia->m;
     return $meses;
 }
+function ivaDeValorConIVA($valor): float{
+    /* devuelve  $valor/1,21  */
+    $clave = (IVA/100)+1; /*de la constante IVA=21 saco el 1,21 */
+    return ($valor-($valor/$clave));/* calculo el iva */
+}
+function ivaDeValorSinIVA($valor): float{
+    /* devuelve  $valor*0,21  */
+    $clave = (IVA/100); /*de la constante IVA=21 saco el 0,21 */
+    return ($valor*$clave);/* calculo el iva */
+}
