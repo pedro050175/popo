@@ -126,6 +126,8 @@ Router::add('GET', '/nueva_multa', function () {return (new MultaController())->
 Router::add('POST', '/nueva_multa', function () {return (new MultaController())->save();});
 Router::add('GET', '/nueva_multa/:id', function($id) {return (new MultaController())->edit($id);});
 Router::add('GET', '/borrar_multa/:id', function($id){return (new MultaController())->delete($id);});
+Router::add('GET', '/nueva_multa_multiple', function($id){return (new MultaController())->addMultiple($id);});
+Router::add('GET', '/guardar_multa_multiple', function($id){return (new MultaController())->saveMultiple($id);});
 
 
 Router::dispatch();

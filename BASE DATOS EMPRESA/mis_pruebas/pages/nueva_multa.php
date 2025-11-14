@@ -11,7 +11,7 @@
     <div class="container mt-1">
         <div class="row">
             <div class="col">
-                <h5 class="titulo_prin"><?= (isset($multa)) ? 'Multa ' : 'Nueva '?>Multa</h5>
+                <h5 class="titulo_prin"><?= (isset($multa)) ? 'Mofificar ' : 'Nueva '?>Multa</h5>
             </div>
             <div class="col text-end">  
                 <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>multas?num_pagina=1';">   

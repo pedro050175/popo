@@ -85,6 +85,10 @@
         <tbody>
             <?php foreach ($compraventas as $compraventa):?>
                 <tr>
+                    <!-- podria declarar el checbox como  name = "actualiza[]" value = "<?=$compraventa->getid_compraventa()?>" y en POST tendria actualiza[0]=id actualiza[1]=id, 
+                     solo los actualiza[i] marcados. De la forma en que esta hecho tendria en el POST actualiza[id]=on. Haciendolo con name = "actualiza[]" en JS se pueden seleccionar todos los
+                     checkbox con document.getElementsByName("actualiza[]"); sin tener que usar querySelectorAll('input[name^="actualiza["]') por declarar con name =actualiza[id] ya que 
+                     ningun checkbos tiene el mismo name, tienen name[id] con id diferentes  -->
                     <td><input type = "checkbox" name = "actualiza[<?=$compraventa->getid_compraventa()?>]"></td>
                     <td style="color: blue"><?=$compraventa->getempresaInfo()->getNombre()?></td>
                     <td class="tooltip-cell info" data-tooltip="<?=$compraventa->getvehiculoInfo()->getMarca_modelo()?> Km:<?=$compraventa->getvehiculoInfo()->getKm()?> Fecha:<?=$compraventa->getvehiculoInfo()->getFecha_matricula()?>">
@@ -106,10 +110,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="tooltip-cell info" data-tooltip="Benef-IVA: <?=number_format($compraventa->beneficioMenosIVA(), 2, ',', '.')?>€">Benef-Gast</td>
+                    <td class="tooltip-cell info" data-tooltip="Benef-IVA: <?=number_format($compraventa->beneficioMenosIVA(), 2, ',', '.')?>€">Beneficio</td>
                     <td style="<?=$compraventa->beneficio()<0 ? 'color: #f70000ff' : 'color: #4f33eeff'?>"><?=number_format($compraventa->beneficio(), 2, ',', '.')?>€</td>
                     <td>IVA</td>
                     <td style="<?=$compraventa->IVA()<0 ? 'color: #f70000ff' : 'color: #4f33eeff'?>"><?=number_format($compraventa->IVA(), 2, ',', '.')?>€</td>
+                    <td style="color: #b11010ff">Gast:<?=number_format($compraventa->getsumaGastos(), 2, ',', '.')?>€</td>
                     <td style="color: #10b141ff"><?=$compraventa->getvendeAInfo()->getNombre() ?? ''?></td>
                     <td><?=formatea_fecha($compraventa->getfechaVenta())?></td>
                     <td class="tooltip-cell info" data-tooltip="Cobros: <?=number_format($compraventa->getsumaCobros(), 2, ',', '.')?>€"><strong><?=number_format($compraventa->getprecioVentaReal(), 2, ',', '.')?>€</strong></td>
@@ -119,17 +124,15 @@
                     <td><?=$compraventa->getnodeclaraVenta() ? '--' : 'SI'?></td>
                     <td><?=$compraventa->getanuladaVenta() ? 'SI' : 'NO'?></td>
                     <td>Tri <input type = "checkbox" disabled <?=$compraventa->gettrimestre() ? 'checked': ''?>></td>
-
-                    <td style="color: #b11010ff">Gast:<?=number_format($compraventa->getsumaGastos(), 2, ',', '.')?>€</td>
                     <td>
-                    <div class="btn-group" role="group">
-                        <a href="<?= DIRECTORIO ?>nueva_compraventa/<?=$compraventa->getid_compraventa()?>" role="button" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a href="<?= DIRECTORIO ?>borrar_compraventa/<?=$compraventa->getid_compraventa()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta compra venta?');"> 
-                        <i class="bi bi-trash"></i> 
-                        </a>   
-                    </div>
+                        <div class="btn-group" role="group">
+                            <a href="<?= DIRECTORIO ?>nueva_compraventa/<?=$compraventa->getid_compraventa()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="<?= DIRECTORIO ?>borrar_compraventa/<?=$compraventa->getid_compraventa()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta compra venta?');"> 
+                            <i class="bi bi-trash"></i> 
+                            </a>   
+                        </div>
                     </td>  
                 </tr>
             <?php endforeach; ?>

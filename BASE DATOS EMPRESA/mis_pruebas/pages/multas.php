@@ -9,8 +9,11 @@
             <div class="col-md-6">
                 <button type="submit" class="boton_submit">Buscar</button>   
             </div>  
-            <div class="col-md-6">
-                <input type="button"  class="boton_link" value = "Nuevo" onclick="window.location.href='<?= DIRECTORIO ?>nueva_multa';"> 
+            <div class="col-md-2">
+                <input type="button"  class="boton_link" value = "Nueva" onclick="window.location.href='<?= DIRECTORIO ?>nueva_multa';"> 
+            </div>
+            <div class="col-md-3">
+                <input type="button"  class="boton_link" value = "Crear Multiples Multas" onclick="window.location.href='<?= DIRECTORIO ?>nueva_multa_multiple';"> 
             </div>
         </div>
         <div class = "botones">

@@ -41,7 +41,9 @@
                         <?=$vehiculo->getMarca_modelo()?>
                     </td>
                     <td><?=$vehiculo->getMatricula()?></td>
-                    <td><?=$vehiculo->getBastidor()?></td>
+                    <td class="tooltip-cell info" data-tooltip="<?=$vehiculo->getBastidor()?>">
+                        <?=$vehiculo->getBastidor()?>
+                    </td>
                     <td><?=$vehiculo->getKm()?></td>
                     <td><?=formatea_fecha($vehiculo->getFecha_matricula())?></td>
                     <td><?=formatea_fecha($vehiculo->getFecha_itv())?></td>

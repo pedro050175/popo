@@ -268,13 +268,14 @@ class CompraventaRepository{
 
     }
     public function actualizaTri($datos, $valor){
-        foreach ($datos as $indice => $nada) {
-            $parametros[] = $valor;
-            $parametros[] = $indice;
-            $sql = "UPDATE compraventas SET trimestre = ? WHERE id_compraventa = ?";
-            $this->conexionPDO->consulta($sql, $parametros);
-            $parametros = [];
+        $parametros[] = $valor;/* añado a los parametros el valor 0 o 1 que se va a meter en trimestre */
+        foreach ($datos as $id => $nada){
+            $parametros[] = $id; /* añado el resto de parametros que son los id que me vienen en el indice de la tabla datos */
+            $placeholders[] = "?"; /* añado un ? por cada id, el ? del valor ya esta puesto en la consulta  */
         }
+        $in = implode(',', $placeholders); /* convierto la tabla con los ? en un string separado por , */
+        $sql = "UPDATE compraventas SET trimestre = ? WHERE id_compraventa IN ($in)"; /* $in es: ?,?,? y parametros es [0 ó 1, 24, 35, 25...] */
+        $this->conexionPDO->consulta($sql, $parametros);
     }
        /* no se usa ---------------------------------------------------*/ 
     public function findAll(): ?array {

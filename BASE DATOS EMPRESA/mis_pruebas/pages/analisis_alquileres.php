@@ -38,6 +38,7 @@
                         <?php endforeach; ?>
                     </select> 
                 </div>
+                <spam class="etiqueta_mini">La lista solo muestra vehiculos que tienen alquileres</spam>
             </div>
         </div>
         <div class="row">
@@ -410,11 +411,11 @@
     });
 
     $(document).ready(function() {
-            $('#select_vehiculo').select2({
-                placeholder: "Buscar vehiculo",
-                allowClear: true,
-                width: '100%'
-            });
+        $('#select_vehiculo').select2({
+            placeholder: "Buscar vehiculo",
+            allowClear: true,
+            width: '100%'
+        });
     });
         
 </script>

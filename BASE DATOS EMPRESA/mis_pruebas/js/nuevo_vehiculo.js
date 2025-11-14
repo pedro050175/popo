@@ -19,8 +19,7 @@ function validarDatos (formulario){//para acceder a elmentos del formulario se u
     }
     let fechaProxItv = new Date(formulario.Prox_itv.value);
     if (fechaProxItv<fechaActual){
-        alert ("Fecha itv erronea");
-        return false;
+        alert ("Fecha itv caducada");
     }
     if (!validar_campo (formulario.kilometros)){
         alert ("Kilometros mal escritos");

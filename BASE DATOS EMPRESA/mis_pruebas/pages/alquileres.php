@@ -48,7 +48,7 @@
             <th scope="col">Precio</th>
             <th scope="col">Dias</th>
             <th scope="col">Fianza</th>
-            <th scope="col">Fianza devl</th>
+            <th scope="col">SIN FACTURAR</th>
             <th scope="col">Empresa</th>
             <th scope="col">Estado</th>
             <th scope="col">Observaciones</th>
@@ -72,8 +72,10 @@
                     <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€
                 </td>
                 <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
-                <td><?=number_format($alquiler->getfianza(), 2, ',', '.')?>€</td>
-                <td><?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€</td>
+                <td class="tooltip-cell info borde" data-tooltip="<?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€">
+                    <?=number_format($alquiler->getfianza(), 2, ',', '.')?>€
+                </td>
+                <td>€</td>
                 <td><?=$alquiler->getempresaInfo()->getNombre()?></td>
                 <td>
                     <?php $estadoActual = $alquiler->getestado();?>
@@ -134,8 +136,8 @@ $(document).ready(function() {
     }
 /* para el texto flotante en observaciones */
     tooltip();
-    document.querySelectorAll('.selectEstado').forEach(select => {
-        select.addEventListener('change', evento => {
+    document.querySelectorAll('.selectEstado').forEach(select => {/* seleccion todas las listas desplegables de selecEstado */
+        select.addEventListener('change', evento => {/* capturo evento change para cada lista desplegable del estado */
             let idAlquiler = select.id; /* id del alquiler que es el mismo que el id del select */
             let nuevoEstado = select.value; /* opcion seleccionada en el select */
             let zonaMensaje = document.getElementById("mensajeAJAX"); /* div para mostrar el mensaje de que se ha ejecutado correctamente */
