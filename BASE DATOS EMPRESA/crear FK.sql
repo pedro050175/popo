@@ -1,4 +1,4 @@
-alter table pagoscomven 
-add constraint fk_compraventa foreign key (CompraVenta) 
-references compraventas(id) 
+alter table multas 
+add constraint fk_coche foreign key (vehiculo) 
+references vehiculos(id_vehiculo) 
 on delete restrict on update restrict;
