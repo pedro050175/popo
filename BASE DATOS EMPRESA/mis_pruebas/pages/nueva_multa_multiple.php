@@ -1,3 +1,5 @@
+
+<div class="mensajeGuardar" id = "mensajeAJAX"></div>
 <div class="row">
     <div class="col">
         <h5 class="titulo_prin">Nueva Multa Multiple</h5>
@@ -13,6 +15,7 @@
             <tr>
                 <th>Expediente</th>
                 <th>Fecha</th>
+                <th>Fecha notifi.</th>
                 <th>Vehiculo</th>
                 <th>Importe</th>
                 <th>Identificar</th>
@@ -26,6 +29,7 @@
             <tr>
                 <td><input type="text" name="expediente" class="form-control" placeholder="expediente" value=""></td>
                 <td><input type="date" name="fecha" class="form-control" placeholder="Fecha" value = ""> </td>
+                <td><input type="date" name="fechaNotificacion" class="form-control" placeholder="Fecha notificacion" value = ""> </td>
                 <?php
                     foreach ($vehiculos as $vehiculo){
                         $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo(). ' ' .$vehiculo->getMatricula() . ' ' .$vehiculo->getBastidor();//con la variable $entidades creo un array asociativo ['id']=Nombre
@@ -47,7 +51,7 @@
                 <td><input class="cuadro_text" type="checkbox" name="identificar" ><!--si estoy editando existe multa evalua Multa ($multa->getteMulta()==1) ? 'checked' : '', por eso esta todo entre () y si no estoy editando pone '' que son los : '' del final--></td>
                 <td><input type="text" name="lugar" class="form-control" placeholder="lugar" value=""></td>
                 <td><input type="text" name="conductor" class="form-control" placeholder="conductor" value=""></td>
-                <td><input type="text" name="comentarios" class="form-control" placeholder="comentarios" value=""></td>
+                <td><input type="text" name="comentarios" class="form-control" placeholder="comentarios" id = "comentarios" value=""></td>
             </tr>
         </tbody>
     </table>
@@ -64,25 +68,64 @@
             allowClear: true,
             width: '100%'
         });/* select2 añade etiquetas div al select con id prpios, con lo que si duplico una fila se duplican esas etiquetas y el select2 falla porque tiene div con id repetidos */
+        document.querySelector('tbody tr input[name="expediente"]').focus();/* foco en campo expediente de la 1º fila */
         /* EVENTO GUARDAR */
         document.getElementById('guardar').addEventListener('click', () => {
             let multas = document.getElementById('multas');
+            let filasMultas = [];
+            let i = 0;
+            let error = false;
+            let expediente, fecha, fechaNotificacion, vehiculo, importe, identificar, lugar, conductor, comentarios;
             multas.querySelectorAll('tbody tr').forEach(function(elemento){
-                let expediente = elemento.querySelector('input[name="expediente"]').value;
-                let fecha = elemento.querySelector('input[name="fecha"]').value;
-                let vehiculo = elemento.querySelector('select[name="vehiculo"]').value;
-                let importe = elemento.querySelector('input[name="importe"]').value;
-                let identificar = elemento.querySelector('input[name="identificar"]').checked;
-                let lugar = elemento.querySelector('input[name="lugar"]').value;
-                let conductor = elemento.querySelector('input[name="conductor"]').value;
-                let comentarios = elemento.querySelector('input[name="comentarios"]').value;
-
+                fecha = elemento.querySelector('input[name="fecha"]').value;
+                vehiculo = elemento.querySelector('select[name="vehiculo"]').value;
+                if ((fecha != '') && (vehiculo != '')) {/* fecha y vehiculo no pueden estar vacios en la tabla mysql */
+                    expediente = elemento.querySelector('input[name="expediente"]').value;
+                    fechaNotificacion = elemento.querySelector('input[name="fechaNotificacion"]').value;
+                    importe = elemento.querySelector('input[name="importe"]').value;
+                    identificar = elemento.querySelector('input[name="identificar"]').checked;
+                    lugar = elemento.querySelector('input[name="lugar"]').value;
+                    conductor = elemento.querySelector('input[name="conductor"]').value;
+                    comentarios = elemento.querySelector('input[name="comentarios"]').value;
+                    filasMultas[i] = [expediente, fecha, fechaNotificacion, vehiculo, importe, identificar, lugar, conductor, comentarios];
+                    i++;
+                }else {
+                        error = true;
+                    }
             });/* end forEach */
+            /*para guardar multas creadas */
+            let zonaMensaje = document.getElementById("mensajeAJAX");
+            if ((filasMultas.length > 0) && (!error)) {
+                fetch('/mis_pruebas/guardar_multas_multiple', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({filasMultas: filasMultas})
+                })
+                .then(response => {
+                        return response.text();/* esto tiene que estar para que los datos lleguen a data. El cuerpo viene en un stream y tienes que procesarlo usando: response.text() → si devuelves texto */
+                })
+                .then(data => { 
+                    zonaMensaje.classList.add("exito");
+                    zonaMensaje.innerHTML = data;
+                    mensaje("mensajeAJAX");/* le paso el nombre del id, en la funcion mensaje sacara el elementoById */
+                })
+                .catch(error => {
+                    zonaMensaje.classList.add("error");
+                    zonaMensaje.innerHTML = error;
+                    mensaje("mensajeAJAX");
+                });
+            } else {  
+                zonaMensaje.classList.add("error");
+                zonaMensaje.innerHTML = "Error, fecha o vehiculo vacio";
+                mensaje("mensajeAJAX");
+                }
 
         });
         /* EVENTOS DUPLICAR Y NUEVA */
-        document.querySelectorAll('.nueva-duplicar').forEach(boton => { /* seleccion los dos botones porque son de la misma clase nueva-duplicar y los dos hacen casi lo mismo*/
-            boton.addEventListener("click", function(){
+        document.querySelectorAll('.nueva-duplicar').forEach(boton => { /* seleccion los dos botones porque son de la misma clase nueva-duplicar y los dos hacen casi lo mismo. Capturo evento
+            focus porque asi, al pulsar tecla Tab en comentarios (al ser el ultimo campo de la tabla salta al boton Nueva Multa) salta al boton Nueva Multa y me crea una fila en blanco, 
+            y si pincho con el raton en el boton tmb se genera evento focus */
+            boton.addEventListener("focus", function(){
                 /* cojo la 1º fila del tbody */
                 let fila = document.querySelector("tbody tr:first-child");
                 
@@ -134,6 +177,7 @@
                 let tablaBody = tabla.querySelector("tbody"); /* la nueva fila hay que insertarla en el body, tmb podria haberlo seleccionado asi document.querySelector("#multas tbody"); 
                 o si le pongo un id="body" a tbody podria hacerlo con document.getElementById("body") */
                 tablaBody.append(filaDuplicada);  /* añado la nueva fila a la tabla */
+                tablaBody.querySelector('tr:last-child input[name="expediente"]').focus();/* foco en campo expediente de la ultima fila */
                 $(`#${nuevoId}`).select2({/* aplico el select2 al select de la nueva fila que tiene id = nuevoId */
                     placeholder: "Buscar vehiculo",
                     allowClear: true,
@@ -141,6 +185,12 @@
                 });
             });/* addEventListener("click" */
         });/* forEach(boton  */
+        /* con esto se captura evento para detectar pulsacion de TAB en el campo comentarios, OJO hay que poner true para anular bootstrap. Solo funcionaria para la 1º fila, a las filas
+        añadidas habria que meterles el evento igual que se les mete el select2 de jquery. Es mas sencillo capturando el evento focus del boton Nueva multa que esta justo despues de comentarios*/
+        /* document.querySelector('#multas tbody tr:last-child input[name="comentarios"]').addEventListener("keydown", e => {
+           if (e.key === "Tab") {}
+        }, true); */
+
         /*EVENTO BORRAR capturo click sobre la tabla, cada vez que se pincha sobre cualquier sitio de la tabla viene aqui */
         document.getElementById('multas').addEventListener('click', function(e) {
             if (e.target.closest('.borrar-fila')) {/* comprueba que pincho sobre un elemento de la clase borrar-fila. •	e.target es el elemento exacto del DOM que disparó el evento. */

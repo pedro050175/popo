@@ -25,6 +25,8 @@
                 </tr>
         </tbody>
     </table>
+    <input type = "text" size = "5" hidden id = "carpeta" value = "<?=$alquiler->getcarpeta()?>"></input> 
+    <button type="button" class="boton_link" onclick = "copy('carpeta')" title="Copiar la ruta de la carpeta del alquiler"><i class="bi bi-clipboard-check"></i></button>
     <p></p>
     <!--Ampliaciones-->
     <div class = "contenedor-tablas">
@@ -77,7 +79,7 @@
             </table>
         <?php endif ;?>
         <!--Cobros-->
-        <?php $totalCobros = 0; ?> <!--//IMPORTANTE inicializar aqui el contador, si no hay gastos no entra y no existiria el contador y daria error -->   
+        <?php $totalCobros = 0; ?> <!--//IMPORTANTE inicializar aqui el contador, si no hay COBROS no entra y no existiria el contador y daria error -->   
         <?php if (!empty($cobros)) :?>
             <table class = "mi_tabla w400" >
                 <caption>Cobros</caption>

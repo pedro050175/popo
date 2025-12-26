@@ -38,7 +38,7 @@ function actualizaFechaFin(formulario){
     let fechaVencimientoString = ''; 
     /* voy extrayendo partes de la fecha y concatenando hasta obtener el formato yyyy-mm-dd */
     fechaVencimientoString += fechaFin.getFullYear() + '-';
-    fechaVencimientoString += fechaFin.getMonth()+1 + '-';
+    fechaVencimientoString += diaMesConCero(fechaFin.getMonth()+1) + '-';
     fechaVencimientoString += diaMesConCero(fechaFin.getDate());
     formulario.fechaFin.value = fechaVencimientoString;  
 }

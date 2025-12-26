@@ -115,7 +115,9 @@ class VehiculoRepository {
         $this->conexionPDO->consulta($sql, $parametros);
     }
     public function read (int $id): ?Vehiculo {
-        $this->conexion->consulta("SELECT * FROM vehiculos WHERE (id_vehiculo=$id)");
+        $this->conexion->consulta("SELECT V.*, E.Nombre FROM vehiculos V
+                                    LEFT JOIN entidad E ON E.id_entidad = V.propietario 
+                                    WHERE (id_vehiculo=$id)");
         return $this->extraer_registro();
     }
     public function detalles_vehiculo (int $id): ?Vehiculo{
@@ -140,7 +142,7 @@ class VehiculoRepository {
         return $relacionada;
     }    
     public function nombreCoche(string $id): mixed { //devuelve Marca_modelo del coche id
-         $parametros = [
+        $parametros = [
         ':id' => $id 
         ]; 
         $sql = "SELECT Marca_modelo FROM vehiculos
@@ -154,6 +156,22 @@ class VehiculoRepository {
                                     ORDER BY Marca_modelo");
             return $this->extraer_todos();
     }
+    public function vehiculosSelect(string $buscar): ?array{
+        /* Se usa para mostrar coches en el Select2 de jQuery para poder probarlo hay que escribir esto en el navegador
+        ya que el select2 no muestra los echo, var_dump, print_r       
+        http://localhost:8000/mis_pruebas/buscar_vehiculos_select?buscar=lambo*/
+        $parametros = [
+            ':buscar' => $buscar
+        ];
+        $sql = "SELECT id_vehiculo, Marca_modelo, Matricula, Bastidor 
+                FROM vehiculos
+                WHERE COALESCE(Marca_modelo, '') LIKE CONCAT('%', :buscar, '%') OR 
+                        COALESCE(Matricula, '') LIKE CONCAT('%', :buscar, '%') OR
+                        COALESCE(Bastidor, '') LIKE CONCAT('%', :buscar, '%') LIMIT 20 ";
+                /*ojo no se puede poner '%:buscar%' */
+        $this->conexionPDO->consulta($sql, $parametros);
+        return $this->conexionPDO->extraer_todos();
+    } 
     /* public function create (array $data):void{ PARA USAR CON LA CLASE BaseDatos de mysql
         //en un campo date, o int o uno que sea unique como matricula o bastidor de mysql no se puede guaradar un '' hay que guardar null. en los campos unique da error de que ya existe y en los date o int dice que el tipo no es correcto
         foreach ($data[vehiculo] as $campo => $valor) {//para todos los campos de la lista si existe y tiene '' le asigna null. Trim devuelve si es igual a '' o '  'y === significa igual calor e igual tipo

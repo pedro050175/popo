@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-md-6">       
         <div class="form-floating mb-1">
-            <input type="text" name="data[entidad][Nombre]" class="form-control" id="Nombre" placeholder="Nombre" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getNombre()):''?>"> 
+            <input type="text" name="data[entidad][Nombre]" class="form-control" id="nombre" placeholder="Nombre" value="<?=(isset($entidad))?quitaEspecialChar($entidad->getNombre()):''?>"> 
             <label for="Nombre">Nombre</label><!--la propiedad for en los label asocia la etiqueta con el cuadro usando el nombre del id del cuadro de esta forma
             al pinchar en la etiqueta el cursor se coloca en el input. Tmb se podria hacer poniendo el input entre las etiquetas label, pero boostrap pone la etiqueta fuera del input-->
         </div>
@@ -64,24 +64,25 @@
 </form>
 <!-- Esto es JS para mostrar mensaje de error en la pagina al guardar con Nombre vacio, este codigo va junto al que se pone al principio de la pagina-->
 <script> 
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.querySelector("form");
-    const errorBox = document.getElementById("error-message");
+    $(document).ready(() => {
+        const form = document.querySelector("form");
+        const errorBox = document.getElementById("error-message");
 
-    form.addEventListener("submit", function(e) {
-        const nombreInput = form.querySelector('input[name="data[entidad][Nombre]"]');
-        if (nombreInput.value.trim() === "") {
-            e.preventDefault();
+        form.addEventListener("submit", function(e) {
+            const nombreInput = form.querySelector('input[name="data[entidad][Nombre]"]');
+            if (nombreInput.value.trim() === "") {
+                e.preventDefault();
 
-            errorBox.textContent = "El campo Nombre no puede estar vacío.";
-            errorBox.classList.remove("d-none");
-            nombreInput.focus();
-        } else {
-            // Ocultar mensaje si todo está bien
-            errorBox.classList.add("d-none");
-        }
+                errorBox.textContent = "El campo Nombre no puede estar vacío.";
+                errorBox.classList.remove("d-none");
+                nombreInput.focus();
+            } else {
+                // Ocultar mensaje si todo está bien
+                errorBox.classList.add("d-none");
+            }
+        });
+        document.getElementById('nombre').focus();
     });
-});
 </script>
 <!-- Esto es JS para mostrar mensaje de error en en una ventana emergente al guardar con Nombre vacio, no necesita la linea del principio del formulario
 <script>

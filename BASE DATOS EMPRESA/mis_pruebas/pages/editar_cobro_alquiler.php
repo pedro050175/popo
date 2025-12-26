@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="parteImporteFianza" >Parte Importe fianza:</label>
-                    <input class="cuadro_text" type="texto" name="cobro[parteImporteFianza]" id="parteImporteFianza" placeholder="parteImporteFianza" value="<?=$cobro->getparteImporteFianza()?>" required>
+                    <input class="cuadro_text" type="texto" name="cobro[parteImporteFianza]" id="parteImporteFianza" placeholder="No dejarlo vacio" value="<?=$cobro->getparteImporteFianza()?>">
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="banco" >Banco:</label>
@@ -48,5 +48,8 @@
             <input type="hidden" name="cobro[alquiler]"  id="alquiler" value="<?=$cobro->getalquiler()?>">
             <input type="hidden" name="cobro[idCobro]" id="idCobro" value="<?=$cobro->getidCobro()?>">
         </fieldset>
+        <span>Si la fianza va en el mismo cobro que el alquiler se pondra facturado cuando facture la parte que es de alquiler y ya no se computa en pagos sin facturar. 
+            Y si la fianza va en un cobro ella sola, HAY QUE PONER en "PARTE_IMPORTE_FIANZA" EL COBRO, no dejarlo vacio, y no se pone facturado nunca, 
+            se resta ella misma porque es un cobro = x y cantidad de fianza = x y en el total sin facturar computa como 0</span>
     </form>
 </div>

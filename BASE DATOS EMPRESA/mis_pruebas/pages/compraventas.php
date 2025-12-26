@@ -78,8 +78,8 @@
                 <th scope="col">Impto.</th>
                 <th scope="col">Declara</th>
                 <th scope="col">Anulada</th>
-                <th scope="col">Comercial venta</th>
-                <th scope="col">Observaciones</th>
+                <th scope="col">Comercial</th>
+                <th scope="col">Observac</th>
             </tr>
         </thead>
         <tbody>
@@ -104,18 +104,18 @@
                     <td style="<?=$compraventa->getimpuestoCompra()=='NETO' ? 'color: #ff0000ff' : ''?>"><?=$compraventa->getimpuestoCompra()?></td>
                     <td><?=$compraventa->getnodeclaraComp() ? '--' : 'SI'?></td>
                     <td><?=$compraventa->getanuladaCompra() ? 'SI' : 'NO'?></td>
-                    <td><?=$compraventa->getcomercialVenta()?></td>
+                    <td title="Comercial de la venta"><?=$compraventa->getcomercialVenta()?></td>
                     <td class="tooltip-cell info" data-tooltip="<?= htmlspecialchars($compraventa->getobservaciones()) ?>">
                             <?= htmlspecialchars($compraventa->getobservaciones()) ?>              
                     </td>
                 </tr>
                 <tr>
-                    <td class="tooltip-cell info" data-tooltip="Benef-IVA: <?=number_format($compraventa->beneficioMenosIVA(), 2, ',', '.')?>€">Beneficio</td>
+                    <td class="tooltip-cell info" data-tooltip="Benef-IVA: <?=number_format($compraventa->beneficioMenosIVA(), 2, ',', '.')?>€">Benef</td>
                     <td style="<?=$compraventa->beneficio()<0 ? 'color: #f70000ff' : 'color: #4f33eeff'?>"><?=number_format($compraventa->beneficio(), 2, ',', '.')?>€</td>
                     <td>IVA</td>
                     <td style="<?=$compraventa->IVA()<0 ? 'color: #f70000ff' : 'color: #4f33eeff'?>"><?=number_format($compraventa->IVA(), 2, ',', '.')?>€</td>
                     <td style="color: #b11010ff">Gast:<?=number_format($compraventa->getsumaGastos(), 2, ',', '.')?>€</td>
-                    <td style="color: #10b141ff"><?=$compraventa->getvendeAInfo()->getNombre() ?? ''?></td>
+                    <td style="color: #10b141ff"><?=$compraventa->getvendeAInfo()?->getNombre() ?? ''?></td>
                     <td><?=formatea_fecha($compraventa->getfechaVenta())?></td>
                     <td class="tooltip-cell info" data-tooltip="Cobros: <?=number_format($compraventa->getsumaCobros(), 2, ',', '.')?>€"><strong><?=number_format($compraventa->getprecioVentaReal(), 2, ',', '.')?>€</strong></td>
                     <td><?=number_format($compraventa->getprecioVentaDeclarado(), 2, ',', '.')?>€</td>
@@ -180,18 +180,21 @@ $(document).ready(function() {
         let nuevaVentana = window.open("", "_blank", "width=,height=800");
         fetch('/mis_pruebas/analisis_compraventas_tri')
         .then(response => {
-                return response.text();
+                return response.text();/* esto tiene que estar para que los datos lleguen a data. El cuerpo viene en un stream y tienes que procesarlo usando: response.text() → si devuelves texto */
         })
         .then(data => {
             nuevaVentana.document.write(data);
-            nuevaVentana.document.close(); /* indica que has terminado, y el navegador puede mostrar la página completa. es necesario para algunos navegadores */
+            nuevaVentana.document.close(); /* indica que has terminado, y el navegador puede mostrar la página completa. es necesario para algunos navegadores. usar write en una pagina
+            que ya esta cargada borraria todo el HTML. Hay que hacer document.open(); window.document.write('Hola'); document.close() para no borrar. o suar el write en el proceso de carga de la pagina  */
             /* tooltip se llama al final de la pagina que se carga. Pero si no se pudiera se prodria hacer desde aqui de varias formas interesantes, ver Word explicaciones*/
         })
         .catch(error => {
             cont.innerHTML = "Error: " + error;
         }); 
     });
-    mensaje("mensaje");
+    mensaje("mensaje");/* le paso el id del div donde sale el mensaje y la funcion mensaje le aplica una clase para que aparezca 
+    con efectos y otra para que desaparezca */
+    /* marcar o desmarcar trimestre  */
     document.getElementById("acciones").addEventListener("change", function(){
         let seleccionados = document.querySelectorAll('input[name^="actualiza["]');/* casillas checkbox seleccionadas para modificar*/
         let algunoSeleccionado = false;
@@ -208,7 +211,7 @@ $(document).ready(function() {
         es chk.checked que significa “el checkbox está marcado”. chk es cada una de las casillas de verificacion de la tabla */
         if (!algunoSeleccionado) {
             accionSeleccionada.value = ""; // para que se quede sin seleccion la lista despl. y tenga que volver a seleccionar y poder lanzar el evento chage de la lista
-            Swal.fire({ /* mensaje tipo alert con SweetAlert se ha importado en el header, es una librria de npm */
+            Swal.fire({ /* mensaje tipo alert con SweetAlert se ha importado en el header, es una libreria de npm */
             icon: 'warning',
             title: 'Atención',
             text: 'Debes seleccionar al menos una compraventa antes de elegir una acción.',
@@ -218,21 +221,21 @@ $(document).ready(function() {
         }
         /* mesanje de confirmacion para ejecutar. Aquí, SweetAlert devuelve una promesa (then), y dentro de ella decides si continuar o no. */
         Swal.fire({
-        title: '¿Confirmar acción?',
-        text: 'Se aplicará la acción seleccionada a las compraventas marcadas.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, continuar',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                accionEjecutar.value = accionSeleccionada.value;
-                document.getElementById("formActualiza").submit();
-            } else {
-        // Si cancela, volvemos al valor vacío
-            accionSeleccionada.selectedIndex = 0;// otra forma de dejar sin seleccion la lista despl.
-            }
-        });
-    });
+            title: '¿Confirmar acción?',
+            text: 'Se aplicará la acción seleccionada a las compraventas marcadas.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    accionEjecutar.value = accionSeleccionada.value;
+                    document.getElementById("formActualiza").submit();
+                } else {
+            // Si cancela, volvemos al valor vacío
+                accionSeleccionada.selectedIndex = 0;// otra forma de dejar sin seleccion la lista despl.
+                    }
+        }); //Swal
+    });//event change
 });
 </script>

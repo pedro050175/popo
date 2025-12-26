@@ -72,6 +72,7 @@ class MultaRepository{
         $parametros = [
             ':expediente'=> $data['expediente'],
             ':fecha' => $data['fecha'],
+            ':fechaNotificacion' => $data['fechaNotificacion'],
             ':importe' => $data['importe'],
             ':importePagado' => $data['importePagado'],
             ':fechaPago' => $data['fechaPago'],
@@ -88,19 +89,42 @@ class MultaRepository{
             ':comentarios' => $data['comentarios']
         ];
         $parametros = Limpiar_parametros($parametros);
-        $sql = "INSERT INTO multas (expediente, fecha, importe, importePagado, fechaPago, pagaDesde, identificar, fechaIdentificada, vencimiento, vehiculo, 
+        $sql = "INSERT INTO multas (expediente, fecha, fechaNotificacion, importe, importePagado, fechaPago, pagaDesde, identificar, fechaIdentificada, vencimiento, vehiculo, 
                                             lugar, importeCobrado, conductor, conductorIdentificado, terminada, comentarios) VALUES 
-                                         (:expediente, :fecha, :importe, :importePagado, :fechaPago, :pagaDesde, :identificar, :fechaIdentificada, :vencimiento, :vehiculo, 
+                                         (:expediente, :fecha, :fechaNotificacion, :importe, :importePagado, :fechaPago, :pagaDesde, :identificar, :fechaIdentificada, :vencimiento, :vehiculo, 
                                             :lugar, :importeCobrado, :conductor, :conductorIdentificado, :terminada, :comentarios)"; 
         //var_dump($parametros);
         $this->conexionPDO->consulta($sql, $parametros);
         return $this->conexionPDO->id_ultimo_insertado();//devuelvo el id ultimo creado para regresar al movimiento creado
+    }
+    public function createMultiple (array $multas) {
+     //se recibe esto: Array ([0] => Array ([0] => , [1] => 2025-11-17, [2] => 117, [3] => , [4] => 1, [5] => , [6] => , [7] => )
+    //                       [1] => Array ([0] => , [1] => 2025-11-11, [2] => 116 , [3] => 2323, [4] => , [5] => , [6] => , [7] =>  )   
+        foreach ($multas as $multa){    
+            $parametros = [
+                ':expediente'=> $multa['0'],
+                ':fecha' => $multa['1'],
+                ':fechaNotificacion' => $multa['2'],
+                ':vehiculo' => $multa['3'],
+                ':importe' => $multa['4'],
+                ':identificar' => (isset($multa['5'])) ? 1 : 0,
+                ':lugar' => $multa['6'],
+                ':conductor' => $multa['7'],
+                ':comentarios' => $multa['8']
+            ];
+            $parametros = Limpiar_parametros($parametros);
+            $sql = "INSERT INTO multas (expediente, fecha, fechaNotificacion, vehiculo, importe, identificar, lugar, conductor, comentarios) VALUES 
+                                       (:expediente, :fecha, :fechaNotificacion, :vehiculo, :importe, :identificar, :lugar, :conductor, :comentarios)"; 
+            //var_dump($parametros);
+            $this->conexionPDO->consulta($sql, $parametros);
+        }
     }
     public function update (array $data): void{ 
         $parametros = [
             ':idMulta'=> $data['idMulta'],
             ':expediente'=> $data['expediente'],
             ':fecha' => $data['fecha'],
+            ':fechaNotificacion' => $data['fechaNotificacion'],
             ':importe' => $data['importe'],
             ':importePagado' => $data['importePagado'],
             ':fechaPago' => $data['fechaPago'],
@@ -117,7 +141,7 @@ class MultaRepository{
             ':comentarios' => $data['comentarios']
         ];
         $parametros = Limpiar_parametros($parametros);
-        $sql = "UPDATE multas SET expediente=:expediente, fecha=:fecha, importe=:importe, importePagado=:importePagado, fechaPago=:fechaPago, 
+        $sql = "UPDATE multas SET expediente=:expediente, fecha=:fecha, fechaNotificacion=:fechaNotificacion, importe=:importe, importePagado=:importePagado, fechaPago=:fechaPago, 
                                         pagaDesde=:pagaDesde, identificar=:identificar, fechaIdentificada=:fechaIdentificada, vencimiento=:vencimiento, vehiculo=:vehiculo, lugar=:lugar, 
                                         importeCobrado=:importeCobrado, conductor=:conductor, conductorIdentificado=:conductorIdentificado, terminada=:terminada, comentarios=:comentarios
                                      WHERE idMulta = :idMulta";
@@ -125,13 +149,12 @@ class MultaRepository{
         $this->conexionPDO->consulta($sql, $parametros);
     }
     public function read (int $id): ?Multa {
-        /*leo tmb datos de tablas relacionadas para que esta funcion read me sirva para ver los detalles de una compraventa 
-        se usa en nueva_compraventa, los totales de pagos, cobros y gastos no los necesito porque tengo que leer esas tablas para mostar todas las lineas, asi que con esos datos 
-        sumare y calculo*/
-        $this->conexionPDO->consulta("SELECT M.* 
-                                        FROM multas M 
-                                        LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo
-                                            WHERE (idMulta=$id)");        
+        /* ahora hace falta leer los datos del vehiculo para el select vehiculo ya que se usa ajax
+        y no hay ningun vehiculo cargado en HTML */
+        $this->conexionPDO->consulta("SELECT S.*, V.Marca_modelo, V.Matricula, V.Bastidor
+                                        FROM multas S
+                                        JOIN vehiculos V ON S.vehiculo = V.id_vehiculo
+                                        WHERE (idMulta=$id)");
         return $this->extraer_registro();
     }
     public function delete (int $id): void {

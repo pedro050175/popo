@@ -2,16 +2,19 @@
 namespace repositories;
 
 use lib\BaseDatos;
+use lib\BaseDatosPDO;
 use models\Entidad;
 
 class EntidadRepository {
 
     private int $num_paginas;
     private BaseDatos $conexion;
+    private BaseDatosPDO $conexionPDO;
     
     
     public function __construct() {
         $this->conexion = new BaseDatos();
+        $this->conexionPDO = new BaseDatosPDO();
         $this->num_paginas = 1;
     }
     public function setnumpaginas(int $paginas){
@@ -116,6 +119,21 @@ class EntidadRepository {
                                     WHERE id_entidad IN (SELECT envia FROM movimientos)
                                     OR id_entidad IN (SELECT recibe FROM movimientos)");
         return $this->extraer_todos();
-    }  
+    }
+    public function entidadesSelect(string $buscar): ?array{
+        /* Se usa para mostrar entidades en el Select2 de jQuery para poder probarlo hay que escribir esto en el navegador
+        ya que el select2 no muestra los echo, var_dump, print_r       
+        http://localhost:8000/mis_pruebas/buscar_entidades_select?buscar=nombre*/
+        $parametros = [
+            ':buscar' => $buscar
+        ];
+        $sql = "SELECT id_entidad, Nombre 
+                FROM entidad
+                WHERE Nombre LIKE CONCAT('%', :buscar, '%') 
+                LIMIT 20 ";
+                /*ojo no se puede poner '%:buscar%' */
+        $this->conexionPDO->consulta($sql, $parametros);
+        return $this->conexionPDO->extraer_todos();
+    }   
 }
 ?>

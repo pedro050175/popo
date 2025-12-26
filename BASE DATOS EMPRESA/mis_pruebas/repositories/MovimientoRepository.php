@@ -232,7 +232,8 @@ class MovimientoRepository{
         return $this->extraer_registro();
     }
     public function detalles_movimiento (int $id): ?Movimiento{
-        $this->conexionPDO->consulta("SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, V.Marca_modelo, C.Nombre AS nombrePropietario FROM movimientos M 
+        $this->conexionPDO->consulta("SELECT M.*, A.Nombre AS nombreEnvia, B.Nombre AS nombreRecibe, 
+                                V.Marca_modelo, V.Matricula, V.Bastidor, C.Nombre AS nombrePropietario FROM movimientos M 
                     LEFT JOIN entidad A ON M.envia = A.id_entidad
                     LEFT JOIN entidad B ON M.recibe = B.id_entidad
                     LEFT JOIN vehiculos V ON M.vehiculo = V.id_vehiculo

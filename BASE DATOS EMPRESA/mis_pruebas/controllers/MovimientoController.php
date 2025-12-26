@@ -37,10 +37,8 @@ class MovimientoController{
         $this->pages->render('movimientos', ['movimientos' => $movimientos, 'error' => $error, 'numPaginas' => $numPaginas, 'entidades' => $entidades]);
     }
     public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
-        $entidades = $this->entidad_repository->listReducida(); //carga los propietarios para la lista desplegable propietario
         $empresas = $this->entidad_repository->empresasGrupo(); //carga solo empresas del grupo
-        $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//carga los vehiculos para la lista desplegable vehiculo
-        $this->pages->render('nuevo_movimiento', ['empresas' => $empresas, 'entidades' => $entidades, 'vehiculos' => $vehiculos]);
+        $this->pages->render('nuevo_movimiento', ['empresas' => $empresas]);
     }
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $movimiento=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
@@ -49,13 +47,11 @@ class MovimientoController{
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
-        $entidades = $this->entidad_repository->listReducida(); //carga los propietarios para la lista desplegable propietario
         $empresas = $this->entidad_repository->empresasGrupo(); //carga solo empresas del grupo
-        $vehiculos = $this->vehiculo_repository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
-        $movimiento = $this->movimientoRepository->read($id);
+        $movimiento = $this->movimientoRepository->detalles_movimiento($id);
         $entregas = $this->entregaRepository->entregasMovimiento($id);
         $devoluciones = $this->devolucionRepository->devolucionesMovimiento($id);
-        $this->pages->render('nuevo_movimiento', ['empresas' => $empresas, 'movimiento' => $movimiento, 'vehiculos' => $vehiculos, 'entidades' => $entidades, 'entregas' => $entregas, 'devoluciones' => $devoluciones]);
+        $this->pages->render('nuevo_movimiento', ['empresas' => $empresas, 'movimiento' => $movimiento, 'entregas' => $entregas, 'devoluciones' => $devoluciones]);
     }
     public function detalles_movimiento(int $id) {
         $entregas = $this->entregaRepository->entregasMovimiento($id);

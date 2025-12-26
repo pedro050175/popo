@@ -44,8 +44,7 @@ class VehiculoController {
         $this->pages->render('vehiculos', ['vehiculos' => $vehiculos, 'error' => $error, 'num_paginas' => $numero_paginas]);//ver explicacion de la IA
     }
     public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
-        $entidades = $this->entidad_repository->listReducida(); //carga los propietarios para la lista desplegable propietatio
-        $this->pages->render('nuevo_vehiculo', ['entidades' => $entidades]);
+        $this->pages->render('nuevo_vehiculo');
     }
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $vehiculo=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
@@ -55,13 +54,12 @@ class VehiculoController {
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
         $vehiculo = $this->vehiculo_repository->read($id);
-        $entidades = $this->entidad_repository->listReducida();//para rellenar el campo de lista desplegable 'propietario' leo todas las entidades
         $fotos = $this->foto_repository->fotos_vehiculo($id);
         $gastos = $this->gasto_repository->gastos_vehiculo($id);
         $gastosCompraventa = $this->gastosCompraventaRepository->gastosVehiculoCompraventa($id);
         //var_dump($gastosCompraventa);
         $cuotas = $this->cuota_repository->cuotas_vehiculo($id);
-        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'entidades' => $entidades, 'fotos' => $fotos, 'gastos' => $gastos, 'cuotas' => $cuotas, 'gastosCompraventa' => $gastosCompraventa]);
+        $this->pages->render('nuevo_vehiculo', ['vehiculo' => $vehiculo, 'fotos' => $fotos, 'gastos' => $gastos, 'cuotas' => $cuotas, 'gastosCompraventa' => $gastosCompraventa]);
     }
     public function delete(int $id): void {
         $relacionados=$this->vehiculo_repository->relacionados($id);
@@ -87,6 +85,26 @@ class VehiculoController {
         $cuotas = $this->cuota_repository->cuotas_vehiculo($idVehiculo);
         $gastosCompraventa = $this->gastosCompraventaRepository->gastosVehiculoCompraventa($idVehiculo);
         $this->pages->renderNoHeader('gastos_cuota_vehiculo', ['gastos' => $gastos, 'cuotas' => $cuotas, 'nombreCoche' => $nombreCoche, 'gastosCompraventa' => $gastosCompraventa]);
+    }
+    public function vehiculosSelect (){
+    /* Se usa para mostrar coches en el Select2 de jQuery para poder probarlo hay que escribir esto en el navegador
+    ya que el select2 no muestra los echo, var_dump, print_r       
+    http://localhost:8000/mis_pruebas/buscar_vehiculos_select?buscar=lambo*/
+        $buscar = $_GET['buscar'];
+        $datos = $this->vehiculo_repository->vehiculosSelect($buscar);
+        //$datos tiene el formato correcto para convertir a json, pero necesito que en un mismo campo vaya el nombre, matricula y batidor
+        foreach ($datos as $fila){
+            $resultado[] = [
+                'id' => $fila['id_vehiculo'],
+                'text' => $fila['Marca_modelo'], /*se podria concatenar y pasarlo todo en el campo text asi: ' '.$fila['Matricula'].' '.$fila['Bastidor'];
+                aunque se pasen mas campos pero text siempre hay que pasarlo igual que id*/
+                'Marca_modelo' => $fila['Marca_modelo'],
+                'Matricula' => $fila['Matricula'] ?? '',
+                'Bastidor' => $fila['Bastidor'] ?? ''
+            ];
+        }
+        echo json_encode($resultado ?? []);/* si no ha encontrado nada tengo que devolver array vacio para 
+        que el select2 de jQuery me muestre el mesanje personalizado*/
     }
 }
 ?>

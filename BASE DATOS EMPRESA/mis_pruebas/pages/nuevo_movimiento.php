@@ -1,4 +1,4 @@
-<form action="<?= DIRECTORIO ?>nuevo_movimiento" method="post">
+<form action="<?= DIRECTORIO ?>nuevo_movimiento" method="post" id = "hola">
 <?php if (isset($movimiento)) :?>    
         <input type="hidden" name="data[movimiento][idMovimiento]" id='id_movimiento' value="<?= $movimiento->getidMovimiento()?>"><!--no se puede poner aqui (isset($movimiento) ? $movimiento->getidMovimiento() : '' porque se crearia la variable data[movimiento][idMovimiento] cuando es un nuevo movimiento y el repository lo detectaria como una edicion de un mov existente-->
 <?php endif ;?>          
@@ -8,18 +8,13 @@
             <h5 class="titulo_prin"><?= (isset($movimiento)) ? 'Modificar ' : 'Nuevo '?>Movimiento</h5>
         </div>
         <div class="col text-end">  <!--en un onclick en cuanto se hace un return no sigue ejecutando instrucciones p.e no puedo mostrar un mensaje con return confirm('') y luego hacer algo mas, lo que venga despues no se ejecuta-->
-            <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>movimientos?num_pagina=1';">   
-            <button type="submit" class="boton_submit" onclick = "return comprobarEntidades(this.form)"> <?= (isset($movimiento)) ? 'Guardar' : 'Crear' ?></button>
+            <input type="button" class="boton_link" id = "salir" value = "Salir">   
+            <button type="submit" class="boton_submit disable" onclick = "return comprobarEntidades(this.form)" id = "botonGuardar" disabled> <?= (isset($movimiento)) ? 'Guardar' : 'Crear' ?></button>
             <button type="reset" class="boton_submit" <?= (isset($movimiento)) ? 'hidden' : ''?>>Limpiar</button>
             <button type="button" class="boton_submit" <?= (isset($movimiento)) ? '' : 'hidden'?> id = "eliminar" >Eliminar</button> 
         </div>
     </div>
     <div class="row">
-        <div class="col-md-1">    
-            <div class="form-floating mb-1">
-                <p><strong>#: <?= (isset($movimiento))?$movimiento->getidMovimiento():''?></strong></p> 
-            </div>
-        </div>
         <div class="col-md-3">    
             <div class="form-floating mb-1">
                 <input type="date" name="data[movimiento][fecha]" class="form-control" id="fecha" placeholder="Fecha" value="<?=(isset($movimiento))?$movimiento->getfecha():''?>" required> 
@@ -75,26 +70,24 @@
     <div class="row">
         <?php
             $vehiculoActual = isset($movimiento) ? $movimiento->getvehiculo() : '';//estoy editando un movimiento
-            $vehiculoActual = $vehiculoActual!=0 ? $vehiculoActual : '';//getvehiculo devuelve un numero, si no existe el vehiculo devuelve un 0 (CAMPOS_MOVIMIENTO lo pone a cero)
-            foreach ($vehiculos as $vehiculo){
-                $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo(). ' ' .$vehiculo->getMatricula() . ' ' .$vehiculo->getBastidor();//con la variable $entidades creo un array asociativo ['id']=Nombre
-            }
+            $vehiculoActual = $vehiculoActual!=0 ? $vehiculoActual : '';//getvehiculo devuelve un numero (int), si no existe el vehiculo devuelve un 0 (CAMPOS_MOVIMIENTO lo pone a cero)
+            if ($vehiculoActual != ''){
+                    $vehiculoActualMostrar =  htmlspecialchars($movimiento->getvehiculoInfo()->getMarca_modelo().' '.$movimiento->getvehiculoInfo()->getMatricula().' '. $movimiento->getvehiculoInfo()->getBastidor());    
+                }else $vehiculoActualMostrar = '';
         ?>
         <div class="col-md-6">
             <label for="select-vehiculo" class="form-label">Vehiculo</label>
             <div class="form-floating mb-1">
-                <select name="data[movimiento][vehiculo]" class="form-select" id="select_vehiculo">
-                    <option disabled <?= $vehiculoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                    <?php foreach ($listaVehiculos as $id => $vehiculo): ?>
-                        <option value="<?= $id?>" <?= $id === $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
-                    <?php endforeach; ?>
+                <select name="data[movimiento][vehiculo]" class="form-select" id="select_vehiculo" data-placeholder = "Movim. pago vehiculo" style="width: 100%">
+                    <option value=""></option>
+                    <option value = <?= $vehiculoActual ?> selected><?= $vehiculoActualMostrar ?></option>
                 </select> 
             </div>
         </div>
         <!-- esto es para mostrar un cuadro de texto con el nombre, matricula, bastidor del coche para poder seleccionarlo y Copiar Pegar, ya que en la lista despleg no me deja seleccionar y copiar.
          Lo cargo con el coche que hay seleccionado en la lista desplegable, tengo que comprobar que haya un vehiculo en la lista despleg -->
         <div class="col-md-4">
-            <input size = 40 type="text" id="copiaVehiculo" value = "<?=isset($movimiento) ? ($vehiculoActual!='' ? $listaVehiculos[$vehiculoActual] : '') : '' ?>"><!--si existe movimiento=>($vehiculoActual!='' ? $listaVehiculos[$vehiculoActual] : '') compuebo si $vehiculoActual no es '' porque puede ser que el movimiento no tenga vehiculo-->
+            <input size = 40 type="text" id="copiaVehiculo" value = "<?=isset($movimiento) ? ($vehiculoActual!='' ? $vehiculoActualMostrar : '') : '' ?>"><!--si existe movimiento=>($vehiculoActual!='' ? $listaVehiculos[$vehiculoActual] : '') compuebo si $vehiculoActual no es '' porque puede ser que el movimiento no tenga vehiculo-->
         </div>         
         <div class="col-md-2">
             <label class="etiqueta" for="terminado" >Finalizado:</label>
@@ -288,46 +281,36 @@
 <?php endif ;?>
 <script>
     $(document).ready(function() {
-        $('#select_recibe').select2({
-            placeholder: "Buscar recibe",
-            allowClear: true,
-            width: '100%'
-        });
-        $('#select_envia').select2({
-            placeholder: "Buscar envia",
-            allowClear: true,
-            width: '100%'
-        });
-        $('#select_vehiculo').select2({
-            placeholder: "Buscar vehiculo",
-            allowClear: true,
-            width: '100%'
-        });
-    });
-/*esto de abajo equivale a poner en el boton submit esto: onclick= "escribirLocalStorage('entrega'); return validar_entero_campo_text(form.entrega_importe)"*/
-    var form = document.getElementById("entrega");
-    var boton = document.getElementById("guardarEntrega");//al evento onclick del boton guardarEntrega le asigna la llamada a la funcion escribirLocalStorege y validar_entero
-    boton.addEventListener("click", function (event) {
-        escribirLocalStorage("entrega");//escribe en locastorage para saber que la proxima vez tiene que mostrar el formulario entrega
-        if (!validar_entero_campo_text(form.entrega_importe)) {
-            event.preventDefault(); // evita que se envíe el form
-        }
-    });
-    var form2 = document.getElementById("devolucion");
-    var boton2 = document.getElementById("guardarDevolucion");
-    boton2.addEventListener("click", function (event) {//event es el parametro de la funcion y es el evento "click"
-        escribirLocalStorage("devolucion");
-        if (!validar_entero_campo_text(form2.devolucion_importe)) {
-            event.preventDefault(); // evita que se envíe el form
-        }
-    });
-    mostrarEntregaDevolucion();//cada vez que carga el la pagina comprueba si hay que mostrar el form entregas o devoluciones
-//aunque se puede hacer eso eliminar.addEventListener("click", ... no es una buena practica, hay navegadores que no lo soportan, o si este script estuviera en el HEAD no reconoceria eliminar porque aun no se ha cargado el HTML 
-    document.getElementById("eliminar").addEventListener("click", function (event) {
-        if (confirm('Estas seguro que quieres borrar este movimiento?')){
-            window.location.href='<?= DIRECTORIO ?>borrar_movimiento/<?= isset($movimiento) ? $movimiento->getidMovimiento() : ''?>'; 
-        } else {
-            event.preventDefault();
+        /* desplegable vehiculo con jQuery Ajax */
+        selectAjaxVehiculos(document.getElementById('select_vehiculo'));
+        /*para controlar el gardar formulario */
+        var estadoFormulario = { modificado: false };
+        guardarDatos(document.forms[0], '<?= DIRECTORIO ?>movimientos?num_pagina=1', estadoFormulario);
+        /*esto de abajo equivale a poner en el boton submit esto: onclick= "escribirLocalStorage('entrega'); return validar_entero_campo_text(form.entrega_importe)"*/
+        var form = document.getElementById("entrega");
+        var boton = document.getElementById("guardarEntrega");//al evento onclick del boton guardarEntrega le asigna la llamada a la funcion escribirLocalStorege y validar_entero
+        boton.addEventListener("click", function (event) {
+            escribirLocalStorage("entrega");//escribe en locastorage para saber que la proxima vez tiene que mostrar el formulario entrega
+            if (!validar_entero_campo_text(form.entrega_importe)) {
+                event.preventDefault(); // evita que se envíe el form
             }
+        });
+        var form2 = document.getElementById("devolucion");
+        var boton2 = document.getElementById("guardarDevolucion");
+        boton2.addEventListener("click", function (event) {//event es el parametro de la funcion y es el evento "click"
+            escribirLocalStorage("devolucion");
+            if (!validar_entero_campo_text(form2.devolucion_importe)) {
+                return false;//event.preventDefault(); // evita que se envíe el form
+            }
+        });
+        mostrarEntregaDevolucion();//cada vez que carga el la pagina comprueba si hay que mostrar el form entregas o devoluciones
+        //aunque se puede hacer eso eliminar.addEventListener("click", ... no es una buena practica, hay navegadores que no lo soportan, o si este script estuviera en el HEAD no reconoceria eliminar porque aun no se ha cargado el HTML 
+        document.getElementById("eliminar").addEventListener("click", function (event) {
+            if (confirm('Estas seguro que quieres borrar este movimiento?')){
+                window.location.href='<?= DIRECTORIO ?>borrar_movimiento/<?= isset($movimiento) ? $movimiento->getidMovimiento() : ''?>'; 
+            } else {
+                event.preventDefault();
+                }
+        });
     });
 </script>

@@ -63,7 +63,7 @@
                 <td class="tooltip-cell info" data-tooltip="Fecha: <?=formatea_fecha($multa->getfechaIdentificada())?> Conductor identificado: <?=$multa->getconductorIdentificada()?>">
                     <input type = "checkbox" disabled <?=$multa->getidentificar() ? 'checked': ''?>>
                 </td>
-                <td><?=formatea_fecha($multa->getvencimiento())?></td>
+                <td style = <?= $multa->caducada() ? '"color : red"' : '""' ?>><?=formatea_fecha($multa->getvencimiento())?></td>
                 <td><?=number_format($multa->getimporteCobrado(), 2, ',', '.')?>€</td>
                 <td><?=$multa->getconductor()?></td> 
                 <td><input type = "checkbox" disabled <?=$multa->getterminada() ? 'checked': ''?>></td>

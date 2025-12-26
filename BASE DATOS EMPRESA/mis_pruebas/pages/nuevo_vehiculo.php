@@ -3,20 +3,20 @@
     <input type="hidden" name="data[vehiculo][id_vehiculo]" id='id_vehiculo' value="<?=$vehiculo->getId()?>">
     <?php endif;?>      
     <div class="container mt-1"><!--esto desplaza a la derecha un poco todo lo que haya dentro, tablas, etiquetas etc-->
-            <div class="row">
-                <div class="col">
-                    <h5 class="titulo_prin"><?= (isset($vehiculo)) ? 'Modificar' : 'Nuevo'?> Vehiculo</h5>
-                </div>
-                <div class="col text-end">  
-                    <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>vehiculos?num_pagina=1';">   
-                    <button type="submit" class="boton_submit" onclick="return validarDatos(this.form)"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
-                    <button type="reset" class="boton_submit" <?= (isset($vehiculo)) ? 'hidden' : ''?>>Limpiar</button>
-                </div>
+        <div class="row">
+            <div class="col">
+                <h5 class="titulo_prin"><?= (isset($vehiculo)) ? 'Modificar' : 'Nuevo'?> Vehiculo</h5>
             </div>
+            <div class="col text-end">  
+                <input type="button" class="boton_link" value = "Salir" id = "salir">   
+                <button type="submit" class="boton_submit disable" disabled id = "botonGuardar" onclick="return validarDatos(this.form)"> <?= (isset($vehiculo)) ? 'Guardar' : 'Crear' ?></button>
+                <button type="reset" class="boton_submit" <?= (isset($vehiculo)) ? 'hidden' : ''?>>Limpiar</button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-4">    
                 <div class="form-floating mb-1">
-                    <input type="text" name="data[vehiculo][Marca_modelo]" class="form-control" id="Marca_modelo" placeholder="Marca_modelo" value="<?=(isset($vehiculo))?quitaEspecialChar($vehiculo->getMarca_modelo()):''?>" required> 
+                    <input type="text" name="data[vehiculo][Marca_modelo]" class="form-control" id="marcaModelo" placeholder="Marca_modelo" value="<?=(isset($vehiculo))?quitaEspecialChar($vehiculo->getMarca_modelo()):''?>" required> 
                     <label for="Marca_modelo">Marca y modelo</label>
                 </div>
             </div>
@@ -59,8 +59,8 @@
                         <option disabled <?= $combustibleActual === '' ? 'selected' : '' ?>>--Seleccione combustible--</option> <!--si combustible ==='' (crear vehiculo)->"selected" el mesanje se muestra-->
             
                         <?php foreach ($combustibles as $opcion): ?>
-        <!--<option <1º(asignar valor)value=elemento_tabla><2º(ver si se muestra por defecto)si el elemen de la tabla==combustible ->'selected' este elem. se muestra por defec, sino ->'' -->
-            <!--para crear siempre sera selected el mensaje, porque en el foreach nunca se dara la igualdad option==combustibleactual, y si es update se dara la igualdad para uno de los elemen que sera el selectd para mostrar por defecto-->
+                <!--<option <1º(asignar valor)value=elemento_tabla><2º(ver si se muestra por defecto)si el elemen de la tabla==combustible ->'selected' este elem. se muestra por defec, sino ->'' -->
+                <!--para crear siempre sera selected el mensaje, porque en el foreach nunca se dara la igualdad option==combustibleactual, y si es update se dara la igualdad para uno de los elemen que sera el selectd para mostrar por defecto-->
                             <option value="<?= $opcion ?>" <?= $opcion === $combustibleActual ? 'selected' : '' ?>><?= $opcion ?><!--si no pongo el atributo value por fecto value = al element de la lista elejido-->
                             </option>
                         <?php endforeach; ?>
@@ -117,18 +117,16 @@
             <?php
                 $propietarioActual = isset($vehiculo) ? $vehiculo->getpropietario() : '';//estoy editando un vehiculo
                 $propietarioActual = $propietarioActual!=0 ? $propietarioActual : '';
-                foreach ($entidades as $entidad){
-                    $listapropietarios[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
-                }
+                if ($propietarioActual != ''){
+                        $propietarioMostrar =  htmlspecialchars($vehiculo->getdatos_propietario()->getNombre());    
+                    }else $propietarioMostrar = '';
             ?>
             <div class="col-md-3">
                 <label for="select-propietario" class="form-label">Propietario</label>
                 <div class="form-floating mb-1">
-                    <select name="data[vehiculo][propietario]" class="form-select" id="select-propietario">
-                        <option disabled <?= $propietarioActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($listapropietarios as $id => $propietario): ?>
-                            <option value="<?= $id?>" <?= $id == $propietarioActual ? 'selected' : '' ?>><?= $propietario ?></option>
-                            <?php endforeach; ?>
+                    <select name="data[vehiculo][propietario]" class="form-select" id="select-propietario" data-placeholder = "Buscar propietario...">
+                        <option value =""></option>
+                            <option value="<?= $propietarioActual?>" <?= $id == $propietarioMostrar ? 'selected' : '' ?>><?= $propietario ?></option>
                     </select> 
                 </div>
             </div>
@@ -404,18 +402,15 @@
                 <label class="etiqueta" for="financiera" >Financiera:</label>&nbsp
                 <input class="cuadro_text" type="text" name="cuota[financiera]" id="financiera">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="select-titular-cuota" class="etiqueta">Titular</label>
                 <div class="form-floating mb-3">
-                    <select name="cuota[titular]" class="form-select" id="select-titular-cuota" required>
-                        <option value="" disabled selected>--Selecc. opcion--</option><!--hay que poner value="" para que el required funcione, de lo contrario si deja enviar sin elegir nada -->
-                        <?php foreach ($listapropietarios as $id => $propietario): ?>
-                            <option value="<?= $id?>"><?= $propietario ?></option>
-                            <?php endforeach; ?>
-                        </select> 
+                    <select name="cuota[titular]" class="form-select" 
+                        id="select-titular-cuota" data-placeholder = "Titular cuota..." required>
+                        <option value="">--</option><!--hay que poner value="" para que el required funcione, de lo contrario si deja enviar sin elegir nada -->
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-4">
                 <label class="etiqueta" for="observaciones" >Observaciones:</label>&nbsp
                 <input size=80 class="cuadro_text" type="text" name="cuota[observaciones]" id="observaciones" placeholder="observaciones">
             </div>
@@ -489,17 +484,21 @@
 <?php endif;?>
 <script>
     $(document).ready(function() {
-        $('#select-propietario').select2({
-            placeholder: "Buscar propietario",
-            allowClear: true,
-            width: '100%'
-        });
-    
-        $('#select-titular-cuota').select2({
+
+        selectAjaxEntidades(document.getElementById('select-propietario'));
+        let cuota = document.getElementById('select-titular-cuota');
+        if (cuota != null) {
+            selectAjaxEntidades(cuota);
+        }
+            /* $('#select-titular-cuota').select2({
             placeholder: "Buscar titular",
             allowClear: true,
             width: '100%'
-        });
+        }); */
+        /*para controlar el gardar formulario */
+        var estadoFormulario = { modificado: false };
+        guardarDatos(document.forms[0], '<?= DIRECTORIO ?>vehiculos?num_pagina=1', estadoFormulario);
+        document.getElementById('marcaModelo').focus();
     });
 </script>
 

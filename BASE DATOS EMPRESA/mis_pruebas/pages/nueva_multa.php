@@ -14,8 +14,8 @@
                 <h5 class="titulo_prin"><?= (isset($multa)) ? 'Mofificar ' : 'Nueva '?>Multa</h5>
             </div>
             <div class="col text-end">  
-                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>multas?num_pagina=1';">   
-                <button type="submit" class="boton_submit" onclick = "return validarMulta(this.form)"> <?= (isset($multa)) ? 'Guardar' : 'Crear' ?></button>
+                <input type="button" class="boton_link" value = "Salir" id = "salir">   
+                <button type="submit" class="boton_submit disable" disabled onclick = "return validarMulta(this.form)" id = "botonGuardar"> <?= (isset($multa)) ? 'Guardar' : 'Crear' ?></button>
                 <button type="reset" class="boton_submit" <?= (isset($multa)) ? 'hidden' : ''?>>Limpiar</button>
             </div>
         </div>
@@ -28,28 +28,33 @@
             </div>
             <div class="col-md-2">
                 <div class="form-floating mb-1">
-                    <input type="date" name="data[fecha]" class="form-control" id="fecha" onchange="actualizaVencimiento(this.form)" required placeholder="Fecha" value="<?=(isset($multa))?$multa->getfecha():''?>"> 
+                    <input type="date" name="data[fecha]" class="form-control" id="fecha" required placeholder="Fecha" value="<?=(isset($multa))?$multa->getfecha():''?>"> 
                     <label for="fecha">Fecha</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-floating mb-1">
+                    <input type="date" name="data[fechaNotificacion]" class="form-control" id="fechaNotificacion" onchange="actualizaVencimiento(this.form)" required placeholder="Fecha Notificacion" value="<?=(isset($multa))?$multa->getfechaNotificacion():''?>"> 
+                    <label for="fecha">Fecha notificacion</label>
                 </div>
             </div>
             <?php
                 $vehiculoActual = isset($multa) ? $multa->getvehiculo() : '';//estoy editando
-                //$clienteActual = $clienteActual!=0 ? $clienteActual : ''; si el campo no es obligatorio hay que poner esto
-                foreach ($vehiculos as $vehiculo){
-                    $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo(). ' ' .$vehiculo->getMatricula() . ' ' .$vehiculo->getBastidor();//con la variable $entidades creo un array asociativo ['id']=Nombre
-                }
+                if ($vehiculoActual != ''){
+                    $vehiculoActualMostrar =  htmlspecialchars($multa->getvehiculoInfo()->getMarca_modelo().' '.$multa->getvehiculoInfo()->getMatricula().' '. $multa->getvehiculoInfo()->getBastidor());    
+                }else $vehiculoActualMostrar = '';
             ?>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="select_vehiculo" class="form-label">Vehiculo</label><!--label fuera del floating para que no se solape con el cuadro de texto -->
+                <option value = ""></option>
                 <select name="data[vehiculo]" 
                         class="form-select" id="select_vehiculo" 
                         required
+                        data-placeholder = "Vehiculo multado"
                         oninvalid="this.setCustomValidity('Por favor selecciona un vehiculo')"
                         oninput="this.setCustomValidity('')"><!--esto hay que ponerlo para que al seleccionar un valor se entere de que has seleccionado y no de error otra vez-->
-                    <option value = "" disabled <?= $vehiculoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
-                    <?php foreach ($listaVehiculos as $id => $vehiculo): ?>
-                        <option value="<?= $id?>" <?= $id === $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
-                    <?php endforeach; ?>
+                    <option value = ""></option>
+                    <option value = <?= $vehiculoActual ?> selected><?= $vehiculoActualMostrar ?></option>
                 </select>     
             </div>
             <div class="col-md-2">
@@ -137,11 +142,9 @@
 </form>
 <script>
     $(document).ready(function() {
-        $('#select_vehiculo').select2({
-            placeholder: "Buscar vehiculo",
-            allowClear: true,
-            width: '100%'
-        });
         mensaje("mensaje");        /* para mostrar el mensaje de guardado correctamente de arriba */
+        var estadoFormulario = { modificado: false };
+        guardarDatos(document.forms[0], '<?= DIRECTORIO ?>multas?num_pagina=1', estadoFormulario);
+        selectAjaxVehiculos(document.getElementById('select_vehiculo'));
     });
 </script>

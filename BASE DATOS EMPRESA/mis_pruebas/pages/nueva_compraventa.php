@@ -26,7 +26,11 @@ en JS tmb se usa algo parecido
         <?= htmlspecialchars($_GET['mensaje']) ?>
     </div>
 <?php endif; ?>
-<form action="<?= DIRECTORIO ?>nueva_compraventa" method="post">
+<!-- esto es para el dialogo de jQuery de salir sin guardar -->
+<div id = "confirm" title="Aviso datos no guardados">
+    <p>Desea salir sin guaradar?</p>
+</div>
+<form action="<?= DIRECTORIO ?>nueva_compraventa" method="post" id = "nuevaCompraventa">
     <?php if (isset($compraventa)) :?>
         <input type="hidden" name="data[id_compraventa]" id='id' value="<?=$compraventa->getid_compraventa()?>">
     <?php endif;?> 
@@ -37,8 +41,8 @@ en JS tmb se usa algo parecido
                 <h5 class="titulo_prin"><?= (isset($compraventa)) ? 'Modificar ' : 'Nueva '?>Compra-venta</h5>
             </div>
             <div class="col text-end">  
-                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>compraventas?num_pagina=1';">   
-                <button type="submit" class="boton_submit" onclick = "return validarCompraventa(this.form)"> <?= (isset($compraventa)) ? 'Guardar' : 'Crear' ?></button>
+                <input type="button" class="boton_link" value = "Salir" id = "salir">    
+                <button type="submit" class="boton_submit disable" id ="botonGuardar" disabled> <?= (isset($compraventa)) ? 'Guardar' : 'Crear' ?></button>
                 <button type="reset" class="boton_submit" <?= (isset($compraventa)) ? 'hidden' : ''?>>Limpiar</button>
             </div>
         </div>
@@ -62,22 +66,20 @@ en JS tmb se usa algo parecido
             </div>
             <?php
                 $vehiculoActual = isset($compraventa) ? $compraventa->getvehiculo() : '';//estoy editando un alquiler
-                //$vehiculoActual = $vehiculoActual!=0 ? $vehiculoActual : '';//getvehiculo devuelve un numero, si no existe el vehiculo devuelve un 0 (CAMPOS_alquiler lo pone a cero)
-                foreach ($vehiculos as $vehiculo){
-                    $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo(). ' ' .$vehiculo->getMatricula() . ' ' .$vehiculo->getBastidor();//con la variable $entidades creo un array asociativo ['id']=Nombre
-                }
+                if ($vehiculoActual != ''){
+                    $vehiculoActualMostrar =  htmlspecialchars($compraventa->getvehiculoInfo()->getMarca_modelo().' '.$compraventa->getvehiculoInfo()->getMatricula().' '. $compraventa->getvehiculoInfo()->getBastidor());    
+                }else $vehiculoActualMostrar = '';
             ?>
             <div class="col-md-3">
                 <label for="select_vehiculo" class="form-label">Vehiculo</label><!--label fuera del floating para que no se solape con el cuadro de texto -->
                 <select name="data[vehiculo]" 
-                        class="form-select" id="select_vehiculo" 
+                        class="form-select" id="select_vehiculo"
+                        data-placeholder = "Vehiculo comprado-vendido"
                         required
                         oninvalid="this.setCustomValidity('Por favor selecciona un vehiculo')"
                         oninput="this.setCustomValidity('')"><!--esto hay que ponerlo para que al seleccionar un valor se entere de que has seleccionado y no de error otra vez-->
-                    <option value = "" disabled <?= $vehiculoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
-                    <?php foreach ($listaVehiculos as $id => $vehiculo): ?>
-                        <option value="<?= $id?>" <?= $id === $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
-                    <?php endforeach; ?>
+                    <option value = ""></option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
+                    <option value = <?= $vehiculoActual ?> selected><?= $vehiculoActualMostrar ?></option>
                 </select> 
             </div>
             <div class="col-md-1">
@@ -96,18 +98,16 @@ en JS tmb se usa algo parecido
             <div class="row"> 
                 <?php
                     $compraActual = isset($compraventa) ? $compraventa->getcompraA() : '';//estoy editando
-                    $compraActual = $compraActual!=0 ? $compraActual : ''; //si el campo no es obligatorio hay que poner esto
-                    foreach ($entidades as $entidad){
-                        $listaEntidades[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
-                    }
+                    $compraActual = $compraActual!=0 ? $compraActual : ''; //las funciones que devuelven un int si hay un '' devuelve 0 en lugar de ''
+                    if ($compraActual != ''){
+                        $compraMostrar =  htmlspecialchars($compraventa->getcompraAinfo()->getNombre());    
+                    }else $compraMostrar = '';
                 ?>   
                 <div class="col-md-3">
                     <label for="select_compraA" class="form-label">Compra a:</label>
-                    <select name="data[compraA]" class="form-select" id="select_compraA">
-                        <option value = "" disabled <?= $compraActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($listaEntidades as $id => $entidad): ?>
-                            <option value="<?= $id?>" <?= $id == $compraActual ? 'selected' : '' ?>><?= $entidad ?></option>
-                        <?php endforeach; ?>
+                    <select name="data[compraA]" class="form-select" id="select_compraA" data-placeholder = "Compra a...">
+                        <option value = ""><option>
+                        <option value = <?= $compraActual ?> selected><?= $compraMostrar ?></option>
                     </select>     
                 </div>
                 <div class="col-md-2">
@@ -118,7 +118,8 @@ en JS tmb se usa algo parecido
                 </div>
                 <div class="col-md-2">
                     <div class="form-floating mb-1">
-                        <input class="form-control" type="text" name="data[precioCompraReal]" id="precioCompraReal" placeholder="Precio" value = "<?= (isset($compraventa))?$compraventa->getprecioCompraReal():''?>">
+                        <input class="form-control" type="text" name="data[precioCompraReal]" id="precioCompraReal" placeholder="Precio" onchange = "igualValor(this.form.precioCompraReal, this.form.precioCompraDeclarado)"
+                            value = "<?= (isset($compraventa))?$compraventa->getprecioCompraReal():''?>">
                         <label for="precioCompraReal">Precio</label>
                     </div>
                 </div>
@@ -128,6 +129,7 @@ en JS tmb se usa algo parecido
                         <label for="precioCompraDeclarado">Precio declarado</label>
                     </div>
                 </div>
+            
                 <div class="col-md-2">
                     <div class="form-floating mb-1">
                         <input type="date" name="data[fechaFactComp]" class="form-control" id="fechaFactComp" placeholder="Fecha factura" value="<?=(isset($compraventa))?$compraventa->getfechaFactComp():''?>"> 
@@ -135,14 +137,13 @@ en JS tmb se usa algo parecido
                     </div>
                 </div>
                 <?php
-                    $impuestos = ["IVA", "REBU", "NETO"];
-                    $impuestoCompra = isset($compraventa) ? ($compraventa->getimpuestoCompra() ?? '') : '';//si existe compraventa (impuesto no es null=>imppuesto; si es null=>'') si no exite compraventa ''
+                    $impuestoCompra = isset($compraventa) ? ($compraventa->getimpuestoCompra() ?? '') : '';//si existe compraventa (impuesto no es null=>impuesto; si es null=>'') si no exite compraventa ''
                 ?>
                 <div class="col-md-2">
                     <label for="impuestoCompra" class="form-label">Impuesto:</label>
                     <select name="data[impuestoCompra]" class="form-select" id="impuestoCompra">
                         <option value = "" disabled <?= $impuestoCompra === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($impuestos as $impuesto): ?>
+                        <?php foreach (IMPUESTOS as $impuesto): ?>
                             <option value="<?= $impuesto?>" <?= $impuesto == $impuestoCompra ? 'selected' : '' ?>><?= $impuesto ?></option>
                         <?php endforeach; ?>
                     </select>     
@@ -154,11 +155,31 @@ en JS tmb se usa algo parecido
                 <div class="col-md-2">
                     <label class="etiqueta" for="anuladaCompra" >Anulada</label>
                     <input class="cuadro_text" type="checkbox" name="data[anuladaCompra]" id="anuladaCompra" <?=isset($compraventa) ? (($compraventa->getanuladaCompra()==1) ? 'checked' : '') : '' ?>><!--si estoy editando existe compraventa evalua esto ($compraventa->getterminado()==1) ? 'checked' : '', por eso esta todo entre () y si no estoy editando pone '' que son los : '' del final-->
-                </div>  
+                </div>
+            
+                <div class="col-md-2">
+                    <div class="form-floating mb-1">
+                        <input type="number" name="data[kmCompra]" class="form-control" id="kmCompra" placeholder="km compra" value="<?=(isset($compraventa))?$compraventa->getkmCompra():''?>">
+                        <label for="kmCompra">Km compra</label>
+                    </div>
+                </div>
+                 <div class="col-md-5">
+                    <div class="form-floating mb-1">
+                        <textarea cols = "50" rows = "5" name="data[formaPagoCompra]" class="form-control" id="formaPagoCompra" placeholder="Pago Venta"><?=(isset($compraventa))?quitaEspecialChar($compraventa->getformaPagoCompra()):''?></textarea>
+                        <label for="formaPagoCompra">Forma Pago</label>
+                    </div>
+                </div>
                 <div class="col-md-2">
                     <label class="etiqueta" for="reserva" >Reserva</label>
                     <input class="cuadro_text" type="checkbox" name="data[reserva]" id="reserva" <?=isset($compraventa) ? (($compraventa->getreserva()==1) ? 'checked' : '') : '' ?>><!--si estoy editando existe compraventa evalua esto ($compraventa->getterminado()==1) ? 'checked' : '', por eso esta todo entre () y si no estoy editando pone '' que son los : '' del final-->
-                </div>  
+                </div>
+                <div>
+                    <button type="button" class="boton_link" onclick = "window.location.href='<?= DIRECTORIO ?>contratoCompraventaPDF/<?= $compraventa->getid_compraventa() ?>?op=compra';" title="Contrato de compraventa en PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z"/>
+                        </svg>
+                    </button>  
+                </div>    
             </div>
         </div>
         <p class = "titulo_marco">VENTA</p>
@@ -167,14 +188,15 @@ en JS tmb se usa algo parecido
                 <?php
                     $vendeActual = isset($compraventa) ? $compraventa->getvendeA() : '';//estoy editando
                     $vendeActual = $vendeActual!=0 ? $vendeActual : ''; //si el campo no es obligatorio hay que poner esto
+                    if ($compraActual != ''){
+                        $vendeMostrar =  htmlspecialchars($compraventa->getvendeAinfo()->getNombre());    
+                    }else $vendeMostrar = '';
                 ?>   
                 <div class="col-md-3">
                     <label for="select_vendeA" class="form-label">Vende a:</label>
-                    <select name="data[vendeA]" class="form-select" id="select_vendeA">
-                        <option value = "" disabled <?= $vendeActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($listaEntidades as $id => $entidad): ?>
-                            <option value="<?= $id?>" <?= $id == $vendeActual ? 'selected' : '' ?>><?= $entidad ?></option>
-                        <?php endforeach; ?>
+                    <select name="data[vendeA]" class="form-select" id="select_vendeA" data-placeholder = "Vende a...">
+                        <option value = ""></option>
+                        <option value = <?= $vendeActual ?> selected><?= $vendeMostrar ?></option>
                     </select>     
                 </div>
                 <div class="col-md-2">
@@ -185,7 +207,8 @@ en JS tmb se usa algo parecido
                 </div>
                 <div class="col-md-2">
                     <div class="form-floating mb-1">
-                        <input class="form-control" type="text" name="data[precioVentaReal]" id="precioVentaReal" placeholder="Precio" value = "<?= (isset($compraventa))?$compraventa->getprecioVentaReal():''?>">
+                        <input class="form-control" type="text" name="data[precioVentaReal]" id="precioVentaReal" 
+                            placeholder="Precio" onchange = "igualValor(this.form.precioVentaReal, this.form.precioVentaDeclarado)" value = "<?= (isset($compraventa))?$compraventa->getprecioVentaReal():''?>">
                         <label for="precioVentaReal">Precio</label>
                     </div>
                 </div>
@@ -202,14 +225,13 @@ en JS tmb se usa algo parecido
                     </div>
                 </div>
                 <?php
-                    $impuestos = ["IVA", "REBU", "NETO"];
                     $impuestoVenta = isset($compraventa) ? ($compraventa->getimpuestoVenta() ?? '') : '';//si existe compraventa (impuesto no es null=>imppuesto; si es null=>'') si no exite compraventa ''
                 ?>
                 <div class="col-md-2">
                     <label for="impuestoVenta" class="form-label">Impuesto:</label>
                     <select name="data[impuestoVenta]" class="form-select" id="impuestoVenta">
                         <option value = "" disabled <?= $impuestoVenta === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                        <?php foreach ($impuestos as $impuesto): ?>
+                        <?php foreach (IMPUESTOS as $impuesto): ?>
                             <option value="<?= $impuesto?>" <?= $impuesto == $impuestoVenta ? 'selected' : '' ?>><?= $impuesto ?></option>
                         <?php endforeach; ?>
                     </select>     
@@ -228,6 +250,31 @@ en JS tmb se usa algo parecido
                         <label for="comercialVenta">Comercial venta</label>
                     </div>
                 </div>
+                <div class="col-md-2">
+                    <div class="form-floating mb-1">
+                        <input type="number" name="data[kmVenta]" class="form-control" id="kmVenta" placeholder="km venta" value="<?=(isset($compraventa))?$compraventa->getkmVenta():''?>">
+                        <label for="kmVenta">Km venta</label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-floating mb-1">
+                        <textarea cols = "50" rows = "5" name="data[clausulasVenta]" class="form-control" id="clausulasVenta" placeholder="Clausulas Venta"><?=(isset($compraventa))?quitaEspecialChar($compraventa->getclausulasVenta()):''?></textarea>
+                        <label for="clausulasVenta">Clausulas Venta</label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-floating mb-1">
+                        <textarea cols = "50" rows = "5" name="data[formaPagoVenta]" class="form-control" id="formaPagoVenta" placeholder="Pago Venta"><?=(isset($compraventa))?quitaEspecialChar($compraventa->getformaPagoVenta()):''?></textarea>
+                        <label for="formaPagoVenta">Forma Pago</label>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="boton_link" onclick = "window.location.href='<?= DIRECTORIO ?>contratoCompraventaPDF/<?= $compraventa->getid_compraventa() ?>?op=venta';" title="Contrato de compraventa en PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>  
     </div>
@@ -238,7 +285,7 @@ en JS tmb se usa algo parecido
         <p class = "etiqueta green">IVA: <?=number_format($compraventa->IVA(), 2, ',', '.')?>€</p>                        
         <p class = "etiqueta green">Beneficion-IVA: <?=number_format($compraventa->beneficioMenosIVA(), 2, ',', '.')?>€* <span class = "etiqueta_mini">*Se restan los gastos</span></p>
     </div>
- <!--Formulario nuevo cobro-->
+    <!--Formulario nuevo cobro-->
     <button type="button" class="boton_link small" id="boton_form_cobro" onclick="mostrar('cobro')">+</button>
     <form action="<?= DIRECTORIO ?>nuevo_cobro_compraventa" method="post" id = "cobro" hidden>
         <fieldset class="mi-fieldset">
@@ -463,46 +510,78 @@ en JS tmb se usa algo parecido
 
 <script>
     $(document).ready(function() {
-        $('#select_vehiculo').select2({
-            placeholder: "Buscar vehiculo",
-            allowClear: true,
-            width: '100%'
-        });
-        $('#select_empresa').select2({
-            placeholder: "Buscar empresa",
-            allowClear: true,
-            width: '100%'
-        });
-        $('#select_compraA').select2({
-            placeholder: "Buscar compra a:",
-            allowClear: true,
-            width: '100%'
-        });
-        $('#select_vendeA').select2({
-            placeholder: "Buscar vende a:",
-            allowClear: true,
-            width: '100%'
-        });
+       
         formulario = document.getElementById("gasto");
-        let botonGuardar = document.getElementById("botonGuardarGasto");
-        if (botonGuardar){/* cuando la pagina es para una nueva compraventa no se cargan el boton de nuevo gasto con lo que no existe"botonGuardarGasto" */
-            botonGuardar.addEventListener("click", (evento) => {/* capturo evento boton submit */
+        let botonGuardarGasto = document.getElementById("botonGuardarGasto");
+        if (botonGuardarGasto){/* cuando la pagina es para una nueva compraventa no se cargan el boton de nuevo gasto con lo que no existe"botonGuardarGasto" */
+            botonGuardarGasto.addEventListener("click", (evento) => {
                 if (!validarTablaEnteros([formulario.importe])){
-                    evento.preventDefault();
-                    return false;
-                }   /* como el evento un submit, despues de aqui continua con el evento submit y se va a la funcion de abajo que captura el evento submit formulario*/ 
+                    return false;/* esto cancela el evento submit del boton */
+                }
             });
         }
-        /* esto era para preguntar al usuario si queria guardar el gasto en gastosVehiculo pero al final no se hace para no duplicar datos, en gastosVehiculo se muestran tmb los gastos de la compraventa pero sin duplicar
-            formulario.addEventListener("submit", (evento) => { capturo submit del formulario 
-             if (confirm ("Desea guardar este gasto como gasto del vehiculo?")){
-                aqui se igualan campos en el formulario de la compra venta con los del vehiculo porque tiene otro nombre diferente
-                document.getElementById("comentariosGastoVehiculo").value = document.getElementById("observaciones").value;
-                document.getElementById("guardarEnVehiculo").value = "si"; campo para indiecar al controller que tiene que guardar tmb en gastovehiculo
+        /* evento change de mi formulario. Para detectar que se ha cambiado algun campo en el formulario 
+        Con one la funcion del evento se ejecuta solo una vez, jquery desvincula el evento del elemento, no es necesario que se dispare el evento en cada cambio de formulario.
+        Otra forma hubiera sido dejar on y dentro de la funcion del evento poner un if(!formularioModificado){ formularioModificado = true; ...
+        y asi solo se ejecuta una vez pero si que se dispara el evento y viene a la funcion en cada cambio de formulario, con one ni siquiera se dispara, 
+        ya no hay evento, habria que cargar otra vez el evento  $('#nuevaCompraventa').one('change', ....*/
+        var formularioModificado = false;
+        $('#nuevaCompraventa').one('change', e => {
+            formularioModificado = true;
+            var botonGuardarForm = document.getElementById('botonGuardar');
+            botonGuardarForm.classList.remove('disable');
+            botonGuardarForm.disabled = false;
+        });
+        /* cuando se cierra la ventana el evento beforeunload y unloas, no puede usar alert, ni confirm, solo se puede mostrar el diálogo nativo del navegado */
+        window.addEventListener('beforeunload', e =>{
+            let botonClick = e.explicitOriginalTarget;/* explicitOriginalTarget me devuelve el elemento deo DOM que ha originado el evento salir de la ventana */
+            /* si la salida no la origina el boton "guardar" es una salida por cierre de ventana o pulsando atras 
+            cuando no usaba el modal de jquery UI tmb podia comprobar si se habia pulsado el boton "salir" y asi no tenia que poner a false formularioModificado, pero con el modal UI, 
+            al pulsar salir salta el modal y despues se pulsa el boton Aceptar o Cancelar del modal con lo que el evento beforeunload ya no sabe que fue pulsacion de salir. Los botones
+            de UI no tienen id, podria haber consultado algun otro atributo del boton pero para no complicarlo cambio la variable formularioModificado en el boton salir */
+            if ((botonClick.id != "botonGuardar") && (formularioModificado == true)){/* si no pulsado guardar y se ha modificado entro en el if y el navegador avisa al usuario*/
+                e.preventDefault(); 
+                e.returnValue = ""; // Obligatorio para que el navegador muestre el diálogo
             }
-        }); */
+        });
+        /* jQuery UI modal, aqui se asigna el pluging al <div> de la pagina HTML correspondiente y se configura */
+        $('#confirm').dialog({
+            resizable : false,
+            show : 'slideDown',
+            hide : 'explode',
+            autoOpen : false,
+            buttons : {
+                "Aceptar" : function () {
+                    $(this).dialog('close');
+                    formularioModificado = false;/*lo pongo a false para que en el evento beforeunload de cerrar la ventana no me salte el aviso del navegador  */
+                    window.location.href='<?= DIRECTORIO ?>compraventas?num_pagina=1';
+                },
+                "Cancelar" : function (){
+                    $(this).dialog('close');
+                }
+            }
+        });
+        /* boton de guardar el formulario, esta parte se puede quedar en el HTML */
+        document.getElementById('botonGuardar').addEventListener("click", (e) => {
+            let nuevaCompraventa = document.getElementById('nuevaCompraventa');
+            if (!validarCompraventa(nuevaCompraventa)) {
+                e.preventDefault(); /*si pongo return false no cancela el submit, me dice la IA que el return false solo cancela cuando se pone en onclick =" return false"
+                pero no se porque en otros sitios si que lo cancela */
+            };
+        });
+        /* boton de salir del formulario */
+        document.getElementById('salir').addEventListener('click', e =>{
+            if (formularioModificado == true){
+                $('#confirm').dialog('open');
+            } else {
+                window.location.href='<?= DIRECTORIO ?>compraventas?num_pagina=1';
+            }
+        });
         /* para mostrar el mensaje de guardado correctamente de arriba */
         mensaje("mensaje");
+        selectAjaxVehiculos(document.getElementById('select_vehiculo'));
+        selectAjaxEntidades(document.getElementById('select_compraA'));
+        selectAjaxEntidades(document.getElementById('select_vendeA'));
     });
 </script>
 <!-- lo mismo que he hecho con PHP al principio del documento lo puedo hacer con JS asi:

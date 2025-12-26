@@ -16,7 +16,7 @@
                     <input type="date" name="hasta" class="cuadro_text" id="hasta" value="<?= $_GET['hasta'] ?? ''?>">
                 </div>
                 <div class="col-md-2">
-                    <label for="coche" class="etiqueta">coche:</label>
+                    <label for="coche" class="etiqueta">Coche</label>
                     <input type="search" name="coche" class="cuadro_text" id="coche" value="<?= $_GET['coche'] ?? ''?>">
                 </div>
                 <div class="col-md-2">
@@ -31,7 +31,7 @@
     </form>
 </div>
 <!-- este mensaje se usa al cargar la pagina, se le envia con $_GET en la URL  -->
-<?php if (!empty($_GET['mensaje'])): ?>
+<?php if (!empty($_GET['mensaje'])): ?><!-- este div solo se crea si existe $_GET['mensaje'] -->
     <div class = "mensajeGuardar <?=htmlspecialchars($_GET['tipo'] ?? '')?>" id = "mensaje">
         <?= htmlspecialchars($_GET['mensaje']) ?>
     </div>
@@ -44,11 +44,11 @@
             <th scope="col">Contrato</th>
             <th scope="col">Vehiculo</th>
             <th scope="col">Cliente</th>
-            <th scope="col">Fecha_inicio</th>
+            <th scope="col">Fecha inicio</th>
+            <th scope="col">Fecha fin</th>
             <th scope="col">Precio</th>
-            <th scope="col">Dias</th>
             <th scope="col">Fianza</th>
-            <th scope="col">SIN FACTURAR</th>
+            <th scope="col">Sin facturar</th>
             <th scope="col">Empresa</th>
             <th scope="col">Estado</th>
             <th scope="col">Observaciones</th>
@@ -59,28 +59,37 @@
         <?php foreach ($alquileres as $alquiler):?>
             <tr>
                 <?php $total += $alquiler->getprecio()+$alquiler->getsumaPrecio(); ?>
-                <td><?=$alquiler->getcontrato()?></td>
-                <td><!-- (para evitar que la página abierta pueda acceder a la ventana original con window.opener), rel="noopener noreferrer" -->
+                <td><!-- sino se le carga nada a href, o se le carga '', el navegador lo cambia por la URL de la pagina actual, asi que no puedo usar el atributo href ya que hay alquileres sin ruta, uso un data  -->
+                    <a href ="#" data-ruta = "<?=$alquiler->getcarpeta()?>" onclick="copyLink(this.dataset.ruta); return false;">
+                        <i title = "Copiar <?=$alquiler->getcarpeta()?>" class="bi bi-clipboard-check"></i>
+                    </a>
+                    <?=$alquiler->getcontrato()?>
+                </td>
+                <td class = "tooltip-cell info" data-tooltip="<?=$alquiler->getvehiculoInfo()->getMarca_modelo()?>"><!-- (para evitar que la página abierta pueda acceder a la ventana original con window.opener), rel="noopener noreferrer" -->
                     <a href="<?= DIRECTORIO ?>detalles_alquiler/<?=$alquiler->getid()?>" target="_blank" rel="noopener noreferrer">
                         <?=$alquiler->getvehiculoInfo()->getMarca_modelo()?>
                     </a>
                 </td>
-                <td style="color:blueviolet"><?=$alquiler->getclienteInfo()->getNombre()?></td>
+                <td title="<?=$alquiler->getclienteInfo()->getNombre()?>" style="color:blueviolet"><?=$alquiler->getclienteInfo()->getNombre()?></td>
                 <td><?=formatea_fecha($alquiler->getfechaInicio())?></td>
+                <!-- a la fecha de inicio le sumo los dias del alquiler y los dias de las ampliaciones y saco la fecha de fin, mas facil asi que sacarla de la ultima ampliacion -->
+                <td><?=formatea_fecha(fechaMasDias($alquiler->getfechaInicio(), $alquiler->getdias()+$alquiler->getsumaDias()))?></td>
         <!--tooltip-cell clase para poner borde verde al pasar con el raton-->
-                <td class="tooltip-cell info borde" data-tooltip="KM: <?= $alquiler->getkilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()+$alquiler->getsumaGanancia()?>; Comision comercial: <?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€">                                    
+                <td class="tooltip-cell info borde" data-tooltip="KM: <?= $alquiler->getkilometros()+$alquiler->getsumaKilometros()?>; Comercial: <?=$alquiler->getcomercial()?>; Ciudad: <?=$alquiler->getciudad()?>; Entrega: <?=$alquiler->getentrega()?>; Ganancia: <?=$alquiler->getganancia()+$alquiler->getsumaGanancia()?>; Comision comercial: <?=number_format($alquiler->getcomisionComercial()+$alquiler->getsumaComisionComercial(), 2, ',', '.')?>€">                                    
                     <?=number_format($alquiler->getprecio()+$alquiler->getsumaPrecio(), 2, ',', '.')?>€
                 </td>
-                <td><?=$alquiler->getdias()+$alquiler->getsumaDias()?></td>
-                <td class="tooltip-cell info borde" data-tooltip="<?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€">
+                <td class="tooltip-cell info borde" data-tooltip="Devuelta:<?=number_format($alquiler->getfianzaDevuelta(), 2, ',', '.')?>€">
                     <?=number_format($alquiler->getfianza(), 2, ',', '.')?>€
                 </td>
-                <td>€</td>
+                <td><?= number_format($alquiler->getsumaCobros(), 2, ',', '.') ?>€</td>
                 <td><?=$alquiler->getempresaInfo()->getNombre()?></td>
                 <td>
                     <?php $estadoActual = $alquiler->getestado();?>
-                    <select class="selectEstado" id = "<?=$alquiler->getid()?>" data-contrato = "<?=$alquiler->getcontrato()?>"><!-- con data-contrato guardo el nº de contrato para luego mostrarlo en el mensaje -->
-                        <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc--</option>
+                    <select class="selectEstado" id = "<?=$alquiler->getid()?>" 
+                            data-contrato = "<?=$alquiler->getcontrato()?>"
+                            style=<?= $estadoActual == "Entregado" ? "color:blueviolet" : '""' ?>><!-- con data-contrato guardo el nº de contrato para luego mostrarlo en el mensaje -->
+                        <!-- tmb podria haberlo puesto asi: <?= $estadoActual == "Entregado" ? 'style="color:blueviolet"' : '' ?> -->
+                            <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc--</option>
                         <?php foreach (ESTADOS_ALQUILER as $opcion): ?>
                             <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : '' ?>><?= $opcion ?></option>
                         <?php endforeach; ?>
@@ -134,8 +143,11 @@ $(document).ready(function() {
     if (document.getElementById("buscar").value!=""){
         document.getElementById("buscar").focus();
     }
-/* para el texto flotante en observaciones */
+    /* para el texto flotante en observaciones */
     tooltip();
+    mensaje("mensaje");/* le paso el id del div donde sale el mensaje y la funcion mensaje le aplica una clase para que aparezca 
+    con efectos y otra para que desaparezca */
+    /* para lista desplegable que cabia el estado del alquiler */
     document.querySelectorAll('.selectEstado').forEach(select => {/* seleccion todas las listas desplegables de selecEstado */
         select.addEventListener('change', evento => {/* capturo evento change para cada lista desplegable del estado */
             let idAlquiler = select.id; /* id del alquiler que es el mismo que el id del select */
@@ -144,15 +156,16 @@ $(document).ready(function() {
             let contrato = select.dataset.contrato; /* nº de contrato guardado con una propiedad data-contrato en el select, para mostrar en el  mensaje */
             fetch('/mis_pruebas/estadoAlquiler?id=' + idAlquiler + '&estado=' + nuevoEstado)
                 .then(response => {
-                        return response.text();
+                        return response.text();/* esto tiene que estar para que los datos lleguen a data. El cuerpo viene en un stream y tienes que procesarlo usando: response.text() → si devuelves texto */
                 })
                 .then(data => {
                     zonaMensaje.classList.add("exito");
                     zonaMensaje.innerHTML = data + ' al estado: ' + '<strong>' + nuevoEstado + '</strong> del contrato; ' + contrato;
-                    mensaje("mensajeAJAX");
+                    mensaje("mensajeAJAX");/* le paso el nombre del id, en la funcion mensaje sacara el elementoById */
                 })
                 .catch(error => {
                     zonaMensaje.innerHTML = "Error: " + error;
+                    mensaje("mensajeAJAX");
                 });
         });
     });

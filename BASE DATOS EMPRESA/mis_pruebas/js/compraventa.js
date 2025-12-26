@@ -12,13 +12,11 @@ function validarCompraventa (formulario){//para acceder a elmentos del formulari
     }
     let impCompra = formulario.impuestoCompra.value;
     let impVenta = formulario.impuestoVenta.value;
-    if ((impCompra == "IVA" && impVenta!= "IVA") || (impCompra == "REBU" && impVenta!= "REBU")){
-        alert ("Impuesto de compra diferente a impusto de venta");
-        return false;
-    }
-    if (impCompra == "NETO" && impVenta!= "IVA"){
-        alert ("Impuesto  de venta tiene que ser IVA");
-        return false;
+    if (precioVenta != 0 && precioCompra != 0) {
+        if ((impCompra == "IVA" && impVenta!= "IVA") || (impCompra == "REBU" && impVenta!= "REBU")){
+            alert ("Impuesto de compra diferente a impusto de venta");
+            return false;
+        }
     }
     let compraA = formulario.select_compraA.value; 
     let vendeA = formulario.select_vendeA.value; 

@@ -1,7 +1,10 @@
 <?php
 
-$valor = 500;
-    $clave = (21/100)+1; /*de la constante IVA=21 saco el 1,21 */
-    echo ($valor-($valor/$clave));/* calculo el iva */
+$fecha ="2025-10-25";
+$dias =0;
+$decision = (($dias == 20) || ($dias == 10)) ? 'yes' : 'no'; 
+    $fechaSumada = new DateTime($fecha);
+    $fechaSumada->modify("+{$dias} days");
+    echo $fechaSumada->format("Y-m-d");
 
 ?>

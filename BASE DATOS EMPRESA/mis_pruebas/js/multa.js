@@ -8,8 +8,8 @@ function validarMulta (formulario){//para acceder a elmentos del formulario se u
     return true; //al devolver true al regresar al formulario se hace el submit, si se devuelve false no se hace submit
 }
 function actualizaVencimiento(formulario){
-    let fechaMulta = new Date(formulario.fecha.value);
-    let fechaMultaMili = fechaMulta.getTime();/* paso a milisegundos para poder dumarle o restarle tiempo, tiene que ser en milisegundos */
+    let fechaNotificacion = new Date(formulario.fechaNotificacion.value);
+    let fechaMultaMili = fechaNotificacion.getTime();/* paso a milisegundos para poder dumarle o restarle tiempo, tiene que ser en milisegundos */
     let dias20Mili = 20*24*60*60*1000; /* 20 dias en milisegundos */
     let fechaVencimiento = new Date(fechaMultaMili + dias20Mili); /* sumo las dos fechas en milis y lo convierto en una fecha formato "fecha+hora". Tengo que pasarlo a formato yyyy-m-dd */ 
     let fechaVencimientoString = ''; 

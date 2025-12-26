@@ -36,8 +36,8 @@ class Router {
         if (null != ($callback)) {
             $result= call_user_func($callback, $param);
             if (!is_null($result)){ 
-                echo $result;            }
-             
+                echo $result;            
+            } 
          } else { echo "Funcion nula";}    
     } 
 }

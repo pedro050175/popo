@@ -20,7 +20,9 @@ class CompraventaRepository{
     public function getnumpaginas():int{
         return $this->numPaginas;
     }
-    /* problema en este SELECT, cuando las fechas de la tabla sql son nulas porqeu no se han introducido el selecto no lee esas filas */
+    /* cuando la fecha de la tabla sql es nula porque no se ha introducido nada, el select no lee esa fila 
+    si se busca por ese campo,pero es logico ya qe si filtro por una fecha de venta pero no se ha vendido 
+    no debe salir*/
     public function findAllDinamico(): ?array {
         /* se pagina con los campos de busqueda este nuevo sistema de consulta dinamica puede paginar con todo.
         No necesito comprobar si el num_pagina del $_GET es mayor que la cantidad de paginas porque eso se controla en la pagina HTML, asi que no necesito saber la cantidad de paginas antes
@@ -42,7 +44,7 @@ class CompraventaRepository{
         /*COUNT OVER me devuelve la filas leidas en resultado[0]['totalFilas'] para paginar. Como he visto que no hace falta saber el numero de paginas antes de hacer la consulta, porque se 
         controla en HTML, el COUNT OVER no seria necesario porque puedo saber las filas leidas haciendo un count(resultado_consulta) en la funcion $this->extraer_todos o incluso aqui
         puedo hacer el COUNT de lo que me devuelve $this->extraer_todos. COn el COUNT OVER me ahora hacer el COUNT del relsultado que tmb gasta tiempo */
-        $sql = "SELECT CV.*, C.Nombre AS nombreComprador, V.Nombre AS nombreVendedor, E.Nombre AS nombreEmpresa, 
+        $sql = "SELECT CV.*, C.Nombre AS nombreCompra, V.Nombre AS nombreVende, E.Nombre AS nombreEmpresa, 
             VV.Marca_modelo, VV.Matricula, VV.Bastidor, VV.Km, VV.Fecha_matricula,
             COALESCE(CC.sumaCobros,0) AS sumaCobros,
             COALESCE(PC.sumaPagos,0) AS sumaPagos,
@@ -117,7 +119,7 @@ class CompraventaRepository{
         y no usar parametros ? */
         $desplazamiento = intval($desplazamiento);
         $filasPagina   = intval(FILAS_PAGINA);
-        $sql .= " ORDER BY CV.trimestre DESC, CV.id_compraventa DESC LIMIT $desplazamiento, $filasPagina";
+        $sql .= " ORDER BY CV.trimestre DESC, VV.Marca_modelo, CV.id_compraventa DESC LIMIT $desplazamiento, $filasPagina";
         // Preparar y ejecutar
         $this->conexionPDO->consulta($sql, $params);
         // Obtener resultados
@@ -128,7 +130,7 @@ class CompraventaRepository{
     public function analisis(){
         /* usada en pag analisis_compraventas_tri. lee las compraventas del trimestre ordenadas por empresa para mostrar benficio e IVA de cada una */
         $sql = "SELECT CV.precioCompraReal, CV.precioCompraDeclarado, CV.precioVentaReal, CV.precioVentaDeclarado, CV.impuestoCompra, CV.impuestoVenta, CV.empresa,
-                        E.Nombre AS nombreEmpresa, VV.Marca_modelo,
+                        E.Nombre AS nombreEmpresa, VV.Marca_modelo, VV.Matricula,
                         COALESCE(GC.sumaGastos,0) AS sumaGastos
                     FROM compraventas CV
                     LEFT JOIN entidad E ON CV.empresa = E.id_entidad
@@ -187,14 +189,21 @@ class CompraventaRepository{
             ':anuladaVenta' => (isset($data['anuladaVenta'])) ? 1 : 0,
             ':observaciones' => $data['observaciones'],
             ':trimestre' => (isset($data['trimestre'])) ? 1 : 0,
-            ':empresa' => $data['empresa']
+            ':empresa' => $data['empresa'], 
+            ':kmCompra' => $data['kmCompra'], 
+            ':kmVenta' => $data['kmVenta'], 
+            ':clausulasVenta' => $data['clausulasVenta'], 
+            ':formaPagoCompra' => $data['formaPagoCompra'],
+            ':formaPagoVenta' => $data['formaPagoVenta']
+
         ];
         $parametros = Limpiar_parametros($parametros);
         $sql = "INSERT INTO compraventas (fechaCompra, precioCompraReal, precioCompraDeclarado, fechaFactComp, nodeclaraComp, impuestoCompra, compraA, anuladaCompra, vehiculo, reserva, 
-                                            comercialVenta, fechaVenta, precioVentaReal, precioVentaDeclarado, fechaFactVent, nodeclaraVent, impuestoVenta, vendeA, anuladaVenta, observaciones, trimestre, empresa) VALUES 
+                                            comercialVenta, fechaVenta, precioVentaReal, precioVentaDeclarado, fechaFactVent, nodeclaraVent, impuestoVenta, vendeA, anuladaVenta, observaciones, 
+                                            trimestre, empresa, kmCompra, kmVenta, clausulasVenta, formaPagoCompra, formaPagoVenta) VALUES 
                                          (:fechaCompra, :precioCompraReal, :precioCompraDeclarado, :fechaFactComp, :nodeclaraComp, :impuestoCompra, :compraA, :anuladaCompra, :vehiculo, :reserva, 
-                                            :comercialVenta, :fechaVenta, :precioVentaReal, :precioVentaDeclarado, :fechaFactVent, :nodeclaraVent, :impuestoVenta, :vendeA, :anuladaVenta, :observaciones, :trimestre, :empresa)"; 
-        //var_dump($parametros);
+                                            :comercialVenta, :fechaVenta, :precioVentaReal, :precioVentaDeclarado, :fechaFactVent, :nodeclaraVent, :impuestoVenta, :vendeA, :anuladaVenta, :observaciones, 
+                                            :trimestre, :empresa, :kmCompra, :kmVenta, :clausulasVenta:, :formaPagoCompra, :formaPagoVenta)"; 
         $this->conexionPDO->consulta($sql, $parametros);
         return $this->conexionPDO->id_ultimo_insertado();//devuelvo el id ultimo creado para regresar al movimiento creado
     }
@@ -222,31 +231,53 @@ class CompraventaRepository{
             ':anuladaVenta' => (isset($data['anuladaVenta'])) ? 1 : 0,
             ':observaciones' => $data['observaciones'],
             ':trimestre' => (isset($data['trimestre'])) ? 1 : 0,
-            ':empresa' => $data['empresa']
+            ':empresa' => $data['empresa'], 
+            ':kmCompra' => $data['kmCompra'], 
+            ':kmVenta' => $data['kmVenta'],  
+            ':clausulasVenta' => $data['clausulasVenta'], 
+            ':formaPagoCompra' => $data['formaPagoCompra'],
+            ':formaPagoVenta' => $data['formaPagoVenta'] 
         ];
         $parametros = Limpiar_parametros($parametros);
         $sql = "UPDATE compraventas SET fechaCompra=:fechaCompra, precioCompraReal=:precioCompraReal, precioCompraDeclarado=:precioCompraDeclarado, fechaFactComp=:fechaFactComp, nodeclaraComp=:nodeclaraComp, 
                                         impuestoCompra=:impuestoCompra, compraA=:compraA, anuladaCompra=:anuladaCompra, vehiculo=:vehiculo, reserva=:reserva, comercialVenta=:comercialVenta, 
                                         fechaVenta=:fechaVenta, precioVentaReal=:precioVentaReal, precioVentaDeclarado=:precioVentaDeclarado, fechaFactVent=:fechaFactVent, nodeclaraVent=:nodeclaraVent,
-                                        impuestoVenta=:impuestoVenta, vendeA=:vendeA, anuladaVenta=:anuladaVenta, observaciones=:observaciones, trimestre=:trimestre, empresa=:empresa
+                                        impuestoVenta=:impuestoVenta, vendeA=:vendeA, anuladaVenta=:anuladaVenta, observaciones=:observaciones, trimestre=:trimestre, empresa=:empresa, 
+                                        kmCompra=:kmCompra, kmVenta=:kmVenta, clausulasVenta=:clausulasVenta, formaPagoCompra=:formaPagoCompra, formaPagoVenta=:formaPagoVenta
                                      WHERE id_compraventa = :id_compraventa";
        
         $this->conexionPDO->consulta($sql, $parametros);
     }
     public function read (int $id): ?Compraventa {
-        /*se usa en nueva_compraventa, los totales de pagos, cobros no los necesito porque tengo que leer esas tablas para mostar todas las lineas, asi que con esos datos 
-        sumare y calculo. total de gastos si lo leo poara calcualr beneficio de la compra venta sin tener que sumar los gastos, porque lo muestro antes de mostrar la tabla con los gastos*/
-        $this->conexionPDO->consulta("SELECT CV.*, COALESCE(GC.sumaGastos,0) AS sumaGastos 
+        /*se usa en nueva_compraventa, los totales de pagos, cobros no los necesito porque tengo que leer cobros y pagos para mostrar esas tablas.
+         Total de gastos si lo leo para calcular beneficio de la compra venta sin tener que sumar los gastos, porque lo muestro antes de mostrar la tabla con los gastos*/
+        $this->conexionPDO->consulta("SELECT CV.*, COALESCE(GC.sumaGastos,0) AS sumaGastos, V.Marca_modelo, V.Matricula, V.Bastidor, 
+                                        C.Nombre AS nombreCompra, E.Nombre AS nombreVende 
                                         FROM compraventas CV
+                                        JOIN vehiculos V ON V.id_vehiculo = CV.vehiculo
                                         LEFT JOIN entidad C ON CV.compraA = C.id_entidad 
-                                        LEFT JOIN entidad V ON CV.vendeA = V.id_entidad 
-                                        LEFT JOIN entidad E ON CV.empresa = E.id_entidad 
-                                        LEFT JOIN vehiculos VV ON CV.vehiculo = VV.id_vehiculo
+                                        LEFT JOIN entidad E ON CV.vendeA = E.id_entidad                        
                                         LEFT JOIN (SELECT compraventa, SUM(importe) AS sumaGastos 
                                                    FROM gastoscompraventa 
                                                    GROUP BY compraventa) GC ON GC.compraventa = CV.id_compraventa
                                             WHERE (id_compraventa=$id)");        
+                
         return $this->extraer_registro();
+    }
+    public function readContrato (int $id): ?Array {
+        /*se usa para hacer el contrato en PDF*/
+        $this->conexionPDO->consulta("SELECT CV.*, V.*, 
+                                        C.Nombre AS nombreCompra, C.CIF_DNI AS CIF_DNICompra, C.Direccion AS DireccionCompra, C.Observaciones AS ObservacionesCompra,
+                                        VD.Nombre AS nombreVende, VD.CIF_DNI AS CIF_DNIVende, VD.Direccion AS DireccionVende, VD.Observaciones AS ObservacionesVende,
+                                        EM.Nombre AS nombreEmpresa, EM.CIF_DNI AS CIF_DNIEmpresa, EM.Direccion AS DireccionEmpresa, EM.Observaciones AS ObservacionesEmpresa
+                                        FROM compraventas CV
+                                        JOIN vehiculos V ON V.id_vehiculo = CV.vehiculo
+                                        LEFT JOIN entidad C ON CV.compraA = C.id_entidad 
+                                        LEFT JOIN entidad VD ON CV.vendeA = VD.id_entidad                        
+                                        LEFT JOIN entidad EM ON CV.empresa = EM.id_entidad                        
+                                        WHERE (id_compraventa=$id)");        
+        /* devuelvo la tabla leida directamente, sin convertir en objeto */
+        return $this->conexionPDO->extraer_registro();
     }
     public function delete (int $id): void {
        $this->conexionPDO->consulta("DELETE FROM compraventas WHERE (id_compraventa=$id)");
@@ -308,7 +339,7 @@ class CompraventaRepository{
             /* problema en este SELECT, cuando las fechas de la tabla sql son nulas porqeu no se han introducido el selecto no lee esas filas 
             asi que lo solucion poniendo OR CV.fechaCompra IS NULL, la otra posibilidad es poner COALESCE(CV.fechaVenta, '1900-01-01') si es null le da valor 1900-01-01 */
 
-        $this->conexionPDO->consulta("SELECT CV.*, C.Nombre AS nombreComprador, V.Nombre AS nombreVendedor, E.Nombre AS nombreEmpresa, 
+        $this->conexionPDO->consulta("SELECT CV.*, C.Nombre AS nombreCompra, V.Nombre AS nombreVende, E.Nombre AS nombreEmpresa, 
                                                 VV.Marca_modelo, VV.Matricula, VV.Bastidor, VV.Km, VV.Fecha_matricula, 
                                                 COALESCE(CC.sumaCobros,0) AS sumaCobros, 
                                                 COALESCE(PC.sumaPagos,0) AS sumaPagos, 

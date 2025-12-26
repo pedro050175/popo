@@ -9,6 +9,9 @@
     <fieldset class="mi-fieldset">
     <legend class="mi-legend">Analisis coche</legend>
     <div class = bloque-movimiento>
+         <div class="col-md-2">
+                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">
+            </div>
         <div class="row">
             <div class="col-md-3">
                 <label for="desde" class="etiqueta">Desde:</label>
@@ -24,7 +27,7 @@
                     $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo(). ' ' .$vehiculo->getMatricula() . ' ' .$vehiculo->getBastidor();//con la variable $entidades creo un array asociativo ['id']=Nombre
                 }
             ?>            
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <label for="select_vehiculo" class="etiqueta">Vehiculo</label><!--label fuera del floating para que no se solape con el cuadro de texto -->
                 <div class="form-floating mb-1">
                     <select name="cocheId" multiple
@@ -43,17 +46,17 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">
                 <button type="button" id = "ocultarAnalisis">Ocultar =></button>
                 <button type="submit" class="boton_link" id = "botonAnalisis">Alquileres</button>
-                <spam class="etiqueta_mini">Muestra alquileres entre fechas del 1º vehiculo seleccionado en la lista</spam>
+                <button type="button" class="boton_link" id = "exportarExcelPHP" title="Exportar a Excel los alquileres de un vehiculo entre las fechas elegidas"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+                <i class="etiqueta_mini">Muestra alquileres entre fechas del 1º vehiculo seleccionado en la lista</i>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="boton_link" id = "botonMeses">Total alquileres On/Off</button>
+                <button type="button" class="boton_link" id = "botonMeses">Total alquileres</button>
                 <spam class="etiqueta_mini">Muestra todos los vehiculos seleccionados en la lista (la lista solo muestra vehiculos que tienen alquileres)</spam>
-                <button type="button" class="boton_link" id = "botonGastosVehiculo">Gastos vehiculo(todas fechas)On/Off</button>
+                <button type="button" class="boton_link" id = "botonGastosVehiculo">Gastos vehiculo</button><i class="etiqueta_mini">Totales</i>
             </div>
         </div>
     </div>
@@ -174,7 +177,7 @@
         </div>
     <?php endforeach ;?>
     <table class = "tabla_resumen" >
-        <caption>Resumen alquileres de las fechas<?= $alquileres[0]->getvehiculoInfo()->getMarca_modelo()?></caption>
+        <caption>Resumen alquileres de las fechas <?= $alquileres[0]->getvehiculoInfo()->getMarca_modelo()?></caption>
         <thead>
             <tr>
                 <th>Total Alquileres</th>
@@ -219,7 +222,7 @@
         /* esta manera de declarar es para que la funcion initTooldtips() se pueda llamar desde fuera de esta capsula 
         tambien la podria haber declara en mis archivos de JS*/
         window.initTooltips = function() {
-            // elege las de la clase tooltip-cell y que no tengan el atributo data-tooltip-init
+            // elige las de la clase tooltip-cell y que no tengan el atributo data-tooltip-init
             document.querySelectorAll('.tooltip-cell:not([data-tooltip-init])').forEach(cell => {
                 cell.setAttribute('data-tooltip-init', '1'); 
                 // marcar como inicializada escribiendo data-tooltip-init=1 en las celdas que tiene el altributo tooltip-cell
@@ -307,16 +310,13 @@
                     })
                 })
                 .then(response => {
-                        console.log("Respuesta HTTP:", response.status);
                         return response.text();/* respuesta en texto plano, Si el servidor devolviera JSON, usaría response.json()*/
                 })
                 .then(data => {
-                    console.log("Contenido recibido:", data);
                     cont.innerHTML = data;
                     cont.style.display = "block"; //muestro los datos
                 })
                 .catch(error => {
-                    console.error("Error en fetch:", error);
                     cont.innerHTML = "Error: " + error;
                 });
                 /* ........................................................... */
@@ -329,17 +329,14 @@
                     })
                 })
                 .then(response => {
-                        console.log("Respuesta HTTP:", response.status);
                         return response.text()
                 })
                 .then(data => {
-                    console.log("Contenido recibido:", data);
                     contTotal.innerHTML = data;
                     contTotal.style.display = "block"; //muestro los datos
                     initTooltips();
                 })
                 .catch(error => {
-                    console.error("Error en fetch:", error);
                     contTotal.innerHTML = "Error: " + error;
                 });
             }  
@@ -365,17 +362,14 @@
                 //me traigo total de ganancia por meses, entre 2 fechas, de los vehiculos elegidos
                 fetch('/mis_pruebas/gastos_cuota_vehiculo?coche=' + cocheIds[0])
                 .then(response => {
-                        console.log("Respuesta HTTP:", response.status);
-                        return response.text()
+                        return response.text()/* esto tiene que estar para que los datos lleguen a data. El cuerpo viene en un stream y tienes que procesarlo usando: response.text() → si devuelves texto */
                 })
                 .then(data => {
-                    console.log("Contenido recibido:", data);
                     cont.innerHTML = data;
                     cont.style.display = "block"; //muestro los datos
                     initTooltips(); /* activo flotantes */
                 })
                 .catch(error => {
-                    console.error("Error en fetch:", error);
                     cont.innerHTML = "Error: " + error;
                 });
             }  else {alert ("Elija un coche");}  
@@ -384,7 +378,7 @@
                 contTotal.style.display = "none";
             }
     });
-    
+    /* para enviar formulario de alquileres de un vehiculo */
     document.getElementById("formAnalizar").addEventListener("submit", function(eventoSubmit){//capturo evento enviar del formulario
             eventoSubmit.preventDefault();//evita el envío automático
             var desde = document.getElementById("desde").value;
@@ -394,6 +388,21 @@
                 this.submit();//envio formulario
             }
     });
+    /* para exportar a Excel los alquileres de un coche entre fechas con PHP */
+    document.getElementById('exportarExcelPHP').addEventListener('click', evento => {
+        let miFormulario = document.getElementById('formAnalizar');
+        let action = miFormulario.getAttribute('action');/* guardo el atributo action y se lo cambio para hacer submit a otra funcion del Controller diferente, 
+        asi reutilizo el formulario */ 
+        miFormulario.setAttribute('action', '/mis_pruebas/exportarAlquileresVehiculo');
+        var desde = document.getElementById("desde").value;
+        var hasta = document.getElementById("hasta").value;
+        let okFechas = validaFechas(desde, hasta);
+        if (okFechas){
+            miFormulario.submit();
+        }
+        miFormulario.setAttribute('action', action); /* le vuelvo a poner la action que tenia */
+    });
+
     document.getElementById("ocultarAnalisis").addEventListener("click", function(){
         const contenedor = document.getElementById("datosAnalisis");
         if (contenedor!=null){//cuando aun no hay datos mostrados no existe el contenedor   
@@ -409,7 +418,6 @@
             }
         }
     });
-
     $(document).ready(function() {
         $('#select_vehiculo').select2({
             placeholder: "Buscar vehiculo",

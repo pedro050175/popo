@@ -10,6 +10,16 @@ use repositories\AmpliacionAlquilerRepository;
 use repositories\GastoAlquilerRepository;
 use repositories\CobroAlquilerRepository;
 use repositories\CompraventaRepository;
+require __DIR__ . '/../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class AlquilerController {
 
@@ -21,6 +31,7 @@ class AlquilerController {
     private CobroAlquilerRepository $cobroRepository;
     private CompraventaRepository $compraventaRepository;
     private Pages $pages;
+    private Spreadsheet $spreadsheet;
  
     function __construct(){
         $this->entidadRepository = new EntidadRepository();
@@ -30,8 +41,8 @@ class AlquilerController {
         $this->gastoAlquilerRepository = new GastoAlquilerRepository();
         $this->cobroRepository = new CobroAlquilerRepository();
         $this->compraventaRepository = new CompraventaRepository();
-
         $this->pages = new Pages();
+        $this->spreadsheet = new Spreadsheet();
     
     }
     public function list() {
@@ -41,10 +52,8 @@ class AlquilerController {
         $this->pages->render('alquileres', ['alquileres' => $alquileres, 'error' => $error, 'numPaginas' => $numPaginas]);
     }
     public function add(): void {  //despues de pinchar en nueva_entidad viene a este metodo add que carga pagina nueva:entidad con GET para meter datos y alli con boton sumit carga de nuevo la misma pagina pero con POST, con lo que se ejecuta save
-        $entidades = $this->entidadRepository->listReducida(); //carga los propietarios para la lista desplegable propietario
         $empresas = $this->entidadRepository->empresasGrupo(); //carga solo empresas del grupo
-        $vehiculos = $this->vehiculoRepository->findAll($paginar=false);//carga los vehiculos para la lista desplegable vehiculo
-        $this->pages->render('nuevo_alquiler', ['entidades' => $entidades, 'vehiculos' => $vehiculos,  'empresas' => $empresas]);
+        $this->pages->render('nuevo_alquiler', ['empresas' => $empresas]);
     } 
     public function save(): void { //se usa para guardar una nueva entidad o una entidad editada, al pulsar boton sumit de nueva_entidad se carga pagina nueva_entidad con POST y viene a este metodo
         $alquiler=$_POST['data']; //coge los datos del metodo POST, los graba y salta al listado entidades
@@ -53,15 +62,13 @@ class AlquilerController {
         exit;
     }
     public function edit(int $id): void {//si se pulsa editar entidad, vendra aqui y leera esa entidad y con render cargara la pagina nueva entidad con una entidad, alli se ve que hay una entidad y se cargan los datos leidos en el formulario y al pulsar sumit se llama a save con POST
-        $entidades = $this->entidadRepository->listReducida(); //carga entidades para la lista desplegable propietario
         $empresas = $this->entidadRepository->empresasGrupo(); //carga solo empresas del grupo
-        $vehiculos = $this->vehiculoRepository->findAll($paginar=false);//para rellenar el campo de lista desplegable 'coche' leo todas las entidades
         $alquiler = $this->alquilerRepository->read($id);
         $ampliaciones = $this->ampliacionRepository->ampliacionesAlquiler($id);
         $cobros = $this->cobroRepository->cobrosAlquiler($id);
         $gastos = $this->gastoAlquilerRepository->gastosAlquiler($id);
 
-        $this->pages->render('nuevo_alquiler', ['alquiler' => $alquiler, 'vehiculos' => $vehiculos, 'empresas' => $empresas, 'entidades' => $entidades, 'ampliaciones' => $ampliaciones, 'cobros' => $cobros, 'gastos' => $gastos]);
+        $this->pages->render('nuevo_alquiler', ['alquiler' => $alquiler, 'empresas' => $empresas, 'ampliaciones' => $ampliaciones, 'cobros' => $cobros, 'gastos' => $gastos]);
     }
     public function detalles_alquiler(int $id): void {
         $alquiler = $this->alquilerRepository->read($id);
@@ -76,10 +83,13 @@ class AlquilerController {
         header('Location: '.DIRECTORIO.'alquileres?num_pagina=1');
         exit; 
     }
-    public function analizar(){
+    public function analizar(){/* se usa en analisis alquiler */
         $vehiculos = $this->vehiculoRepository->cochesAlquilados();//para rellenar el campo de lista desplegable 'coche' leo los coches que se han alquilado
         if (isset($_GET['cocheId'])){//ya se han leido las entidades, 2º vez que pasa por aqui
-            $alquileres = $this->alquilerRepository->alquileresVehiculo(); 
+            $desde = $_GET['desde'];
+            $hasta = $_GET['hasta'];
+            $coche = $_GET['cocheId'];
+            $alquileres = $this->alquilerRepository->alquileresVehiculo($desde, $hasta, $coche); 
             $ids = $this->leer_ids($alquileres);
             if (!empty($ids)){
                 foreach ($ids as $id){
@@ -93,6 +103,87 @@ class AlquilerController {
             }
         
         }else $this->pages->render('analisis_alquileres', ['vehiculos' => $vehiculos]); 
+    }
+    public function exportarAlquileresVehiculo(){
+           
+            $desde = $_GET['desde'];
+            $hasta = $_GET['hasta'];
+            $coche = $_GET['cocheId'] ?? '';
+            $alquileres = $this->alquilerRepository->alquileresVehiculo($desde, $hasta, $coche); 
+            $ids = $this->leer_ids($alquileres);
+            if (!empty($ids)){
+                foreach ($ids as $id){
+                    $ampliaciones[$id] = $this->ampliacionRepository->ampliacionesAlquiler($id);
+                    
+                }
+            }
+            $sheet = $this->spreadsheet->getActiveSheet();
+
+            $sheet->setCellValue('A1', 'Vehiculo');
+            $sheet->setCellValue('B1', $alquileres[0]->getvehiculoInfo()->getMarca_modelo());
+            $sheet->getStyle('A1:B1')->getFont()->setBold(true)->setSize(14);/* negrita y tamaño 14*/
+            $sheet->getStyle('A1:B1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('f8daf0');
+            
+            $sheet->setCellValue('A2', 'Contrato');
+            $sheet->setCellValue('B2', 'Cliente');
+            $sheet->setCellValue('C2', 'Fecha');
+            $sheet->setCellValue('D2', 'Km');
+            $sheet->setCellValue('E2', 'Precio');
+            $sheet->setCellValue('F2', 'Dias');
+            $sheet->setCellValue('G2', 'Ciudad');
+            $sheet->setCellValue('H2', 'Comercial');
+            $sheet->setCellValue('I2', 'Estado');
+            $sheet->setCellValue('J2', 'Observaciones');
+            $sheet->getStyle('A2:J2')->getFont()->setBold(true);
+            $sheet->getStyle('A2:J2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);/* centrado */
+            $sheet->getStyle('A2:J2')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('c8daf0');/* color de fondo */
+            $fila = 2;
+            /* leo alquiler y todos sus ampliaciones */
+            foreach ($alquileres as $alquiler){
+                $fila ++;
+                $sheet->setCellValue("A$fila", $alquiler->getcontrato());
+                $sheet->setCellValue("B$fila", $alquiler->getclienteInfo()->getNombre());
+                $sheet->setCellValue("C$fila", Date::PHPToExcel($alquiler->getfechaInicio()));/* con esto se convierte en un timestamp Excel: numero que representa una fecha */
+                $sheet->getStyle("C$fila")->getNumberFormat()->setFormatCode('dd/mm/yyyy'); /* aqui aplica formato fecha */
+                $sheet->setCellValue("D$fila", $alquiler->getkilometros());
+                $sheet->setCellValue("E$fila", $alquiler->getprecio());
+                $sheet->getStyle("E$fila")->getNumberFormat()->setFormatCode('#,##0.00 €');
+                $sheet->setCellValue("F$fila", $alquiler->getdias());
+                $sheet->setCellValue("G$fila", $alquiler->getciudad());
+                $sheet->setCellValue("H$fila", $alquiler->getcomercial());
+                $sheet->setCellValue("I$fila", $alquiler->getestado());
+                $sheet->setCellValue("J$fila", $alquiler->getobservaciones());
+                $alquilerActual = $alquiler->getid();
+                if (!empty($ampliaciones[$alquilerActual])){
+                    foreach ($ampliaciones[$alquilerActual] as $ampliacion){/*ampliaciones de alquiler */
+                        $fila ++;
+                        $sheet->setCellValue("B$fila", 'Ampliacion de: '. $alquiler->getcontrato());
+                        $sheet->setCellValue("C$fila", Date::PHPToExcel($ampliacion->getfechaInicio()));
+                        $sheet->getStyle("C$fila")->getNumberFormat()->setFormatCode('dd/mm/yyyy'); /* aqui aplica formato fecha */
+                        $sheet->setCellValue("D$fila", $ampliacion->getkilometros());
+                        $sheet->setCellValue("E$fila", $ampliacion->getprecio());
+                        $sheet->getStyle("E$fila")->getNumberFormat()->setFormatCode('#,##0.00 €');
+                        $sheet->setCellValue("F$fila", $ampliacion->getdias());
+                    }
+                }
+            }
+            $ultimaFilaDatos = $fila;
+            $fila++; 
+            $sheet->setCellValue("D$fila", 'Suma');/* sumo el total del importe, la formula tiene que estar en ingles o me dara error */
+            $sheet->setCellValue("E$fila", "=SUM(E3:E$ultimaFilaDatos)");
+            $sheet->getStyle("E$fila")->getNumberFormat()->setFormatCode('#,##0.00 €');
+            $sheet->getStyle("D$fila:E$fila")->getFont()->setBold(true)->setSize(12);
+
+            for ($col = 'A'; $col <= 'J'; $col++) {/* ancho columna automatico */
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+            $sheet->getStyle("A2:J$fila")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);/* bordes */
+
+            $writer = new Xlsx($this->spreadsheet);
+            $writer->save('ventas.xlsx');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="ventas.xlsx"');
+            readfile('ventas.xlsx');
     }
     private function leer_ids (array $alquileres): ?array {
         foreach ($alquileres as $alquiler){
@@ -230,9 +321,15 @@ class AlquilerController {
         $id = $_GET['id'];
         $estado = $_GET['estado'];
         $this->alquilerRepository->estadoAlquiler($id, $estado);
+        /* le pongo un header al mensaje que devuelvo con el echo ya que esta funcion se llama con fetch y no uso la pagina header.php que le pongo a todas las paginas */
         header("Content-Type: text/plain; charset=UTF-8");
         echo ("Actualizado correctamente");
     }
+    public function contratoAlquilerPDF($id){
+        
+
+    } 
+
 /* ---------------------------------------------------------------------------------------------- */
     //esta funcion no se esta usando la dejo para que se vea otra forma de trabajar las tablas
     public function totalAlquileresVehiculosFechaV2(){//version que lee los alquileres y las ampliaciones vehiculo por vehiclo

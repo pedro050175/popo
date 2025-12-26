@@ -51,8 +51,7 @@ function ordenar(array $tabla):array{
                     $tabla[$i]=$tabla[$j];
                     $tabla[$j]=$temp;
                 }
-            }
-            
+            } 
         }
     return $tabla;
     }
@@ -66,10 +65,10 @@ function parametrosIn(array &$in, array &$parametros, array $datosConvertir){//e
     $in = implode(',', $placeholders); //la tabla del IN la convierte a string separado por ,
 }
 function diferenciaMeses (? string $fecha):int{
-    $hoy = new DateTime();
-    $fechaAnterior = new DateTime($fecha);
-    $diferencia = $hoy->diff($fechaAnterior);
-    // Diferencia total en meses (años convertidos a meses)
+    $hoy = new DateTime(); /* fecha actual */
+    $fechaAnterior = new DateTime($fecha); /* $fecha lo convierto en una fecha */
+    $diferencia = $hoy->diff($fechaAnterior); /* me devuelve la diferencia */
+    // Diferencia total en años * 12 lo paso a meses y le sumo la diferencia en meses (años convertidos a meses)
     $meses = ($diferencia->y * 12) + $diferencia->m;
     return $meses;
 }
@@ -82,4 +81,23 @@ function ivaDeValorSinIVA($valor): float{
     /* devuelve  $valor*0,21  */
     $clave = (IVA/100); /*de la constante IVA=21 saco el 0,21 */
     return ($valor*$clave);/* calculo el iva */
+}
+/* devuelve la misma fecha sumandole los dias */
+function fechaMasDias(string $fecha, int $dias){
+    $fechaSumada = new DateTime($fecha);
+    /* modify Lee frases naturales (“+10 days”, “-1 month”, etc.) */
+    $fechaSumada->modify("+{$dias} days");
+    return ($fechaSumada->format("Y-m-d"));
+}
+/* indica si la fecha de hoy+la cantidad de dias que se le pasa como parametro 
+es mayor o igual a la que se le pasa como parametro, se usa para los vencimientos, para
+saber si una fecha vencimiento esta proxima al cumplirse */ 
+function fechaProxHoy(string $fecha, int $dias){
+    $fecha = new DateTime($fecha);
+    $hoy = new DateTime();
+    $hoy->modify("+{$dias} days");
+    if ($hoy >= $fecha) {
+        return true;
+    }
+    return false;
 }

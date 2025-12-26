@@ -1,4 +1,4 @@
-<form action="<?= DIRECTORIO ?>nuevo_alquiler" method="post">
+<form action="<?= DIRECTORIO ?>nuevo_alquiler" method="post" id = "nuevoAlquiler">
     <?php if (isset($alquiler)) :?>
     <input type="hidden" name="data[id]" id='id' value="<?=$alquiler->getid()?>">
     <?php endif;?>      
@@ -8,8 +8,8 @@
                 <h5 class="titulo_prin"><?= (isset($alquiler)) ? 'Modificar ' : 'Nuevo '?>alquiler</h5>
             </div>
             <div class="col text-end">  
-                <input type="button" class="boton_link" value = "Salir" onclick="window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';">   
-                <button type="submit" class="boton_submit" onclick = "return validarAlquiler(this.form)"> <?= (isset($alquiler)) ? 'Guardar' : 'Crear' ?></button>
+                <input type="button" class="boton_link" value = "Salir" id = "salir">   
+                <button type="submit" class="boton_submit disable" id = "botonGuardar" disabled onclick = "return validarAlquiler(this.form);"> <?= (isset($alquiler)) ? 'Guardar' : 'Crear' ?></button>
                 <button type="reset" class="boton_submit" <?= (isset($alquiler)) ? 'hidden' : ''?>>Limpiar</button>
             </div>
         </div>
@@ -43,9 +43,9 @@
         <?php
             $vehiculoActual = isset($alquiler) ? $alquiler->getvehiculo() : '';//estoy editando un alquiler
             $vehiculoActual = $vehiculoActual!=0 ? $vehiculoActual : '';//getvehiculo devuelve un numero, si no existe el vehiculo devuelve un 0 (CAMPOS_alquiler lo pone a cero)
-            foreach ($vehiculos as $vehiculo){
-                $listaVehiculos[$vehiculo->getId()] = $vehiculo->getMarca_modelo(). ' ' .$vehiculo->getMatricula() . ' ' .$vehiculo->getBastidor();//con la variable $entidades creo un array asociativo ['id']=Nombre
-            }
+           if ($vehiculoActual != ''){
+                    $vehiculoActualMostrar =  htmlspecialchars($alquiler->getvehiculoInfo()->getMarca_modelo().' '.$alquiler->getvehiculoInfo()->getMatricula().' '. $alquiler->getvehiculoInfo()->getBastidor());    
+                }else $vehiculoActualMostrar = '';
         ?>
         <div class="row">            
             <div class="col-md-4">
@@ -53,13 +53,12 @@
                 <div class="form-floating mb-1">
                     <select name="data[vehiculo]" 
                             class="form-select" id="select_vehiculo" 
+                            data-placeholder = "Vehiculo alquilado"
                             required
                             oninvalid="this.setCustomValidity('Por favor selecciona un vehiculo')"
                             oninput="this.setCustomValidity('')"><!--esto hay que ponerlo para que al seleccionar un valor se entere de que has seleccionado y no de error otra vez-->
-                        <option value = "" disabled <?= $vehiculoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
-                        <?php foreach ($listaVehiculos as $id => $vehiculo): ?>
-                            <option value="<?= $id?>" <?= $id === $vehiculoActual ? 'selected' : '' ?>><?= $vehiculo ?></option>
-                        <?php endforeach; ?>
+                        <option value = ""></option><!--hay que ponerle value="" para que el required funcione, asi el navegador entiende que si no se elije nada el valor es "" y te avisa, sino se pone, no tiene ningun valor y no avisa-->
+                        <option value = <?= $vehiculoActual ?> selected><?= $vehiculoActualMostrar ?></option>
                     </select> 
                 </div>
             </div>
@@ -131,20 +130,18 @@
             <?php
                 $clienteActual = isset($alquiler) ? $alquiler->getcliente() : '';//estoy editando un alquiler
                 $clienteActual = $clienteActual!=0 ? $clienteActual : '';
-                foreach ($entidades as $entidad){
-                    $lista[$entidad->getId()] = $entidad->getNombre();//con la variable $entidades creo un array asociativo ['id']=Nombre
-                }
+                if ($clienteActual != ''){
+                        $clienteMostrar =  htmlspecialchars($alquiler->getclienteinfo()->getNombre());    
+                    }else $clienteMostrar = '';
             ?>
             <div class="col-md-3">
                 <label for="select_cliente" class="form-label">Cliente</label>
-                <select name="data[cliente]" class="form-select" id="select_cliente" 
+                <select name="data[cliente]" class="form-select" id="select_cliente" data-placeholder = "Cliente alquiler..."
                         required
                         oninvalid="document.getElementById('clienteError').style.display='block';"
                         oninput="document.getElementById('clienteError').style.display='none';"><!--esto es por si no elige un cliente, oninvalid es evento de no elegido (clienteError esta definido abajo) y oninput es evento de que se ha eligido para quitar el error-->
-                    <option value = "" disabled <?= $clienteActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
-                    <?php foreach ($lista as $id => $entidad): ?>
-                        <option value="<?= $id?>" <?= $id == $clienteActual ? 'selected' : '' ?>><?= $entidad ?></option>
-                    <?php endforeach; ?>
+                    <option value = ""></option>
+                    <option value = <?= $clienteActual ?> selected><?= $clienteMostrar ?></option>
                 </select> 
                 <div id="clienteError" style="color: red; display: none; font-size: 0.9em;">
                     Por favor selecciona un cliente.
@@ -193,15 +190,35 @@
                         <option disabled <?= $estadoActual === '' ? 'selected' : '' ?>>--Selecc. opcion--</option>
                         <?php foreach (ESTADOS_ALQUILER as $opcion): ?>
                             <option value="<?= $opcion ?>" <?= $opcion === $estadoActual ? 'selected' : '' ?>><?= $opcion ?></option>
-                        <?php endforeach; ?>
-                    </select> 
-                    <label for="estado">Estado</label>
-                </div>
+                            <?php endforeach; ?>
+                        </select> 
+                        <label for="estado">Estado</label>
+                    </div>
             </div>
-            <div class="col-md-3">
+        </div>
+        <div class="row">
+            <div class="col-md-4">
                 <div class="form-floating mb-1">
                     <input type="text" name="data[observaciones]" class="form-control" id="observaciones" placeholder="Observaciones" value="<?=(isset($alquiler))?quitaEspecialChar($alquiler->getobservaciones()):''?>">
                     <label for="observaciones">Observaciones</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating mb-1">
+                    <input type="text" name="data[carpeta]" class="form-control" id="carpeta" placeholder="carpeta" value="<?=(isset($alquiler))?quitaEspecialChar($alquiler->getcarpeta()):''?>">
+                    <label for="carpeta">Carpeta</label>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-floating mb-1">
+                    <button type="button" class="boton_link" onclick = "copy('carpeta')" title="Copiar la ruta de la carpeta del alquiler"><i class="bi bi-clipboard-check"></i></button>
+                </div>
+                <div class="form-floating mb-1">
+                    <button type="button" class="boton_link" onclick = "" title="Contrato de alquiler en PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div> 
@@ -221,13 +238,13 @@
                     <input class="cuadro_text" type="date" name="ampliacion[fechaInicio]" id="fechaInicio" required>
                 </div>        
                 <div class="col-md-3">
+                    <label for="dias" class="etiqueta">Dias:</label> 
+                    <input class="cuadro_text" type="number" name="ampliacion[dias]" id="dias" onchange = "actualizaFechaFin(this.form)" placeholder="dias">
+                </div>
+                <div class="col-md-3">
                     <label for="fechaFin" class="etiqueta">Fecha fin:</label> 
                     <input class="cuadro_text" type="date" name="ampliacion[fechaFin]" id="fechaFin">
-                </div>        
-                <div class="col-md-3">
-                    <label for="dias" class="etiqueta">Dias:</label> 
-                    <input class="cuadro_text" type="number" name="ampliacion[dias]" id="dias" placeholder="dias">
-                </div>        
+                </div>                
                 <div class="col-md-3">
                     <label for="kilometros" class="etiqueta">Kilometros:</label> 
                     <input class="cuadro_text" type="number" name="ampliacion[kilometros]" id="kilometros" placeholder="kilometros">
@@ -260,44 +277,46 @@
     <!--listado ampliaciones-->
     <p class="titulo_sec">Ampliaciones</p>
     <div>
-    <table class="table table-hover table-striped fina">
-        <thead>
-            <tr>
-                <th class="etiqueta" scope="col">Comision</th>
-                <th class="etiqueta" scope="col">Fecha inicio</th>
-                <th class="etiqueta" scope="col">Precio</th>
-                <th class="etiqueta" scope="col">Dias</th>
-                <th class="etiqueta" scope="col">Kilometros</th>
-                <th class="etiqueta" scope="col">Ganancia</th>
-                <th class="etiqueta" scope="col">Observaciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $total = $alquiler->getprecio(); ?>
-            <?php foreach($ampliaciones as $ampliacion) :?>
+        <table class="table table-hover table-striped fina">
+            <thead>
                 <tr>
-                    <?php $total += $ampliacion->getprecio();?> 
-                    <td><?=number_format($ampliacion->getcomisionComercial  (), 2, ',', '.');?>€</td>                 
-                    <td><?=formatea_fecha($ampliacion->getfechaInicio())?></td>
-                    <td><?=number_format($ampliacion->getprecio(), 2, ',', '.');?>€</td>         
-                    <td><?=$ampliacion->getdias();?></td>         
-                    <td><?=$ampliacion->getkilometros();?></td>         
-                    <td><?=number_format($ampliacion->getganancia(), 2, ',', '.');?>€</td>         
-                    <td><?=$ampliacion->getobservaciones()?></td>         
-                    <td><div class="btn-group" role="group">
-                        <a href="<?= DIRECTORIO ?>editar_ampliacion_alquiler/<?=$ampliacion->getidAmpliacion()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a href="../borrar_ampliacion_alquiler/<?=$ampliacion->getidAmpliacion()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta ampliacion?');">  
-                            <i class="bi bi-trash"></i>
-                        </a>   
-                        </div>
-                    </td>
-            </tr>    
-            <?php endforeach ;?>    
-        </tbody>
-    </table> 
-    <p class='etiqueta_desplazada'> Suma: <?=number_format($total, 2, ',', '.')?>€</p>   
+                    <th class="etiqueta" scope="col">Fecha inicio</th>
+                    <th class="etiqueta" scope="col">Dias</th>
+                    <th class="etiqueta" scope="col">Fecha fin</th>
+                    <th class="etiqueta" scope="col">Precio</th>
+                    <th class="etiqueta" scope="col">Kilometros</th>
+                    <th class="etiqueta" scope="col">Comision</th>
+                    <th class="etiqueta" scope="col">Ganancia</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $total = $alquiler->getprecio(); ?>
+                <?php foreach($ampliaciones as $ampliacion) :?>
+                    <tr>
+                        <?php $total += $ampliacion->getprecio();?> 
+                        <td><?=formatea_fecha($ampliacion->getfechaInicio())?></td>
+                        <td><?=$ampliacion->getdias();?></td>         
+                        <td><?=formatea_fecha($ampliacion->getfechaFin())?></td>
+                        <td><?=number_format($ampliacion->getprecio(), 2, ',', '.');?>€</td>         
+                        <td><?=$ampliacion->getkilometros();?></td>         
+                        <td><?=number_format($ampliacion->getcomisionComercial  (), 2, ',', '.');?>€</td>                 
+                        <td><?=number_format($ampliacion->getganancia(), 2, ',', '.');?>€</td>         
+                        <td><?=$ampliacion->getobservaciones()?></td>         
+                        <td><div class="btn-group" role="group">
+                            <a href="<?= DIRECTORIO ?>editar_ampliacion_alquiler/<?=$ampliacion->getidAmpliacion()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="../borrar_ampliacion_alquiler/<?=$ampliacion->getidAmpliacion()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar esta ampliacion?');">  
+                                <i class="bi bi-trash"></i>
+                            </a>   
+                            </div>
+                        </td>
+                </tr>    
+                <?php endforeach ;?>    
+            </tbody>
+        </table> 
+        <p class='etiqueta_desplazada'> Suma: <?=number_format($total, 2, ',', '.')?>€</p>   
     </div>
     <!--Formulario nuevo cobro-->
     <button type="button" class="boton_link small" id="boton_form_cobro" onclick="mostrar('cobro')">+</button>
@@ -331,7 +350,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="parteImporteFianza" >Parte Importe fianza:</label>
-                    <input class="cuadro_text" type="texto" name="cobro[parteImporteFianza]" id="parteImporteFianza" placeholder="parteImporteFianza">
+                    <input class="cuadro_text" type="texto" name="cobro[parteImporteFianza]" id="parteImporteFianza" placeholder="No dejarlo vacio">
                 </div>
                 <div class="col-md-3">
                     <label class="etiqueta" for="banco" >Banco:</label>
@@ -348,6 +367,9 @@
             </div>
             <input type="hidden" name="cobro[alquiler]"  id="alquiler" value="<?=$alquiler->getid()?>">
         </fieldset>
+        <span class = "etiqueta_mini">Si la fianza va en el mismo cobro que el alquiler se pondra facturado cuando facture la parte que es de alquiler y ya no se computa en pagos sin facturar. 
+            Y si la fianza va en un cobro ella sola, HAY QUE PONER en "PARTE_IMPORTE_FIANZA" EL COBRO, no dejarlo vacio, y no se pone facturado nunca, 
+            se resta ella misma porque es un cobro = x y cantidad de fianza = x y en el total sin facturar computa como 0 porque se hace importe - parte fianza</span>
     </form>
 
     <!--listado cobros-->
@@ -373,11 +395,11 @@
                     <tr>
                         <?php $totalCobros += $cobro->getimporte();?> 
                         <td><?=formatea_fecha($cobro->getfecha())?></td>         
-                        <td><?=number_format($cobro->getimporte(), 2, ',', '.');?>€</td>         
-                        <td><?=$cobro->getfacturado() ? 'SI' : 'NO'?></td>         
+                        <td style = "text-align: center"><?=number_format($cobro->getimporte(), 2, ',', '.');?>€</td>         
+                        <td style = "text-align: center"><?=$cobro->getfacturado() ? 'SI' : 'NO'?></td>         
                         <td><?=$cobro->getfacturadoA()?></td>         
                         <td><?=$cobro->getcontratoHacienda()?></td>         
-                        <td><?=$cobro->getfianza() ? 'SI' : 'NO'?></td>         
+                        <td style = "text-align: center"><?=$cobro->getfianza() ? 'SI' : 'NO'?></td>         
                         <td><?=number_format($cobro->getparteImporteFianza(), 2, ',', '.');?>€</td>                  
                         <td><?=$cobro->getbanco()?></td>         
                         <td><?=$cobro->getobservaciones()?></td>         
@@ -439,60 +461,86 @@
     <!--listado gastos-->
     <p class="titulo_sec">Gastos</p>
     <div>
-    <table class="table table-hover table-striped fina">
-        <thead>
-            <tr>
-                <th class="etiqueta" scope="col">Fecha</th>
-                <th class="etiqueta" scope="col">Importe</th>
-                <th class="etiqueta" scope="col">Tipo</th>
-                <th class="etiqueta" scope="col">Paga otro</th>
-                <th class="etiqueta" scope="col">Pagado</th>
-                <th class="etiqueta" scope="col">Observaciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $totalGastos = 0; ?>
-            <?php foreach($gastos as $gasto) :?>
+        <table class="table table-hover table-striped fina">
+            <thead>
                 <tr>
-                    <?php $totalGastos += $gasto->getimporte();?> 
-                    <td><?=formatea_fecha($gasto->getfecha())?></td>         
-                    <td><?=number_format($gasto->getimporte(), 2, ',', '.');?>€</td>         
-                    <td><?=$gasto->gettipo()?></td>
-                    <td><?=$gasto->getpagaOtro() ? 'SI' : 'NO'?></td>         
-                    <td><?=$gasto->getpagado() ? 'SI' : 'NO'?></td>         
-                    <td><?=$gasto->getobservaciones()?></td>         
-                    <td><div class="btn-group" role="group">
-                        <a href="<?= DIRECTORIO ?>editar_gasto_alquiler/<?=$gasto->getidGasto()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a href="../borrar_gasto_alquiler/<?=$gasto->getidGasto()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este gasto?');">   
-                            <i class="bi bi-trash"></i>
-                        </a>   
-                        </div>
-                    </td>
-                </tr>    
-            <?php endforeach ;?>   
-        </tbody>
-    </table>            
-    <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
+                    <th class="etiqueta" scope="col">Fecha</th>
+                    <th class="etiqueta" scope="col">Importe</th>
+                    <th class="etiqueta" scope="col">Tipo</th>
+                    <th class="etiqueta" scope="col">Paga otro</th>
+                    <th class="etiqueta" scope="col">Pagado</th>
+                    <th class="etiqueta" scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $totalGastos = 0; ?>
+                <?php foreach($gastos as $gasto) :?>
+                    <tr>
+                        <?php $totalGastos += $gasto->getimporte();?> 
+                        <td><?=formatea_fecha($gasto->getfecha())?></td>         
+                        <td><?=number_format($gasto->getimporte(), 2, ',', '.');?>€</td>         
+                        <td><?=$gasto->gettipo()?></td>
+                        <td><?=$gasto->getpagaOtro() ? 'SI' : 'NO'?></td>         
+                        <td><?=$gasto->getpagado() ? 'SI' : 'NO'?></td>         
+                        <td><?=$gasto->getobservaciones()?></td>         
+                        <td><div class="btn-group" role="group">
+                            <a href="<?= DIRECTORIO ?>editar_gasto_alquiler/<?=$gasto->getidGasto()?>?alquiler=<?=$alquiler->getid()?>" role="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="../borrar_gasto_alquiler/<?=$gasto->getidGasto()?>?alquiler=<?=$alquiler->getid()?>" class= "btn btn-sm btn-outline-danger" onclick="return confirm('Estas seguro que quieres borrar este gasto?');">   
+                                <i class="bi bi-trash"></i>
+                            </a>   
+                            </div>
+                        </td>
+                    </tr>    
+                <?php endforeach ;?>   
+            </tbody>
+        </table>            
+        <p class='etiqueta_desplazada'> Suma: <?=number_format($totalGastos, 2, ',', '.')?>€</p>
     </div> 
 <?php endif;?>
 <script>
     $(document).ready(function() {
-        $('#select_vehiculo').select2({
-            placeholder: "Buscar vehiculo",
-            allowClear: true,
-            width: '100%'
+        
+        /* para controlar el guardado del formulario */
+        var formularioModificado = false;
+        $('#nuevoAlquiler').one('change', e => {
+            formularioModificado = true;
+            var botonGuardarForm = document.getElementById('botonGuardar');
+            botonGuardarForm.classList.remove('disable');
+            botonGuardarForm.disabled = false;
         });
-        $('#select_empresa').select2({
-            placeholder: "Buscar empresa",
-            allowClear: true,
-            width: '100%'
+        /* cuando se cierra la ventana el evento beforeunload y unloas, no puede usar alert, ni confirm, solo se puede mostrar el diálogo nativo del navegado */
+        window.addEventListener('beforeunload', e =>{
+            let botonClick = e.explicitOriginalTarget;/* explicitOriginalTarget me devuelve el elemento deo DOM que ha originado el evento salir de la ventana */
+            if ((botonClick.id != "botonGuardar") && (formularioModificado == true)){/* si no pulsado guardar y se ha modificado entro en el if y el navegador avisa al usuario*/
+                e.preventDefault(); 
+                e.returnValue = ""; // Obligatorio para que el navegador muestre el diálogo
+            }
         });
-        $('#select_cliente').select2({
-            placeholder: "Buscar cliente",
-            allowClear: true,
-            width: '100%'
+        /* boton de salir del formulario */
+        document.getElementById('salir').addEventListener('click', e=>{
+            if (formularioModificado == true){
+                Swal.fire({
+                    title: 'Atencion datos no guardados',
+                    text: 'El formulario alquiler no se ha guardado, desea salir sin guardar?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            formularioModificado = false;
+                            window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';                            
+                        }
+                }); //Swal
+            } else {
+                window.location.href='<?= DIRECTORIO ?>alquileres?num_pagina=1';
+                }
         });
+        /* desplegable vehiculo con jQuery Ajax */
+        selectAjaxVehiculos(document.getElementById('select_vehiculo')); 
+        selectAjaxEntidades(document.getElementById('select_cliente'));
+
     });
 </script>

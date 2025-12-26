@@ -56,7 +56,7 @@ class FotoRepository {
             $id_ultimo_insertado = $this->conexionPDO->id_ultimo_insertado();
             $obj_foto = new Foto ($id_ultimo_insertado, $imagen['name'], 0, $foto['id_vehiculo'], $foto['descripcion']);//para poder usar el metodo get_nombre_foto_server tengo que crear un objeto clase Foto
             $nombre = $obj_foto->nombre_foto_server();
-            $Destino=$carpetaDestino.$nombre;//destino es la carpeta y el nombre del archivo
+            $Destino = $carpetaDestino.$nombre;//destino es la carpeta concatenado con el nombre del archivo
             
             if (!@move_uploaded_file($imagen['tmp_name'], $Destino)){//si falla el traslado de la foto a la carpeta fotos borro el registro de la base de datos. 
                 //la @ es para que no salgan warning en pantalla al fallar la copia del archivo

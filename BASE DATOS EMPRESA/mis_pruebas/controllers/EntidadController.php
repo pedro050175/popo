@@ -59,5 +59,22 @@ class EntidadController {
         header('Location: '.DIRECTORIO.'entidades?num_pagina=1');
         exit; 
     }
+    public function entidadesSelect (){
+    /* Se usa para mostrar coches en el Select2 de jQuery para poder probarlo hay que escribir esto en el navegador
+    ya que el select2 no muestra los echo, var_dump, print_r       
+    http://localhost:8000/mis_pruebas/buscar_vehiculos_select?buscar=lambo*/
+        $buscar = $_GET['buscar'];
+        $datos = $this->entidad_repository->entidadesSelect($buscar);
+        //$datos tiene el formato correcto para convertir a json, pero necesito que en un mismo campo vaya el nombre, matricula y batidor
+        foreach ($datos as $fila){
+            $resultado[] = [
+                'id' => $fila['id_entidad'],
+                'text' => $fila['Nombre'] /*se podria concatenar y pasarlo todo en el campo text asi: ' '.$fila['Matricula'].' '.$fila['Bastidor'];
+                aunque se pasen mas campos pero text siempre hay que pasarlo igual que id*/
+            ];
+        }
+        echo json_encode($resultado ?? []);/* si no ha encontrado nada tengo que devolver array vacio para 
+        que el select2 de jQuery me muestre el mesanje personalizado*/
+    }
 }
 ?>

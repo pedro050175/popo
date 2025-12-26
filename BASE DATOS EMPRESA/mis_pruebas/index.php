@@ -21,6 +21,7 @@ use controllers\CobroCompraventaController;
 use controllers\PagoCompraventaController;
 use controllers\GastoCompraventaController;
 use controllers\MultaController;
+use controllers\SeguroController;
 
 //Cuando da error en el router "índice array no existe" y sale mensaje "función nula" es problema de rutas relativas de los href, la ruta del href que se usa como segundo índice en el array routes no coincide con la que se ha añadido a routes con add
 //Rutas de Entidades
@@ -30,6 +31,8 @@ Router::add('GET', '/nueva_entidad/:id', function($entidadId) {return (new Entid
 Router::add('POST', '/nueva_entidad', function () {return (new EntidadController())->save();});
 Router::add('GET', '/nueva_entidad', function() {return (new EntidadController())->add();});
 Router::add('GET', '/entidades', function () {return (new EntidadController())->list();});
+Router::add('GET', '/buscar_entidades_select', function() {return (new EntidadController())->entidadesSelect();});
+
 //file_put_contents("log.txt", $_SERVER['REQUEST_METHOD'] . " - " . $_SERVER['REQUEST_URI'] . "\n", FILE_APPEND);
 //Rutas de Vehiculos
 Router::add('GET', '/detalles_vehiculo/:id', function($vehiculoId) {return (new VehiculoController())->detalles_vehiculo($vehiculoId);});
@@ -39,6 +42,7 @@ Router::add('POST', '/nuevo_vehiculo', function () {return (new VehiculoControll
 Router::add('GET', '/nuevo_vehiculo', function() {return (new VehiculoController())->add();});
 Router::add('GET', '/vehiculos', function () {return (new VehiculoController())->list();});
 Router::add('GET', '/gastos_cuota_vehiculo', function () {return (new VehiculoController())->gastosCuotasVehiculo();});
+Router::add('GET', '/buscar_vehiculos_select', function() {return (new VehiculoController())->vehiculosSelect();});
 
 //Rutas de fotos vehiculo
 Router::add('GET', '/borrar_foto_vehiculo/:id', function($id_foto){return (new FotoController())->delete($id_foto);});
@@ -83,8 +87,11 @@ Router::add('GET', '/analisis_alquileres', function(){return (new AlquilerContro
 Router::add('GET', '/detalles_alquiler/:id', function($id) {return (new AlquilerController())->detalles_alquiler($id);});
 Router::add('POST', '/total_alquileres_vehiculo_fecha', function() {return (new AlquilerController())->totalAlquileresVehiculosFecha();});
 Router::add('POST', '/total_alquileres_vehiculos', function() {return (new AlquilerController())->totalAlquileresVehiculos();});
-/* actuializa el estado del alquiler con AJAX si cargar la pagina*/
+/* actualiza el estado del alquiler con AJAX si cargar la pagina*/
 Router::add('GET', '/estadoAlquiler', function(){return (new AlquilerController())->estadoAlquiler();});
+Router::add('GET', '/exportarAlquileresVehiculo', function(){return (new AlquilerController())->exportarAlquileresVehiculo();});
+/* contrato de alquiler en PDF */
+Router::add('GET', '/contratoAlquilerPDF/:id', function($id){return (new AlquilerController())->contratoAlquilerPDF($id);});
 
 //ampliaciones alquiler
 Router::add('POST', '/nueva_ampliacion_alquiler', function () {return (new AmpliacionAlquilerController())->save();});
@@ -107,6 +114,8 @@ Router::add('GET', '/borrar_compraventa/:id', function($id){return (new Comprave
 Router::add('GET', '/analisis_compraventas_tri', function(){return (new CompraventaController())->analisis();});
 /* actualiza el trimestre de las compraventas seleccionadas */
 Router::add('POST', '/actualizaCompraventas', function(){return (new CompraventaController())->actualizaCompraventas();});
+/* contrato de compraventa en PDF */
+Router::add('GET', '/contratoCompraventaPDF/:id', function($id){return (new CompraventaController())->contratoCompraventaPDF($id);});
 //pagos compraventa
 //pagos compraventanalisisers_tri::add('POST', '/nuevo_cobro_compraventa', function () {return (new CobroCompraventaController())->save();});
 Router::add('POST', '/nuevo_cobro_compraventa', function() {return (new CobroCompraventaController())->save();});
@@ -126,9 +135,14 @@ Router::add('GET', '/nueva_multa', function () {return (new MultaController())->
 Router::add('POST', '/nueva_multa', function () {return (new MultaController())->save();});
 Router::add('GET', '/nueva_multa/:id', function($id) {return (new MultaController())->edit($id);});
 Router::add('GET', '/borrar_multa/:id', function($id){return (new MultaController())->delete($id);});
-Router::add('GET', '/nueva_multa_multiple', function($id){return (new MultaController())->addMultiple($id);});
-Router::add('GET', '/guardar_multa_multiple', function($id){return (new MultaController())->saveMultiple($id);});
-
+Router::add('GET', '/nueva_multa_multiple', function(){return (new MultaController())->addMultiple();});
+Router::add('POST', '/guardar_multas_multiple', function(){return (new MultaController())->saveMultiple();});
+//seguros
+Router::add('GET', '/seguros', function () {return (new SeguroController())->list();});
+Router::add('GET', '/nuevo_seguro', function () {return (new SeguroController())->add();});
+Router::add('POST', '/nuevo_seguro', function () {return (new SeguroController())->save();});
+Router::add('GET', '/nuevo_seguro/:id', function($id) {return (new SeguroController())->edit($id);});
+Router::add('GET', '/borrar_seguro/:id', function($id){return (new SeguroController())->delete($id);});
 
 Router::dispatch();
 

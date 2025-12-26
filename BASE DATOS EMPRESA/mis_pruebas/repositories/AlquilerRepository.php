@@ -19,30 +19,12 @@ class AlquilerRepository {
     public function getnumpaginas():int{
         return $this->numPaginas;
     }
-    public function alquileresVehiculo(){
-        if (!empty($_GET['cocheId'])){//listado para analisis, se usa el id del coche para buscar alquileres en lugar del nombre
-                    $desde = $_GET['desde'];
-                    $hasta = $_GET['hasta'];
-                    $coche = $_GET['cocheId']; 
-                    $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo,
-                                            COALESCE(AM.sumaPrecio, 0) AS sumaPrecio,
-                                            COALESCE(AM.sumaDias, 0) AS sumaDias,
-                                            COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
-                                            COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
-                                            COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial 
-                                    FROM alquileres AL
+    public function alquileresVehiculo($desde, $hasta, $coche){
+        $this->conexionPDO->consulta ("SELECT   AL.*, A.Nombre, V.Marca_modelo                                                 
+                                        FROM alquileres AL
                                         LEFT JOIN entidad A ON AL.cliente = A.id_entidad
-                                        LEFT JOIN entidad B ON AL.empresa = B.id_entidad
                                         LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                                        LEFT JOIN (SELECT alquiler, SUM(precio) AS sumaPrecio, 
-                                                                    SUM(dias) AS sumaDias,
-                                                                    SUM(kilometros) AS sumaKilometros,
-                                                                    SUM(ganancia) AS sumaGanancia,
-                                                                    SUM(comisionComercial) AS sumaComisionComercial
-                                                    FROM ampliaciones
-                                                    GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler    
-                                    WHERE AL.fechaInicio BETWEEN '$desde' AND '$hasta' AND AL.vehiculo = '$coche'");                   
-        }
+                                        WHERE AL.fechaInicio BETWEEN '$desde' AND '$hasta' AND AL.vehiculo = '$coche'");                   
         return $this->extraer_todos();                    
     }
     public function findAll(): ?array {   
@@ -53,7 +35,8 @@ class AlquilerRepository {
                                                     COALESCE(AM.sumaDias, 0) AS sumaDias,
                                                     COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
                                                     COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
-                                                    COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial 
+                                                    COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial,
+                                                    COALESCE(C.sumaCobros, 0) AS sumaCobros 
                                             FROM alquileres AL
                                                 LEFT JOIN entidad A ON AL.cliente = A.id_entidad
                                                 LEFT JOIN entidad B ON AL.empresa = B.id_entidad
@@ -64,9 +47,14 @@ class AlquilerRepository {
                                                                             SUM(ganancia) AS sumaGanancia,
                                                                             SUM(comisionComercial) AS sumaComisionComercial
                                                             FROM ampliaciones
-                                                            GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler    
+                                                            GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
+                                                LEFT JOIN (SELECT alquiler, 
+                                                                    COALESCE(SUM(importe))-COALESCE(SUM(parteImporteFianza)) AS sumaCobros
+                                                                FROM cobrosalquiler
+                                                                WHERE facturado = 0
+                                                                GROUP BY alquiler) C ON C.alquiler = AL.id_alquiler    
                                             WHERE AL.contrato LIKE '%$buscar%' OR A.Nombre LIKE '%$buscar%'
-                                            ORDER BY AL.fechaInicio");
+                                            ORDER BY (AL.estado <> 'entregado') asc, AL.fechaInicio DESC");
         }else if (!empty($_GET['desde']) | !empty($_GET['hasta']) | !empty($_GET['coche'])){//para buscar por nombre coche o fechas
                                 $desde = $_GET['desde'] != '' ? $_GET['desde'] : INICIO; // si no escribe en la fecha de inicio tomo la fecha 1900-01-01 como inicial
                                 $hasta = $_GET['hasta'] != '' ? $_GET['hasta'] : FIN;
@@ -76,7 +64,8 @@ class AlquilerRepository {
                                                     COALESCE(AM.sumaDias, 0) AS sumaDias,
                                                     COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
                                                     COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
-                                                    COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial 
+                                                    COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial, 
+                                                    COALESCE(C.sumaCobros, 0) AS sumaCobros
                                             FROM alquileres AL
                                                 LEFT JOIN entidad A ON AL.cliente = A.id_entidad
                                                 LEFT JOIN entidad B ON AL.empresa = B.id_entidad
@@ -87,11 +76,17 @@ class AlquilerRepository {
                                                                             SUM(ganancia) AS sumaGanancia,
                                                                             SUM(comisionComercial) AS sumaComisionComercial
                                                             FROM ampliaciones
-                                                            GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler    
+                                                            GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler 
+                                                LEFT JOIN (SELECT alquiler, 
+                                                                    COALESCE(SUM(importe))-COALESCE(SUM(parteImporteFianza)) AS sumaCobros
+                                                                FROM cobrosalquiler
+                                                                WHERE facturado = 0
+                                                                GROUP BY alquiler) C ON C.alquiler = AL.id_alquiler   
                                             WHERE AL.fechaInicio BETWEEN '$desde' AND '$hasta' AND V.Marca_modelo LIKE '%$coche%'
-                                            ORDER BY AL.fechaInicio"); 
+                                            ORDER BY (AL.estado <> 'entregado') asc, AL.fechaInicio DESC"); 
+                /* la expresión <> (no igual, tmb se puede poner !=) devuelve 0(false) para los entregados y 1(true) para el resto, y 0 va primero y 1 despues. Esta forma solo sirve para poner 1º los entregados */
 
-                }else {//listado por defecto
+                }else {//listado por defecto para pagina alquileres
                         $desplazamiento = 0;
                         $this->numPaginas = numeroPaginas("SELECT COUNT(*) as num_filas FROM alquileres");
                         $num_pagina = $_GET['num_pagina'] ?? 1;
@@ -104,7 +99,8 @@ class AlquilerRepository {
                                                         COALESCE(AM.sumaDias, 0) AS sumaDias,
                                                         COALESCE(AM.sumaKilometros, 0) AS sumaKilometros,
                                                         COALESCE(AM.sumaGanancia, 0) AS sumaGanancia,
-                                                        COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial
+                                                        COALESCE(AM.sumaComisionComercial, 0) AS sumaComisionComercial,
+                                                        COALESCE(C.sumaCobros, 0) AS sumaCobros
                                                 FROM alquileres AL
                                                     LEFT JOIN entidad A ON AL.cliente = A.id_entidad
                                                     LEFT JOIN entidad B ON AL.empresa = B.id_entidad
@@ -116,8 +112,19 @@ class AlquilerRepository {
                                                                                 SUM(comisionComercial) AS sumaComisionComercial
                                                                 FROM ampliaciones
                                                                 GROUP BY alquiler) AM ON AM.alquiler = AL.id_alquiler
-                                                ORDER BY AL.fechaInicio desc, AL.contrato desc LIMIT $desplazamiento, ".FILAS_PAGINA);
-    }
+                                                    LEFT JOIN (SELECT alquiler, 
+                                                                    COALESCE(SUM(importe))-COALESCE(SUM(parteImporteFianza)) AS sumaCobros
+                                                                FROM cobrosalquiler
+                                                                WHERE facturado = 0
+                                                                GROUP BY alquiler) C ON C.alquiler = AL.id_alquiler
+                                                ORDER BY 
+                                                    CASE 
+                                                        WHEN AL.estado = 'Entregado' THEN 1 /* asigna un nº a cada fila segun el valor del campo estado y luego ordenar por ese valor */
+                                                        WHEN AL.estado = 'Sin entregar' THEN 2 /* en el SELECT de arriba uso otra forma mas ingeniosa by IA*/
+                                                        ELSE 3
+                                                    END, AL.fechaInicio desc 
+                                                    LIMIT $desplazamiento, ".FILAS_PAGINA);
+    } /* ultimo SELECT es para calcular lo que esta sin facturar. Cobros sin facturar quitandole la parte de fianza, a cada cobro resta la parte que es de fianza */
 //con esto se consigue el total de precio, dias, ganacia, es decir, la suma de todas las ampliaciones mas la del alquiler para no tener que sumarlo luego en la pagina
 /* SELECT   AL.vehiculo, AL.fechaInicio, V.Marca_modelo, 
                                         COALESCE(AM.sumaGanancia, 0) + COALESCE(AL.ganancia) AS TotalGanancia,
@@ -176,11 +183,12 @@ class AlquilerRepository {
             ':comisionComercial' => $alquiler['comisionComercial'],
             ':ganancia' => $alquiler['ganancia'],
             ':observaciones' => $alquiler['observaciones'],
+            ':carpeta' => $alquiler['carpeta'],
             ':estado' => $alquiler['estado'] ?? ''
         ];
         $parametros = Limpiar_parametros($parametros);
-        $sql = "INSERT INTO alquileres (contrato, vehiculo, cliente, fechaInicio, fechaFin, kilometros, kmInicio, kmFin, dias, precio, precioKm, fianza, fianzaDevuelta, comercial, empresa, ciudad, entrega, comisionComercial, ganancia, observaciones, estado) VALUES 
-                                         (:contrato,:vehiculo,:cliente,:fechaInicio,:fechaFin,:kilometros,:kmInicio,:kmFin,:dias,:precio,:precioKm,:fianza,:fianzaDevuelta,:comercial,:empresa,:ciudad,:entrega,:comisionComercial,:ganancia,:observaciones,:estado)"; 
+        $sql = "INSERT INTO alquileres (contrato, vehiculo, cliente, fechaInicio, fechaFin, kilometros, kmInicio, kmFin, dias, precio, precioKm, fianza, fianzaDevuelta, comercial, empresa, ciudad, entrega, comisionComercial, ganancia, observaciones, estado, carpeta) VALUES 
+                                         (:contrato,:vehiculo,:cliente,:fechaInicio,:fechaFin,:kilometros,:kmInicio,:kmFin,:dias,:precio,:precioKm,:fianza,:fianzaDevuelta,:comercial,:empresa,:ciudad,:entrega,:comisionComercial,:ganancia,:observaciones,:estado,:carpeta)"; 
         $ok = $this->conexionPDO->consulta($sql, $parametros);
         
         if ($ok) {
@@ -210,23 +218,25 @@ class AlquilerRepository {
             ':comisionComercial' => $alquiler['comisionComercial'],
             ':ganancia' => $alquiler['ganancia'],
             ':observaciones' => $alquiler['observaciones'],
+            ':carpeta' => $alquiler['carpeta'],
             ':estado' => $alquiler['estado'] ?? ''
         ];
         $parametros = Limpiar_parametros($parametros);
         $sql = "UPDATE alquileres SET contrato = :contrato, vehiculo = :vehiculo, cliente = :cliente, fechaInicio = :fechaInicio, fechaFin = :fechaFin, kilometros = :kilometros, kmInicio = :kmInicio, kmFin = :kmFin, 
                                        dias = :dias, precio = :precio, precioKm = :precioKm, fianza = :fianza, fianzaDevuelta = :fianzaDevuelta,  comercial = :comercial, empresa = :empresa,
-                                       ciudad = :ciudad, entrega = :entrega, comisionComercial = :comisionComercial, ganancia = :ganancia, observaciones = :observaciones, estado = :estado
+                                       ciudad = :ciudad, entrega = :entrega, comisionComercial = :comisionComercial, ganancia = :ganancia, observaciones = :observaciones, estado = :estado, carpeta = :carpeta
                                      WHERE id_alquiler = :id_alquiler";
        
         $this->conexionPDO->consulta($sql, $parametros);//hay que controlar el error si se duplica contrato,en consultaPDO hay un catch (PDOException hay qeu ver como pasar ese error al cliente 
     }
     public function read (int $id): ?Alquiler {
-        $this->conexionPDO->consulta("SELECT   AL.*, A.Nombre, B.Nombre AS nombreEmpresa, V.Marca_modelo
-                                            FROM alquileres AL
-                                                LEFT JOIN entidad A ON AL.cliente = A.id_entidad
-                                                LEFT JOIN entidad B ON AL.empresa = B.id_entidad
-                                                LEFT JOIN vehiculos V ON AL.vehiculo = V.id_vehiculo
-                                            WHERE (id_alquiler=$id)");        
+        $this->conexionPDO->consulta("SELECT AL.*, V.Marca_modelo, V.Bastidor, V.Matricula, E.Nombre, EM.Nombre as nombreEmpresa 
+                                        FROM alquileres AL 
+                                        JOIN vehiculos V ON V.id_vehiculo = AL.vehiculo
+                                        JOIN entidad E ON E.id_entidad = AL.cliente
+                                        LEFT JOIN entidad EM ON EM.id_entidad = AL.empresa
+                                        WHERE (id_alquiler=$id)");        
+            /* es necesario leer datos de vehiculo, cliente, empresa porque se usa en la pagina "detalles_alquiler" */
         return $this->extraer_registro();
     }
     public function delete (int $id): void {

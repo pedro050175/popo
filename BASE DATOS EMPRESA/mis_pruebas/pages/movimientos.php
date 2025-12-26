@@ -147,6 +147,9 @@
                             <li>
                                 <a href = "<?= DIRECTORIO ?>movimientos?envia=3&recibe=33" id = "3_33">Universo a Martin</a>
                             </li>
+                            <li>
+                                <a href = "<?= DIRECTORIO ?>movimientos?envia=3&recibe=32" id = "3_32">Universo a Magna</a>
+                            </li>
                         </ul>    
                     </td>
                     <td>

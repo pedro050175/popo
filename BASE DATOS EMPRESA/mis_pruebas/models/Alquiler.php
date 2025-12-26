@@ -9,7 +9,7 @@ class Alquiler {
     function __construct (private ?int $id_alquiler, private ?string $contrato, private ?int $vehiculo, private ?int $cliente, private ?string $fechaInicio, private ?string $fechaFin, private ?int $kilometros,
     private ?int $kmInicio, private ?int $kmFin, private ?int $dias, private ?int $precio, private ?int $precioKm, private ?int $fianza, private ?int $fianzaDevuelta, private ?string $comercial, 
     private ?int $empresa, private ?string $ciudad, private ?string $entrega, private ?int $comisionComercial, private ?int $ganancia, private ?string $observaciones,  private ?string $estado, 
-    private ?float $sumaPrecio, private ?float $sumaDias, private ?float $sumaKilometros, private ?float $sumaGanancia, private ?float $sumaComisionComercial, 
+    private ?float $sumaPrecio, private ?float $sumaDias, private ?float $sumaKilometros, private ?float $sumaGanancia, private ?float $sumaComisionComercial,  private ?string $carpeta, private ?float $sumaCobros,  
     private ?Vehiculo $vehiculoInfo = null, private ?Entidad $clienteInfo =null, private ?Entidad $empresaInfo = null){}
 
     public function getvehiculoInfo(): ?Vehiculo {
@@ -99,8 +99,14 @@ class Alquiler {
     public function getsumaGanancia(): ?float {
         return $this->sumaGanancia;
     }
+    public function getsumaCobros(): ?float {
+        return $this->sumaCobros;
+    }
     public function getsumaComisionComercial(): ?float {
         return $this->sumaComisionComercial;
+    }
+    public function getcarpeta (): ?string {
+        return $this->carpeta;
     }
     public static function fromArray(array $data): Alquiler {
         $vehiculo = null;
@@ -124,6 +130,7 @@ class Alquiler {
                             $data['kilometros']??null, $data['kmInicio']??null, $data['kmFin']??null, $data['dias']??null, $data['precio']??null, $data['precioKm']??null, 
                             $data['fianza']??null, $data['fianzaDevuelta']??null, $data['comercial']??null, $data['empresa']??null, $data['ciudad']??null, $data['entrega']??null,
                             $data['comisionComercial']??null, $data['ganancia']??null, $data['observaciones']??null, $data['estado']??null,  $data['sumaPrecio']??null, 
-                            $data['sumaDias']??null, $data['sumaKilometros']??null, $data['sumaGanancia']??null, $data['sumaComisionComercial']??null, $vehiculo, $cliente, $empresa); 
+                            $data['sumaDias']??null, $data['sumaKilometros']??null, $data['sumaGanancia']??null, $data['sumaComisionComercial']??null, $data['carpeta']??null, 
+                            $data['sumaCobros']??null, $vehiculo, $cliente, $empresa); 
     }
 }
