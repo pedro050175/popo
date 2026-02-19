@@ -16,35 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `gastosalquiler`
+-- Table structure for table `gastoscompraventa`
 --
 
-DROP TABLE IF EXISTS `gastosalquiler`;
+DROP TABLE IF EXISTS `gastoscompraventa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gastosalquiler` (
+CREATE TABLE `gastoscompraventa` (
   `idGasto` int NOT NULL AUTO_INCREMENT,
   `tipo` varchar(35) DEFAULT NULL,
   `importe` decimal(10,2) DEFAULT NULL,
   `fecha` date NOT NULL,
   `pagaOtro` tinyint unsigned DEFAULT NULL,
-  `alquiler` int NOT NULL,
+  `compraventa` int NOT NULL,
   `pagado` tinyint unsigned DEFAULT NULL,
   `observaciones` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idGasto`),
-  KEY `fk_alquiler` (`alquiler`),
-  CONSTRAINT `fk_alquiler` FOREIGN KEY (`alquiler`) REFERENCES `alquileres` (`id_alquiler`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `fk_gastos_compraventa` (`compraventa`),
+  CONSTRAINT `fk_gastos_compraventa` FOREIGN KEY (`compraventa`) REFERENCES `compraventas` (`id_compraventa`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `gastosalquiler`
+-- Dumping data for table `gastoscompraventa`
 --
 
-LOCK TABLES `gastosalquiler` WRITE;
-/*!40000 ALTER TABLE `gastosalquiler` DISABLE KEYS */;
-INSERT INTO `gastosalquiler` VALUES (4,'TODOS',3170.40,'2025-07-21',0,22,0,NULL),(5,'TRANSPORTE MARBELLA',2640.00,'2025-07-12',0,29,0,NULL),(6,'cuotas de 14 meses de alquiler',19399.00,'2025-07-17',0,32,0,NULL),(7,'TRANSPORTE MADRID',1920.00,'2025-07-20',0,33,0,NULL),(8,'TRANSPORTE MADRID',960.00,'2025-06-30',0,36,0,NULL),(9,'TRANSPORTE MARBELLA',1320.00,'2025-08-31',0,36,0,NULL),(10,'TRANSPORTE',300.00,'2025-10-31',0,20,0,NULL);
-/*!40000 ALTER TABLE `gastosalquiler` ENABLE KEYS */;
+LOCK TABLES `gastoscompraventa` WRITE;
+/*!40000 ALTER TABLE `gastoscompraventa` DISABLE KEYS */;
+INSERT INTO `gastoscompraventa` VALUES (17,'GARANTIA',471.90,'2025-11-04',0,32,1,NULL),(18,'GARANTIA',544.50,'2025-10-13',0,25,1,NULL),(19,'BATERIA',321.00,'2025-10-01',0,25,1,NULL),(20,'PASTILLAS',550.00,'2025-10-05',0,25,1,NULL),(21,'GESTORIA',784.00,'2024-10-01',0,25,0,NULL),(22,'PLACA BASTIDOR',77.00,'2024-10-01',0,25,0,NULL),(23,'REVISION',693.00,'2024-10-01',0,25,0,NULL),(24,'TRANSFERENCIA',1452.00,'2024-10-01',0,25,0,NULL),(25,'TRANSFERENCIA',176.81,'2025-11-25',0,45,0,NULL),(26,'TRANSFERENCIA',152.61,'2025-11-14',0,32,0,NULL),(29,'GARANTIA',508.20,'2025-12-02',0,33,0,NULL),(30,'GESTORIA',125.79,'2025-12-05',0,48,0,NULL),(31,'GESTORIA',92.00,'2025-12-16',0,33,1,NULL),(32,'GESTORIA',143.02,'2025-12-22',0,49,0,NULL),(33,'GESTORIA',269.00,'2026-01-22',0,47,1,NULL),(34,'GESTORIA',468.00,'2026-01-29',0,76,0,NULL),(35,'GESTORIA',92.00,'2026-01-29',0,59,0,NULL);
+/*!40000 ALTER TABLE `gastoscompraventa` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-30 16:52:27
+-- Dump completed on 2026-01-30 16:52:26

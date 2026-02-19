@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: empresa
+-- Host: 127.0.0.1    Database: sys
 -- ------------------------------------------------------
 -- Server version	9.3.0
 
@@ -16,35 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `gastosalquiler`
+-- Table structure for table `sys_config`
 --
 
-DROP TABLE IF EXISTS `gastosalquiler`;
+DROP TABLE IF EXISTS `sys_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gastosalquiler` (
-  `idGasto` int NOT NULL AUTO_INCREMENT,
-  `tipo` varchar(35) DEFAULT NULL,
-  `importe` decimal(10,2) DEFAULT NULL,
-  `fecha` date NOT NULL,
-  `pagaOtro` tinyint unsigned DEFAULT NULL,
-  `alquiler` int NOT NULL,
-  `pagado` tinyint unsigned DEFAULT NULL,
-  `observaciones` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`idGasto`),
-  KEY `fk_alquiler` (`alquiler`),
-  CONSTRAINT `fk_alquiler` FOREIGN KEY (`alquiler`) REFERENCES `alquileres` (`id_alquiler`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `sys_config` (
+  `variable` varchar(128) NOT NULL,
+  `value` varchar(128) DEFAULT NULL,
+  `set_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `set_by` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`variable`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `gastosalquiler`
+-- Dumping data for table `sys_config`
 --
 
-LOCK TABLES `gastosalquiler` WRITE;
-/*!40000 ALTER TABLE `gastosalquiler` DISABLE KEYS */;
-INSERT INTO `gastosalquiler` VALUES (4,'TODOS',3170.40,'2025-07-21',0,22,0,NULL),(5,'TRANSPORTE MARBELLA',2640.00,'2025-07-12',0,29,0,NULL),(6,'cuotas de 14 meses de alquiler',19399.00,'2025-07-17',0,32,0,NULL),(7,'TRANSPORTE MADRID',1920.00,'2025-07-20',0,33,0,NULL),(8,'TRANSPORTE MADRID',960.00,'2025-06-30',0,36,0,NULL),(9,'TRANSPORTE MARBELLA',1320.00,'2025-08-31',0,36,0,NULL),(10,'TRANSPORTE',300.00,'2025-10-31',0,20,0,NULL);
-/*!40000 ALTER TABLE `gastosalquiler` ENABLE KEYS */;
+LOCK TABLES `sys_config` WRITE;
+/*!40000 ALTER TABLE `sys_config` DISABLE KEYS */;
+INSERT INTO `sys_config` VALUES ('diagnostics.allow_i_s_tables','OFF','2025-05-09 16:32:27',NULL),('diagnostics.include_raw','OFF','2025-05-09 16:32:27',NULL),('ps_thread_trx_info.max_length','65535','2025-05-09 16:32:27',NULL),('statement_performance_analyzer.limit','100','2025-05-09 16:32:27',NULL),('statement_performance_analyzer.view',NULL,'2025-05-09 16:32:27',NULL),('statement_truncate_len','64','2025-05-09 16:32:27',NULL);
+/*!40000 ALTER TABLE `sys_config` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
