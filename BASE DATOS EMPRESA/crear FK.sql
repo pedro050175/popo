@@ -1,4 +1,4 @@
-alter table multas 
-add constraint fk_coche foreign key (vehiculo) 
-references vehiculos(id_vehiculo) 
-on delete restrict on update restrict;
+alter table accionesTarea 
+add constraint fk_tarea foreign key (tarea) 
+references tareas(idTarea) 
+on delete cascade on update cascade;
