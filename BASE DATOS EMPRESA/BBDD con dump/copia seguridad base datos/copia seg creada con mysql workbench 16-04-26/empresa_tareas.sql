@@ -1,0 +1,68 @@
+-- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+--
+-- Host: 127.0.0.1    Database: empresa
+-- ------------------------------------------------------
+-- Server version	9.3.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `tareas`
+--
+
+DROP TABLE IF EXISTS `tareas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tareas` (
+  `idTarea` int NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(5000) NOT NULL,
+  `prioridad` tinyint DEFAULT NULL,
+  `categoria` varchar(45) DEFAULT NULL,
+  `vencimiento` date DEFAULT NULL,
+  `creacion` datetime DEFAULT CURRENT_TIMESTAMP,
+  `modificacion` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `pendiente` tinyint DEFAULT NULL,
+  `comentarios` varchar(500) DEFAULT NULL,
+  `empresa` int DEFAULT NULL,
+  `vehiculo` int DEFAULT NULL,
+  `importe` decimal(10,2) DEFAULT NULL,
+  `ruta` varchar(250) DEFAULT NULL,
+  `persona` varchar(75) DEFAULT NULL,
+  PRIMARY KEY (`idTarea`),
+  KEY `fk_empresa_tarea_idx` (`empresa`) /*!80000 INVISIBLE */,
+  KEY `fk_vehiculo_tarea` (`vehiculo`),
+  FULLTEXT KEY `descrip_coment` (`descripcion`,`comentarios`),
+  CONSTRAINT `fk_empresa_tarea` FOREIGN KEY (`empresa`) REFERENCES `entidad` (`id_entidad`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `fk_vehiculo_tarea` FOREIGN KEY (`vehiculo`) REFERENCES `vehiculos` (`id_vehiculo`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tareas`
+--
+
+LOCK TABLES `tareas` WRITE;
+/*!40000 ALTER TABLE `tareas` DISABLE KEYS */;
+INSERT INTO `tareas` VALUES (6,'escritura de ilbedito, ya se lo pase a carmen de la notaria, estoy esperando que me diga si es valido el informe',2,'Notaria',NULL,'2026-03-25 09:39:15','2026-03-26 11:41:50',1,NULL,NULL,NULL,NULL,NULL,NULL),(12,'alegaciones sepe larisa',4,'Asesoria',NULL,'2026-03-26 11:43:25','2026-04-06 09:04:43',0,'las tiene que presentar SAra',NULL,NULL,NULL,NULL,NULL),(16,'le pido las multas del GLE a ayvens por correo',1,'Peticion datos',NULL,'2026-03-27 07:17:47','2026-03-27 07:17:47',1,NULL,NULL,86,NULL,NULL,NULL),(17,'SUBIDAS LAS FACTURAS',1,'Asesoria',NULL,'2026-03-30 08:23:34','2026-04-07 10:27:25',1,'07-04-2026',NULL,NULL,NULL,NULL,NULL),(18,'CAMBIO MAIL STELAR',3,'Solicitud cambio datos',NULL,'2026-04-06 07:27:02','2026-04-11 15:13:07',1,NULL,1,NULL,NULL,NULL,NULL),(20,'MORA ME TIENE QUE DEVOLVER 125.79 A LA CUENTA DE WORLD IBERCAJA Y YO LE PAGO DESDE BBVA NIVERSO LA FACTURA DEL 08-04-26',2,'Pago',NULL,'2026-04-08 10:40:32','2026-04-08 10:40:32',1,NULL,NULL,NULL,NULL,NULL,NULL),(25,'cambio locucion centralita',1,'Otros',NULL,'2026-04-09 07:36:48','2026-04-09 07:36:48',1,NULL,NULL,NULL,NULL,NULL,NULL),(27,'bbva universo nos tiene que devolver por la transf inmediata',3,'Otros',NULL,'2026-04-13 08:10:32','2026-04-13 08:10:32',1,NULL,NULL,NULL,NULL,NULL,NULL),(29,'DESPIDO DE JUAN COLLADOS MACANAS 49198655E',4,'Asesoria','2026-04-14','2026-04-14 16:13:53','2026-04-14 16:13:53',1,NULL,NULL,NULL,NULL,NULL,NULL),(30,'deudas en hacienda de HORMIGONES GARCIA CARRILLO B04178125',3,'Asesoria',NULL,'2026-04-15 14:53:46','2026-04-15 14:53:46',1,NULL,NULL,NULL,NULL,NULL,'juan masanet'),(31,'renomvar certificado de REPROI B-04790002',3,'Asesoria',NULL,'2026-04-15 14:55:23','2026-04-15 14:55:23',1,NULL,NULL,NULL,NULL,NULL,'mariajose masanet'),(32,'MAGNA DIA 20 -> EN SABADELL',4,'Pago','2026-04-20','2026-04-16 08:04:20','2026-04-16 08:05:41',1,NULL,NULL,NULL,590.00,NULL,NULL),(33,'UNIVERSO 20 -> CAJA RURAL',4,'Pago','2026-04-20','2026-04-16 08:05:31','2026-04-16 08:05:31',1,NULL,NULL,NULL,2632.00,NULL,NULL),(34,'RADIKAL EMOTION -> IBERCAJA',4,'Pago','2026-04-20','2026-04-16 08:06:21','2026-04-16 08:06:21',1,NULL,NULL,NULL,124.00,NULL,NULL),(35,'JADRILEY -> SANTANDER',4,'Pago','2026-04-20','2026-04-16 08:07:11','2026-04-16 08:24:50',1,NULL,NULL,NULL,222.00,NULL,NULL),(36,'ILBENDITO -> IBERCAJA',4,'Pago','2026-04-20','2026-04-16 08:08:00','2026-04-16 08:27:29',1,NULL,NULL,NULL,85.00,NULL,NULL),(37,'MARTIN -> IBERCAJA',4,'Pago','2026-04-20','2026-04-16 08:08:35','2026-04-16 08:08:35',1,NULL,NULL,NULL,1645.00,NULL,NULL),(38,'SEGURO MAPFRE SINIESTRO CAMRA FRIO SUSHI',4,'Seguro otros','2026-04-23','2026-04-16 09:24:11','2026-04-16 09:24:39',1,NULL,NULL,NULL,NULL,NULL,'ROBERTO MAPFRE'),(39,'hoja registro horario trabajadores sushi ver que ponen',4,'Asesoria',NULL,'2026-04-16 10:12:35','2026-04-16 10:12:35',1,NULL,NULL,NULL,NULL,NULL,'asesoria tyfany');
+/*!40000 ALTER TABLE `tareas` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2026-04-16 16:27:14
